@@ -1,4 +1,4 @@
--- =====================================================================
+﻿-- =====================================================================
 -- THE ROYAL HOTEL MANAGEMENT SYSTEM
 -- Microsoft SQL Server 2016+ | T-SQL | ERD 27 bang
 -- Full Script: DDL + Trigger + Index + Seed Data
