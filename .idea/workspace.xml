@@ -16,6 +16,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="e6c2ed78-9aa0-4384-9574-311a04d9cf8e" value="" />
+    </colors>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -56,23 +61,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0" />
-      <entry key="M5" value="1.0" />
-      <entry key="M10" value="1.0" />
-      <entry key="M15" value="1.0" />
-      <entry key="M30" value="1.0" />
-      <entry key="H1" value="1.0" />
-      <entry key="H2" value="1.0" />
-      <entry key="H4" value="1.0" />
-      <entry key="D1" value="1.0" />
-      <entry key="W1" value="1.0" />
+      <entry key="MS100" value="1.0497210302346824" />
+      <entry key="MS500" value="1.5486659687896216" />
+      <entry key="S2" value="1.860650857787384" />
+      <entry key="S5" value="1.941739533988746" />
+      <entry key="S10" value="1.9704326530498433" />
+      <entry key="S30" value="1.9917537587352658" />
+      <entry key="S60" value="2.1247487286661775" />
+      <entry key="M2" value="3.134487456951473" />
+      <entry key="M5" value="6.188077036835922" />
+      <entry key="M10" value="8.4713562345431" />
+      <entry key="M15" value="9.481577507889376" />
+      <entry key="M30" value="10.649570559134467" />
+      <entry key="H1" value="11.300295103413847" />
+      <entry key="H2" value="11.643800662131076" />
+      <entry key="H4" value="11.82028466563458" />
+      <entry key="D1" value="11.969820546684442" />
+      <entry key="W1" value="11.99568305996229" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -94,23 +99,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.2812646211722023" />
-      <entry key="MS500" value="0.775930854274856" />
-      <entry key="S2" value="0.9385464155421293" />
-      <entry key="S5" value="0.9749499069332734" />
-      <entry key="S10" value="0.9873955169704152" />
-      <entry key="S30" value="0.9957807284418361" />
-      <entry key="S60" value="0.9978881342324079" />
-      <entry key="M2" value="0.9989435090296187" />
-      <entry key="M5" value="0.9995772695955446" />
-      <entry key="M10" value="0.9997886124554253" />
-      <entry key="M15" value="0.9998590700048511" />
-      <entry key="M30" value="0.9999295325195926" />
-      <entry key="H1" value="0.9999647656390662" />
-      <entry key="H2" value="0.9999823826643478" />
-      <entry key="H4" value="0.9999911912933772" />
-      <entry key="D1" value="0.9999985318768411" />
-      <entry key="W1" value="0.9999997902679882" />
+      <entry key="MS100" value="0.9430639896240254" />
+      <entry key="MS500" value="1.4532634486332543" />
+      <entry key="S2" value="1.8237334420809312" />
+      <entry key="S5" value="1.925568376139829" />
+      <entry key="S10" value="1.9620966800021808" />
+      <entry key="S30" value="1.9888820311854964" />
+      <entry key="S60" value="2.1218242623995933" />
+      <entry key="M2" value="3.1269100445025138" />
+      <entry key="M5" value="6.1774232879069455" />
+      <entry key="M10" value="8.463140147095364" />
+      <entry key="M15" value="9.475243702974257" />
+      <entry key="M30" value="10.645907305569896" />
+      <entry key="H1" value="11.29832494930779" />
+      <entry key="H2" value="11.642778987455953" />
+      <entry key="H4" value="11.819764422401736" />
+      <entry key="D1" value="11.969732510815925" />
+      <entry key="W1" value="11.995670450576759" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -143,6 +148,11 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlserver"
+    ]
   }
 }]]></component>
   <component name="SharedIndexes">

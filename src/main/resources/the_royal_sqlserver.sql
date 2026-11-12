@@ -9,14 +9,47 @@
 -- PHAN 1: DDL — TAO 27 BANG
 -- =====================================================================
 
-CREATE DATABASE THE_ROYAL;
+USE master;
+GO
+
+IF DB_ID('THE_ROYAL') IS NULL
+BEGIN
+    CREATE DATABASE THE_ROYAL;
+END;
 GO
 
 USE THE_ROYAL;
 GO
 
--- Bat dau transaction sau khi da chon database
-BEGIN TRANSACTION;
+-- Xoa cac bang theo thu tu nguoc neu da ton tai (an toan tuyet doi cho connection SSMS)
+DROP TABLE IF EXISTS bang_thu_chi;
+DROP TABLE IF EXISTS bang_luong;
+DROP TABLE IF EXISTS danh_gia;
+DROP TABLE IF EXISTS thanh_toan;
+DROP TABLE IF EXISTS lich_su_dat_phong;
+DROP TABLE IF EXISTS su_dung_dich_vu;
+DROP TABLE IF EXISTS lich_su_doi_phong;
+DROP TABLE IF EXISTS nhiem_vu_don_phong;
+DROP TABLE IF EXISTS khach_luu_tru_chi_tiet;
+DROP TABLE IF EXISTS dat_phong_chi_tiet;
+DROP TABLE IF EXISTS dat_phong;
+DROP TABLE IF EXISTS the_thanh_vien;
+DROP TABLE IF EXISTS tien_nghi_phong;
+DROP TABLE IF EXISTS phong;
+DROP TABLE IF EXISTS tang;
+DROP TABLE IF EXISTS toa_nha;
+DROP TABLE IF EXISTS loai_phong;
+DROP TABLE IF EXISTS hang_phong;
+DROP TABLE IF EXISTS loai_giuong;
+DROP TABLE IF EXISTS tien_nghi;
+DROP TABLE IF EXISTS dich_vu;
+DROP TABLE IF EXISTS danh_muc_chi;
+DROP TABLE IF EXISTS ma_giam_gia;
+DROP TABLE IF EXISTS hang_thanh_vien;
+DROP TABLE IF EXISTS khach_hang;
+DROP TABLE IF EXISTS nhan_vien;
+DROP TABLE IF EXISTS vai_tro;
+GO
 -- ---------------------------------------------------------------------
 -- NHOM TAI KHOAN: vai_tro, nhan_vien, khach_hang
 -- ---------------------------------------------------------------------
@@ -240,13 +273,13 @@ CREATE TABLE dich_vu (
 );
 
 CREATE TABLE su_dung_dich_vu (
-                                 id_su_dung_dich_vu BIGINT        IDENTITY(1,1) PRIMARY KEY,
-                                 id_dat_phong       BIGINT        NOT NULL REFERENCES dat_phong(id_dat_phong),
-                                 id_dich_vu         BIGINT        NOT NULL REFERENCES dich_vu(id_dich_vu),
-                                 so_luong           NUMERIC(10,2) NOT NULL CHECK (so_luong > 0),
-                                 thanh_tien         NUMERIC(14,0) NOT NULL CHECK (thanh_tien >= 0),
-                                 tien_giam_gia      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (tien_giam_gia >= 0),
-                                 thoi_gian_su_dung  DATETIME2     NOT NULL DEFAULT GETDATE()
+                                 id_su_dung_dich_vu    BIGINT        IDENTITY(1,1) PRIMARY KEY,
+                                 id_dat_phong_chi_tiet BIGINT        NOT NULL REFERENCES dat_phong_chi_tiet(id_dat_phong_chi_tiet),
+                                 id_dich_vu            BIGINT        NOT NULL REFERENCES dich_vu(id_dich_vu),
+                                 so_luong              NUMERIC(10,2) NOT NULL CHECK (so_luong > 0),
+                                 thanh_tien            NUMERIC(14,0) NOT NULL CHECK (thanh_tien >= 0),
+                                 tien_giam_gia         NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (tien_giam_gia >= 0),
+                                 thoi_gian_su_dung     DATETIME2     NOT NULL DEFAULT GETDATE()
 );
 
 -- ---------------------------------------------------------------------
@@ -385,7 +418,7 @@ CREATE INDEX ix_dat_phong_khach_hang   ON dat_phong(id_khach_hang);
 CREATE INDEX ix_dat_phong_trang_thai   ON dat_phong(trang_thai, thoi_gian_nhan_phong);
 CREATE INDEX ix_dat_phong_chi_tiet_dat ON dat_phong_chi_tiet(id_dat_phong);
 CREATE INDEX ix_thanh_toan_dat_phong   ON thanh_toan(id_dat_phong);
-CREATE INDEX ix_su_dung_dich_vu_dat    ON su_dung_dich_vu(id_dat_phong);
+CREATE INDEX ix_su_dung_dich_vu_dat    ON su_dung_dich_vu(id_dat_phong_chi_tiet);
 CREATE INDEX ix_khach_luu_tru          ON khach_luu_tru_chi_tiet(id_dat_phong_chi_tiet);
 CREATE INDEX ix_nhiem_vu_trang_thai    ON nhiem_vu_don_phong(trang_thai, id_nhan_vien);
 
@@ -500,12 +533,19 @@ WITH
                  JOIN toa_nha tn ON tn.id_toa_nha = t.id_toa_nha
                  CROSS JOIN nums5 n5
     )
-INSERT INTO phong(ma_phong, id_tang, id_loai_phong)
+INSERT INTO phong(ma_phong, id_tang, id_loai_phong, ghi_chu)
 SELECT  v.ma_toa
             + RIGHT('0' + CAST(v.so_tang AS VARCHAR(2)), 2)
     + RIGHT('0' + CAST(v.n       AS VARCHAR(2)), 2),
     v.id_tang,
-    l.id_loai_phong
+    l.id_loai_phong,
+    CASE v.n
+        WHEN 1 THEN N'Ocean View'
+        WHEN 2 THEN N'Ocean View'
+        WHEN 3 THEN N'City View'
+        WHEN 4 THEN N'City View'
+        ELSE        N'Mountain View'
+    END
 FROM vi_tri v
     JOIN loai l ON l.ma_hang_phong = v.ma_hang
     AND l.stt = (v.so_tang + v.n) % l.tong
@@ -519,14 +559,21 @@ INSERT INTO tien_nghi(ten_tien_nghi) VALUES
                                          (N'Ket an toan'),
                                          (N'Bon tam'),
                                          (N'Ban lam viec'),
-                                         (N'May pha ca phe');
+                                         (N'May pha ca phe'),
+                                         (N'Ban ui va cau la'),
+                                         (N'May say toc');
 
 INSERT INTO dich_vu(ma_dich_vu, ten_dich_vu, danh_muc, don_vi_tinh, don_gia) VALUES
                                                                                  ('DV_GIAT_UI',    N'Giat ui',           N'Tien ich',  N'kg',     60000),
                                                                                  ('DV_AN_SANG',    N'An sang tai phong', N'An uong',   N'suat',  180000),
                                                                                  ('DV_MINIBAR',    N'Do uong minibar',   N'An uong',   N'lan',    50000),
                                                                                  ('DV_SPA',        N'Spa 60 phut',       N'Thu gian',  N'luot',  650000),
-                                                                                 ('DV_DON_SAN_BAY',N'Don san bay',       N'Di chuyen', N'luot',  450000);
+                                                                                 ('DV_DON_SAN_BAY',N'Don san bay',       N'Di chuyen', N'luot',  450000),
+                                                                                 ('DV_GIAT_HAP',   N'Giat hap cao cap',  N'Tien ich',  N'bo',    120000),
+                                                                                 ('DV_THUE_XE',    N'Thue xe tu lai',    N'Di chuyen', N'ngay',  900000),
+                                                                                 ('DV_TRA_CHIEU',  N'Set tra chieu Royal',N'An uong',  N'set',   350000),
+                                                                                 ('DV_TOUR_DAO',   N'Tour du thuyen dao',N'Tham quan', N've',   1200000),
+                                                                                 ('DV_HO_BOI_VIP', N'Ve ho boi vo cuc VIP',N'Thu gian',N've',    250000);
 
 INSERT INTO danh_muc_chi(ten_danh_muc, loai_chi_phi) VALUES
                                                          (N'Luong nhan vien',       'LUONG'),
@@ -589,7 +636,11 @@ INSERT INTO the_thanh_vien(id_khach_hang, id_hang_thanh_vien,
                                                                         (3, 1, 'QR-KH003-HOI-2025',  'HOAT_DONG',  12000000, '2025-01-10 08:30:00'),
                                                                         (4, 4, 'QR-KH004-KIM-2022',  'HOAT_DONG', 450000000, '2022-05-01 11:00:00'),
                                                                         (5, 2, 'QR-KH005-BAC-2024',  'HOAT_DONG',  70000000, '2024-07-22 09:00:00'),
-                                                                        (6, 1, 'QR-KH006-HOI-2026',  'HOAT_DONG',  15000000, '2026-02-14 14:00:00');
+                                                                        (6, 1, 'QR-KH006-HOI-2026',  'HOAT_DONG',  15000000, '2026-02-14 14:00:00'),
+                                                                        (7, 3, 'QR-KH007-VANG-2024', 'HOAT_DONG', 145000000, '2024-09-01 10:30:00'),
+                                                                        (8, 2, 'QR-KH008-BAC-2025',  'HOAT_DONG',  65000000, '2025-04-12 11:15:00'),
+                                                                        (9, 1, 'QR-KH009-HOI-2026',  'HOAT_DONG',  10000000, '2026-03-05 15:45:00'),
+                                                                        (10, 1, 'QR-KH010-HOI-2026', 'BI_KHOA',    5000000,  '2026-06-18 09:20:00');
 
 INSERT INTO tien_nghi_phong(id_phong, id_tien_nghi)
 SELECT p.id_phong, t.id_tien_nghi
@@ -737,7 +788,14 @@ SELECT dpct.id_dat_phong_chi_tiet,
 FROM (VALUES
           ('DP2026007','W1401','W1405','NV004','2026-11-09 10:00:00',       0,N'Khach yeu cau phong yen tinh hon'),
           ('DP2026001','C0301','C0302','NV005','2026-10-01 15:30:00',       0,N'Phong C0301 co su co dieu hoa'),
-          ('DP2026004','C3001','W3005','NV004','2026-09-16 09:00:00',30000000,N'Khach nang hang Presidential Family')
+          ('DP2026004','C3001','W3005','NV004','2026-09-16 09:00:00',30000000,N'Khach nang hang Presidential Family'),
+          ('DP2026002','W1302','W1304','NV005','2026-11-10 16:00:00',       0,N'Khach muon doi sang phong City View'),
+          ('DP2026006','C0204','C0205','NV004','2026-10-20 17:00:00',       0,N'Khach muon doi sang phong Mountain View'),
+          ('DP2026010','C1301','C1302','NV005','2026-11-01 16:30:00',       0,N'Khach thich phong gan thang may hon'),
+          ('DP2026007','W1405','W1402','NV006','2026-11-10 09:30:00',       0,N'Doi phong theo yeu cau dac biet cua khach'),
+          ('DP2026001','C0302','C0304','NV004','2026-10-02 11:00:00',       0,N'Chuyen phong cung tang de tien gap ban be'),
+          ('DP2026003','C2501','C2502','NV004','2026-11-15 15:00:00',       0,N'Ho tro khach chon huong nhin mong muon'),
+          ('DP2026004','W3005','C3002','NV005','2026-09-17 14:00:00',       0,N'Khach yeu cau chuyen sang phong view bien')
      ) AS d(ma_dp, ma_cu, ma_moi, ma_nv, doi_luc, chenh_lech, ly_do)
          JOIN dat_phong          dp   ON dp.ma_dat_phong   = d.ma_dp
          JOIN dat_phong_chi_tiet dpct ON dpct.id_dat_phong = dp.id_dat_phong
@@ -748,27 +806,29 @@ FROM (VALUES
 -- ---------------------------------------------------------------------
 -- LOP 6a: su_dung_dich_vu (10)
 -- ---------------------------------------------------------------------
-INSERT INTO su_dung_dich_vu(id_dat_phong, id_dich_vu,
+INSERT INTO su_dung_dich_vu(id_dat_phong_chi_tiet, id_dich_vu,
                             so_luong, thanh_tien, tien_giam_gia, thoi_gian_su_dung)
-SELECT dp.id_dat_phong, dv.id_dich_vu,
+SELECT dpct.id_dat_phong_chi_tiet, dv.id_dich_vu,
        CAST(d.sl AS NUMERIC(10,2)),
        CAST(d.tt   AS NUMERIC(14,0)),
        CAST(d.giam AS NUMERIC(14,0)),
        CAST(d.tgsd AS DATETIME2)
 FROM (VALUES
-          ('DP2026001','DV_AN_SANG',    1,  180000,      0,'2026-10-02 08:00:00'),
-          ('DP2026001','DV_GIAT_UI',    2,  120000,      0,'2026-10-02 10:00:00'),
-          ('DP2026002','DV_SPA',        1,  650000,      0,'2026-11-11 15:00:00'),
-          ('DP2026002','DV_MINIBAR',    1,   50000,      0,'2026-11-11 21:00:00'),
-          ('DP2026004','DV_SPA',        2, 1300000, 650000,'2026-09-16 10:00:00'),
-          ('DP2026004','DV_DON_SAN_BAY',1,  450000, 225000,'2026-09-15 12:00:00'),
-          ('DP2026004','DV_AN_SANG',    5,  900000, 450000,'2026-09-17 08:00:00'),
-          ('DP2026006','DV_GIAT_UI',    3,  180000,      0,'2026-10-21 09:00:00'),
-          ('DP2026007','DV_DON_SAN_BAY',1,  450000,      0,'2026-11-08 12:00:00'),
-          ('DP2026010','DV_AN_SANG',    2,  360000,      0,'2026-11-02 08:00:00')
-     ) AS d(ma_dp, ma_dv, sl, tt, giam, tgsd)
-         JOIN dat_phong dp ON dp.ma_dat_phong = d.ma_dp
-         JOIN dich_vu   dv ON dv.ma_dich_vu   = d.ma_dv;
+          ('DP2026001','C0301','DV_AN_SANG',    1,  180000,      0,'2026-10-02 08:00:00'),
+          ('DP2026001','C0301','DV_GIAT_UI',    2,  120000,      0,'2026-10-02 10:00:00'),
+          ('DP2026002','W1302','DV_SPA',        1,  650000,      0,'2026-11-11 15:00:00'),
+          ('DP2026002','W1302','DV_MINIBAR',    1,   50000,      0,'2026-11-11 21:00:00'),
+          ('DP2026004','C3001','DV_SPA',        2, 1300000, 650000,'2026-09-16 10:00:00'),
+          ('DP2026004','C3001','DV_DON_SAN_BAY',1,  450000, 225000,'2026-09-15 12:00:00'),
+          ('DP2026004','C3001','DV_AN_SANG',    5,  900000, 450000,'2026-09-17 08:00:00'),
+          ('DP2026006','C0204','DV_GIAT_UI',    3,  180000,      0,'2026-10-21 09:00:00'),
+          ('DP2026007','W1401','DV_DON_SAN_BAY',1,  450000,      0,'2026-11-08 12:00:00'),
+          ('DP2026010','C1301','DV_AN_SANG',    2,  360000,      0,'2026-11-02 08:00:00')
+     ) AS d(ma_dp, ma_phong, ma_dv, sl, tt, giam, tgsd)
+         JOIN dat_phong          dp   ON dp.ma_dat_phong = d.ma_dp
+         JOIN dat_phong_chi_tiet dpct ON dpct.id_dat_phong = dp.id_dat_phong
+         JOIN phong              p    ON p.id_phong = dpct.id_phong AND p.ma_phong = d.ma_phong
+         JOIN dich_vu            dv   ON dv.ma_dich_vu = d.ma_dv;
 
 -- ---------------------------------------------------------------------
 -- LOP 6b: thanh_toan (10)
@@ -800,18 +860,26 @@ FROM (VALUES
 -- ---------------------------------------------------------------------
 INSERT INTO lich_su_dat_phong(id_dat_phong, id_nguoi_huy,
                               id_ma_giam_gia, so_tien_hoan, ghi_chu)
-SELECT dp.id_dat_phong, nv.id_nhan_vien, NULL,
+SELECT dp.id_dat_phong, nv.id_nhan_vien, mgg.id_ma_giam_gia,
        CAST(d.hoan AS NUMERIC(14,0)), d.ghi_chu
 FROM (VALUES
-          ('DP2026008','NV005',200000,N'Khach tu huy truoc 48h, hoan toan bo tien coc'),
-          ('DP2026009', NULL,       0,N'He thong tu huy do qua han xac nhan'),
-          ('DP2026003','NV004',500000,N'Khach yeu cau huy va dat lai')
-     ) AS d(ma_dp, ma_nv, hoan, ghi_chu)
-         JOIN dat_phong   dp ON dp.ma_dat_phong    = d.ma_dp
-         LEFT JOIN nhan_vien nv ON nv.ma_nhan_vien = d.ma_nv;
+          ('DP2026008','NV005', NULL, 200000,N'Khach tu huy truoc 48h, hoan toan bo tien coc vao the'),
+          ('DP2026009', NULL,  NULL,      0,N'He thong tu huy do qua han xac nhan'),
+          ('DP2026003','NV004', NULL, 500000,N'Khach yeu cau huy va dat lai'),
+          ('DP2026001','NV004', NULL,      0,N'Khach hoan tat ky nghi va tra phong dung han'),
+          ('DP2026002','NV005', NULL,      0,N'Xac nhan check-in, khach dang luu tru'),
+          ('DP2026004','NV004','VIP1M',    0,N'Khach VIP hoan tat ky nghi, tang voucher tri an'),
+          ('DP2026005','NV006', NULL,      0,N'Don cho khach thanh toan tien coc'),
+          ('DP2026006','NV005', NULL,      0,N'Check-out thanh cong, quy trinh don phong bat dau'),
+          ('DP2026007','NV004', NULL,      0,N'Khach da doi phong sang W1405 va tiep tuc luu tru'),
+          ('DP2026010','NV004', NULL,      0,N'Hoan tat thanh toan va xuat hoa don VAT')
+     ) AS d(ma_dp, ma_nv, ma_gg, hoan, ghi_chu)
+         JOIN dat_phong           dp  ON dp.ma_dat_phong    = d.ma_dp
+         LEFT JOIN nhan_vien      nv  ON nv.ma_nhan_vien    = d.ma_nv
+         LEFT JOIN ma_giam_gia    mgg ON mgg.ma_giam_gia    = d.ma_gg;
 
 -- ---------------------------------------------------------------------
--- LOP 6d: danh_gia (5) — chi dat phong DA_TRA_PHONG
+-- LOP 6d: danh_gia (10) — danh gia tu tat ca khach hang
 -- BIT: 0=hien thi, 1=an danh
 -- ---------------------------------------------------------------------
 INSERT INTO danh_gia(id_dat_phong, id_khach_hang,
@@ -822,11 +890,16 @@ SELECT dp.id_dat_phong, kh.id_khach_hang,
        CAST(d.bi_an AS BIT),
        d.ly_do_an
 FROM (VALUES
-          ('DP2026001','an.nguyen@gmail.com', 5,N'Phong sach se, nhan vien than thien. Se quay lai!',0,NULL),
-          ('DP2026004','cam.pham@gmail.com',  5,N'Dich vu 5 sao, xung dang voi gia tien cao cap.',  0,NULL),
-          ('DP2026006','linh.dang@gmail.com', 4,N'Phong dep, vi tri tot. An sang co the phong phu hon.',0,NULL),
-          ('DP2026010','an.nguyen@gmail.com', 4,N'Trai nghiem tot, se gioi thieu ban be.',           0,NULL),
-          ('DP2026007','manh.bui@gmail.com',  3,N'Phong binh thuong, dich vu cham.',                 1,N'Khach yeu cau an danh')
+          ('DP2026001','an.nguyen@gmail.com',  5,N'Phong sach se, nhan vien than thien. Se quay lai!',0,NULL),
+          ('DP2026002','ngoc.tran@gmail.com',  5,N'Phong view bien rat dep, gia dinh rat hai long.',  0,NULL),
+          ('DP2026003','hoang.le@gmail.com',   4,N'Thu tuc nhanh gon, phong Suite rong rai thoang mat.',0,NULL),
+          ('DP2026004','cam.pham@gmail.com',   5,N'Dich vu 5 sao, xung dang voi gia tien cao cap.',   0,NULL),
+          ('DP2026005','khoa.vo@gmail.com',    5,N'Dich vu dat phong tien loi, nhan vien chu dao.',   0,NULL),
+          ('DP2026006','linh.dang@gmail.com',  4,N'Phong dep, vi tri tot. An sang co the phong phu hon.',0,NULL),
+          ('DP2026007','manh.bui@gmail.com',   3,N'Phong binh thuong, dich vu hoi cham.',             1,N'Khach yeu cau an danh'),
+          ('DP2026008','nhu.ho@gmail.com',     4,N'Khach san ho tro huy phong nhanh, hoan tien uy tin vao the.',0,NULL),
+          ('DP2026009','quan.truong@gmail.com',5,N'Mong cho chuyen nghi duong Giang sinh sap toi!',  0,NULL),
+          ('DP2026010','an.nguyen@gmail.com',  4,N'Trai nghiem tot, se tiep tuc ung ho The Royal.',   0,NULL)
      ) AS d(ma_dp, email, diem, binh_luan, bi_an, ly_do_an)
          JOIN dat_phong  dp ON dp.ma_dat_phong = d.ma_dp
          JOIN khach_hang kh ON kh.email        = d.email;
@@ -914,5 +987,3 @@ SELECT bang, so_dong FROM (
                               UNION ALL SELECT 'bang_luong',          COUNT(*) FROM bang_luong
                               UNION ALL SELECT 'bang_thu_chi',        COUNT(*) FROM bang_thu_chi
                           ) t ORDER BY bang;
-
-COMMIT TRANSACTION;
