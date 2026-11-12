@@ -6,6 +6,10 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import entity.DatPhong;
+import entity.DatPhongChiTiet;
+import entity.TienNghi;
+
 
 import java.util.Properties;
 
@@ -27,14 +31,15 @@ public class HibernateConfig {
         properties.put(Environment.DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
         properties.put(Environment.URL, "jdbc:sqlserver://localhost:1433;databaseName=THE_ROYAL;encrypt=true;trustServerCertificate=true;");
         properties.put(Environment.USER, "sa");
-        properties.put(Environment.PASS, "81129");
+        properties.put(Environment.PASS, "abc123");
         properties.put(Environment.SHOW_SQL, "true");
         /*
             - Khai báo cho Hibernate biết các Class nào trong Java sẽ được ánh xạ xuống database
             - Khi ứng dụng chạy, Hibernate sẽ quét các class xxx1 và xxx2 (thường có annotation @Entity) để quản lý chúng.
         */
-        //conf.addAnnotatedClass(xxx1.class);
-        //conf.addAnnotatedClass(xxx2.class);
+        conf.addAnnotatedClass(TienNghi.class);
+        conf.addAnnotatedClass(DatPhong.class);
+        conf.addAnnotatedClass(DatPhongChiTiet.class);
 
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
