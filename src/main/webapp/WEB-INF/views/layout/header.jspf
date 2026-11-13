@@ -1,0 +1,25 @@
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<fmt:setLocale value="vi_VN"/>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><c:out value="${tieuDe}"/> - The Royal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="${ctx}/assets/royal.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="${ctx}/">The Royal</a>
+  <nav aria-label="Chức năng">
+    <a class="${menu eq 'tien-nghi' ? 'on' : ''}" href="${ctx}/tien-nghi">Tiện nghi</a>
+    <a class="${menu eq 'tim-phong' ? 'on' : ''}" href="${ctx}/dat-phong?action=timPhong">Tìm phòng</a>
+    <a class="${menu eq 'don' ? 'on' : ''}" href="${ctx}/dat-phong">Đơn đặt phòng</a>
+  </nav>
+</header>
+<main class="page">
+<c:if test="${not empty thongBao}"><p class="msg ok" role="status"><c:out value="${thongBao}"/></p></c:if>
+<c:if test="${not empty loi}"><p class="msg err" role="alert"><c:out value="${loi}"/></p></c:if>

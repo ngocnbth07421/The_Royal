@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cd56af3-4ea0-4d97-8d41-1a282377dc2f" name="Changes" comment="test 1">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/KhachLuuTruChiTiet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/LichSuDoiPhong.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Phong.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Phong.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/demo/ChayThuChucNang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/demo/ChayThuChucNang.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/LoaiPhong.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/LoaiPhong.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/DatPhongRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/repository/DatPhongRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/util/HibernateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/HibernateConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/util/TransactionHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/TransactionHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,6 +140,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ChayThuChucNang.executor": "Run",
     "Application.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -145,7 +148,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Smart Tomcat.Unnamed.executor": "Debug",
+    "Smart Tomcat.Unnamed.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "ducducdidu",
     "kotlin-language-version-configured": "true",
@@ -168,7 +171,20 @@
     ]
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Smart Tomcat.Unnamed">
+    <configuration name="ChayThuChucNang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="demo.ChayThuChucNang" />
+      <module name="The_Royal" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Unnamed" type="com.poratu.idea.plugins.tomcat" nameIsGenerated="true">
       <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
       <predefined_log_file enabled="true" id="Tomcat Access Log" />
@@ -178,6 +194,9 @@
       <option name="catalinaBase" value="C:\Users\admin\.SmartTomcat\ducducdidu\The_Royal" />
       <option name="contextPath" value="/The_Royal" />
       <option name="docBase" value="$PROJECT_DIR$/src/main/webapp" />
+      <option name="envOptions">
+        <map />
+      </option>
       <option name="extraClassPath" value="" />
       <option name="tomcatInfo">
         <TomcatInfo>
@@ -192,6 +211,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.ChayThuChucNang" />
+      <item itemvalue="Smart Tomcat.Unnamed" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ChayThuChucNang" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -224,11 +252,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/org/example/Main.java</url>
           <line>7</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/entity/Phong.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

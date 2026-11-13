@@ -61,7 +61,6 @@ public class ChayThuChucNang {
                 System.out.println("Hoàn tiền: " + ls.getSoTienHoan());
             }
         } finally {
-            HibernateConfig.getSessionFactory().close();
-        }
+            HibernateConfig.getFACTORY().close();        }
     }
 }

@@ -14,7 +14,7 @@ public final class TransactionHelper {
     private TransactionHelper() {}
 
     public static <T> T chay(Function<Session, T> congViec) {
-        try (Session s = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session s = HibernateConfig.getFACTORY().openSession()) {
             Transaction tx = s.beginTransaction();
             try {
                 T ketQua = congViec.apply(s);

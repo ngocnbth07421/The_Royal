@@ -1,0 +1,11 @@
+<%-- Dùng: <c:set var="tt" value="${...trangThai}"/> rồi include file này --%>
+<span class="badge st-${tt}"><c:choose>
+  <c:when test="${tt eq 'CHO_COC'}">Chờ cọc</c:when>
+  <c:when test="${tt eq 'DA_XAC_NHAN'}">Đã xác nhận</c:when>
+  <c:when test="${tt eq 'DANG_LUU_TRU'}">Đang lưu trú</c:when>
+  <c:when test="${tt eq 'DA_TRA_PHONG'}">Đã trả phòng</c:when>
+  <c:when test="${tt eq 'KHACH_HUY'}">Khách hủy</c:when>
+  <c:when test="${tt eq 'KHACH_SAN_HUY'}">Khách sạn hủy</c:when>
+  <c:when test="${tt eq 'TU_HUY'}">Tự hủy</c:when>
+  <c:otherwise><c:out value="${tt}"/></c:otherwise>
+</c:choose></span>

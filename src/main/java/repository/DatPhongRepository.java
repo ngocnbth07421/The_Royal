@@ -201,7 +201,7 @@ public class DatPhongRepository {
     }
 
     public void danhDauHuyChiTiet(Session s, Long idDatPhong) {
-        s.createMutationQuery("update DatPhongChiTiet c set c.trangThai = :tt where c.datPhong.id = :id")
+        s.createQuery("update DatPhongChiTiet c set c.trangThai = :tt where c.datPhong.id = :id")
                 .setParameter("tt", DatPhongChiTiet.DA_HUY)
                 .setParameter("id", idDatPhong)
                 .executeUpdate();

@@ -1,14 +1,11 @@
 package util;
 
+import entity.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
-
-import entity.DatPhong;
-import entity.DatPhongChiTiet;
-import entity.TienNghi;
 
 
 import java.util.Properties;
@@ -40,7 +37,14 @@ public class HibernateConfig {
         conf.addAnnotatedClass(TienNghi.class);
         conf.addAnnotatedClass(DatPhong.class);
         conf.addAnnotatedClass(DatPhongChiTiet.class);
-
+        conf.addAnnotatedClass(KhachHang.class);
+        conf.addAnnotatedClass(LichSuDatPhong.class);
+        conf.addAnnotatedClass(Phong.class);
+        conf.addAnnotatedClass(KhachLuuTruChiTiet.class);
+        conf.addAnnotatedClass(LichSuDoiPhong.class);
+        conf.addAnnotatedClass(LoaiPhong.class);
+        conf.addAnnotatedClass(entity.HangPhong.class);
+        conf.addAnnotatedClass(entity.LoaiGiuong.class);
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .applySettings(conf.getProperties()).build();
