@@ -1,11 +1,12 @@
 package util;
-
+import entity.khachhang;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
-
+import entity.sudungdichvu;
+import entity.dichvu;
 
 import java.util.Properties;
 
@@ -27,14 +28,17 @@ public class HibernateConfig {
         properties.put(Environment.DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
         properties.put(Environment.URL, "jdbc:sqlserver://localhost:1433;databaseName=THE_ROYAL;encrypt=true;trustServerCertificate=true;");
         properties.put(Environment.USER, "sa");
-        properties.put(Environment.PASS, "81129");
+        properties.put(Environment.PASS, "123456789");
         properties.put(Environment.SHOW_SQL, "true");
         /*
             - Khai báo cho Hibernate biết các Class nào trong Java sẽ được ánh xạ xuống database
             - Khi ứng dụng chạy, Hibernate sẽ quét các class xxx1 và xxx2 (thường có annotation @Entity) để quản lý chúng.
         */
-        //conf.addAnnotatedClass(xxx1.class);
-        //conf.addAnnotatedClass(xxx2.class);
+        conf.addAnnotatedClass(khachhang.class); // khi xảy ra lỗi sản phẩm í not mapped
+        conf.addAnnotatedClass(sudungdichvu.class);
+        conf.addAnnotatedClass(dichvu.class);
+//      conf.addAnnotatedClass(Sanphamchitiet.class);
+//        conf.addAnnotatedClass(xxx2.class);
 
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
@@ -47,7 +51,7 @@ public class HibernateConfig {
     public static SessionFactory getFACTORY() {
         return FACTORY;
     }
-
+    // tạo test
     public static void main(String[] args) {
         System.out.println(getFACTORY());
     }
