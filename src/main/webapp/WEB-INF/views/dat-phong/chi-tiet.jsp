@@ -4,79 +4,112 @@
 <c:set var="tieuDe" value="Đơn ${datPhong.maDatPhong}"/>
 <c:set var="menu" value="don"/>
 <%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<fmt:setLocale value="vi_VN"/>
 
-<div class="page-head">
-  <h1>Đơn <c:out value="${datPhong.maDatPhong}"/>
-    <c:set var="tt" value="${datPhong.trangThai}"/><%@ include file="/WEB-INF/views/layout/badge.jspf" %></h1>
-  <a class="btn" href="${ctx}/dat-phong">Về danh sách</a>
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">CHI TIẾT ĐƠN ĐẶT PHÒNG</div>
+        <h1><c:out value="${datPhong.maDatPhong}"/></h1>
+        <p><c:set var="tt" value="${datPhong.trangThai}"/><%@ include file="/WEB-INF/views/layout/badge.jspf" %></p>
+    </div>
+    <div class="heading-actions">
+        <a class="btn btn-ghost" href="${ctx}/dat-phong"><i class='bx bx-arrow-back'></i> Về danh sách</a>
+    </div>
 </div>
 
-<dl class="facts panel">
-  <div><dt>Khách hàng</dt><dd><c:out value="${datPhong.khachHang.hoTen}"/></dd></div>
-  <div><dt>Số điện thoại</dt><dd><c:out value="${datPhong.khachHang.soDienThoai}"/></dd></div>
-  <div><dt>Nhận phòng</dt><dd>${datPhong.thoiGianNhanPhong.toLocalDate()} lúc ${datPhong.thoiGianNhanPhong.toLocalTime()}</dd></div>
-  <div><dt>Trả phòng</dt><dd>${datPhong.thoiGianTraPhong.toLocalDate()} lúc ${datPhong.thoiGianTraPhong.toLocalTime()}</dd></div>
-  <div><dt>Số đêm</dt><dd>${datPhong.soDem}</dd></div>
-</dl>
+<div class="stack">
+    <div class="panel">
+        <dl class="facts">
+            <div><dt>Khách hàng</dt><dd><c:out value="${datPhong.khachHang.hoTen}"/></dd></div>
+            <div><dt>Số điện thoại</dt><dd><c:out value="${datPhong.khachHang.soDienThoai}"/></dd></div>
+            <div><dt>Nhận phòng</dt><dd>${datPhong.thoiGianNhanPhong.toLocalDate()} lúc ${datPhong.thoiGianNhanPhong.toLocalTime()}</dd></div>
+            <div><dt>Trả phòng</dt><dd>${datPhong.thoiGianTraPhong.toLocalDate()} lúc ${datPhong.thoiGianTraPhong.toLocalTime()}</dd></div>
+            <div><dt>Số đêm</dt><dd>${datPhong.soDem}</dd></div>
+        </dl>
+    </div>
 
-<h2>Phòng đã đặt</h2>
-<div class="table-wrap">
-  <table>
-    <thead><tr><th>Phòng</th><th>Loại phòng</th><th class="num">Người lớn</th><th class="num">Trẻ dưới 6</th><th class="num">Trẻ từ 6</th><th>Trạng thái</th></tr></thead>
-    <tbody>
-    <c:forEach var="ct" items="${datPhong.chiTiet}">
-      <tr>
-        <td><c:out value="${ct.phong.maPhong}"/></td>
-        <td><c:out value="${ct.phong.loaiPhong.ten}"/></td>
-        <td class="num">${ct.soNguoiLon}</td>
-        <td class="num">${ct.soTreEmDuoi6}</td>
-        <td class="num">${ct.soTreEmTu6Tuoi}</td>
-        <td><c:out value="${ct.trangThai eq 'HIEU_LUC' ? 'Có hiệu lực' : (ct.trangThai eq 'DA_HUY' ? 'Đã hủy' : (ct.trangThai eq 'DANG_LUU_TRU' ? 'Đang lưu trú' : 'Đã trả phòng'))}"/></td>
-      </tr>
-    </c:forEach>
-    </tbody>
-  </table>
+    <div>
+        <h3 class="section-title" style="margin-top:0">Phòng đã đặt</h3>
+        <div class="table-panel">
+            <div class="table-scroll">
+                <table>
+                    <thead><tr><th>Phòng</th><th>Loại phòng</th><th class="num">Người lớn</th><th class="num">Trẻ dưới 6</th><th class="num">Trẻ từ 6</th><th>Trạng thái</th></tr></thead>
+                    <tbody>
+                    <c:forEach var="ct" items="${datPhong.chiTiet}">
+                        <tr>
+                            <td><b><c:out value="${ct.phong.maPhong}"/></b></td>
+                            <td><c:out value="${ct.phong.loaiPhong.ten}"/></td>
+                            <td class="num">${ct.soNguoiLon}</td>
+                            <td class="num">${ct.soTreEmDuoi6}</td>
+                            <td class="num">${ct.soTreEmTu6Tuoi}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${ct.trangThai eq 'HIEU_LUC'}"><span class="status status-success"><span class="status-dot"></span>Có hiệu lực</span></c:when>
+                                    <c:when test="${ct.trangThai eq 'DANG_LUU_TRU'}"><span class="status status-occupied"><span class="status-dot"></span>Đang lưu trú</span></c:when>
+                                    <c:when test="${ct.trangThai eq 'DA_HUY'}"><span class="status status-danger"><span class="status-dot"></span>Đã hủy</span></c:when>
+                                    <c:otherwise><span class="status status-neutral"><span class="status-dot"></span>Đã trả phòng</span></c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="section-title" style="margin-top:0">Chi phí</h3>
+        <div class="pricing-calc-box">
+            <div class="calc-row"><span>Tiền phòng</span><span><fmt:formatNumber value="${datPhong.tienPhong}" groupingUsed="true"/> ₫</span></div>
+            <div class="calc-row"><span>Giảm giá</span><span>- <fmt:formatNumber value="${datPhong.giamGia}" groupingUsed="true"/> ₫</span></div>
+            <div class="calc-row"><span>Phí dịch vụ</span><span><fmt:formatNumber value="${datPhong.phiDichVu}" groupingUsed="true"/> ₫</span></div>
+            <div class="calc-row"><span>Thuế VAT</span><span><fmt:formatNumber value="${datPhong.thueVat}" groupingUsed="true"/> ₫</span></div>
+            <div class="calc-row total"><span>Tổng tiền</span><strong><fmt:formatNumber value="${datPhong.tongTien}" groupingUsed="true"/> ₫</strong></div>
+            <div class="calc-row"><span>Tiền cọc</span><span><fmt:formatNumber value="${datPhong.tienCoc}" groupingUsed="true"/> ₫</span></div>
+        </div>
+    </div>
+
+    <c:if test="${not empty lichSuHuy}">
+        <div class="policy-banner">
+            <div class="policy-icon"><i class='bx bx-receipt'></i></div>
+            <div class="policy-text">
+                <b>Thông tin hủy đơn</b>
+                <p>Số tiền hoàn lại: <strong><fmt:formatNumber value="${lichSuHuy.soTienHoan}" groupingUsed="true"/> ₫</strong>.
+                    <c:if test="${not empty lichSuHuy.ghiChu}"> Ghi chú: <c:out value="${lichSuHuy.ghiChu}"/></c:if></p>
+            </div>
+        </div>
+    </c:if>
+
+    <c:if test="${coTheHuy}">
+        <form class="panel" method="post" action="${ctx}/dat-phong"
+              onsubmit="return confirm('Hủy đơn này? Phòng sẽ được nhả cho khách khác đặt.');">
+            <input type="hidden" name="action" value="huy">
+            <input type="hidden" name="id" value="${datPhong.id}">
+            <div class="panel-head">
+                <div>
+                    <h3>Hủy đơn đặt phòng</h3>
+                    <div class="panel-sub">Số tiền hoàn được tính tự động theo thời điểm hủy và số tiền cọc đã thu.</div>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="loaiHuy">Người hủy</label>
+                    <select id="loaiHuy" name="loaiHuy">
+                        <option value="KHACH_HUY">Khách hủy</option>
+                        <option value="KHACH_SAN_HUY">Khách sạn hủy</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label for="ghiChu">Ghi chú <span class="field-hint">(tối đa 255 ký tự)</span></label>
+                    <textarea id="ghiChu" name="ghiChu" maxlength="255"></textarea>
+                </div>
+            </div>
+            <div class="action-bar end" style="margin-top:18px">
+                <button class="btn btn-danger" type="submit"><i class='bx bx-x-circle'></i> Hủy đơn đặt phòng</button>
+            </div>
+        </form>
+    </c:if>
 </div>
-
-<h2>Chi phí</h2>
-<div class="table-wrap money">
-  <table>
-    <tbody>
-      <tr><td>Tiền phòng</td><td><fmt:formatNumber value="${datPhong.tienPhong}" groupingUsed="true"/> ₫</td></tr>
-      <tr><td>Giảm giá</td><td>- <fmt:formatNumber value="${datPhong.giamGia}" groupingUsed="true"/> ₫</td></tr>
-      <tr><td>Phí dịch vụ</td><td><fmt:formatNumber value="${datPhong.phiDichVu}" groupingUsed="true"/> ₫</td></tr>
-      <tr><td>Thuế VAT</td><td><fmt:formatNumber value="${datPhong.thueVat}" groupingUsed="true"/> ₫</td></tr>
-      <tr class="total"><td>Tổng tiền</td><td><fmt:formatNumber value="${datPhong.tongTien}" groupingUsed="true"/> ₫</td></tr>
-      <tr><td>Tiền cọc</td><td><fmt:formatNumber value="${datPhong.tienCoc}" groupingUsed="true"/> ₫</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<c:if test="${not empty lichSuHuy}">
-  <h2>Thông tin hủy</h2>
-  <div class="panel">
-    <p>Số tiền hoàn lại: <strong><fmt:formatNumber value="${lichSuHuy.soTienHoan}" groupingUsed="true"/> ₫</strong></p>
-    <c:if test="${not empty lichSuHuy.ghiChu}"><p>Ghi chú: <c:out value="${lichSuHuy.ghiChu}"/></p></c:if>
-  </div>
-</c:if>
-
-<c:if test="${coTheHuy}">
-  <h2>Hủy đơn</h2>
-  <form class="panel form-stack" method="post" action="${ctx}/dat-phong"
-        onsubmit="return confirm('Hủy đơn này? Phòng sẽ được nhả cho khách khác đặt.');">
-    <input type="hidden" name="action" value="huy">
-    <input type="hidden" name="id" value="${datPhong.id}">
-    <label>Người hủy
-      <select name="loaiHuy">
-        <option value="KHACH_HUY">Khách hủy</option>
-        <option value="KHACH_SAN_HUY">Khách sạn hủy</option>
-      </select>
-    </label>
-    <label>Ghi chú
-      <textarea name="ghiChu" rows="3" maxlength="255"></textarea>
-    </label>
-    <div class="actions"><button class="btn danger" type="submit">Hủy đơn đặt phòng</button></div>
-  </form>
-</c:if>
 
 <%@ include file="/WEB-INF/views/layout/footer.jspf" %>

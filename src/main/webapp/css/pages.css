@@ -1,0 +1,672 @@
+/* ==========================================================================
+   THE ROYAL HOTEL — HỆ THỐNG QUẢN LÝ KHÁCH SẠN HOÀNG GIA
+   04. NỘI DUNG TỪNG TRANG: DASHBOARD & SƠ ĐỒ PHÒNG 2 TÒA NHÀ
+   (Clarence 30 tầng x 5 phòng & Windsor 30 tầng x 5 phòng = 300 phòng)
+   Tham khảo phong cách trình bày từ bài assm (Rõ ràng, thụt lề 4 dấu cách)
+   ========================================================================== */
+
+/* ==================== 1. TỔNG QUAN (DASHBOARD) ==================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.stat-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin: 12px 0 6px;
+    line-height: 1.1;
+}
+
+.stat-foot {
+    font-size: 11.5px;
+    color: var(--text-muted);
+}
+
+.stat-foot .positive {
+    color: var(--color-success);
+    font-weight: 700;
+}
+
+/* Lưới biểu đồ và tỷ lệ lấp đầy phòng */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 24px;
+}
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.panel-head h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+.panel-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.chart-wrap {
+    height: 240px;
+    position: relative;
+}
+
+/* Biểu đồ tròn Donut tình trạng phòng */
+.occupancy {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.donut {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(#6d9886 0 68%, #e8d9bf 68% 86%, #dce0dd 86%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.donut::after {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.donut-label {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.donut-label b {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-dark);
+    display: block;
+    line-height: 1.1;
+}
+
+.donut-label small {
+    font-size: 9.5px;
+    color: var(--text-muted);
+}
+
+.legend {
+    display: grid;
+    gap: 12px;
+    flex: 1;
+}
+
+.legend-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #555f58;
+}
+
+.legend-row span:first-child::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dot);
+    margin-right: 8px;
+}
+
+.legend-row b {
+    color: var(--color-dark);
+    font-size: 13px;
+}
+
+/* Hoạt động và đặt phòng gần đây */
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+}
+
+.activity {
+    display: grid;
+    gap: 14px;
+}
+
+.activity-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.activity-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.activity-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.activity-row b {
+    font-size: 12px;
+    color: var(--color-dark);
+    display: block;
+}
+
+.activity-row small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.activity-row time {
+    margin-left: auto;
+    color: #9ba29e;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* ==================== 2. SƠ ĐỒ PHÒNG (ROOM MANAGEMENT MAP) ==================== */
+/* Thanh chọn tòa nhà và ghi chú trạng thái */
+.room-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.building-tabs {
+    display: flex;
+    background: #e1e5e1;
+    padding: 4px;
+    border-radius: var(--radius-md);
+    gap: 4px;
+}
+
+.building-tab {
+    border: 0;
+    background: transparent;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    color: #555f58;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.building-tab:hover {
+    color: var(--color-dark);
+}
+
+.building-tab.active {
+    background: #ffffff;
+    color: var(--color-primary-dark);
+    box-shadow: 0 2px 8px rgba(34, 40, 49, 0.08);
+}
+
+.room-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.room-legend span {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.room-legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 6px;
+}
+
+/* Bố cục: Cột tầng bên trái (30 tầng) và Sơ đồ tầng bên phải */
+.room-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 18px;
+}
+
+/* Danh sách 30 tầng */
+.floor-list {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 16px 14px;
+    max-height: 640px;
+    display: flex;
+    flex-direction: column;
+}
+
+.floor-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.floor-list-head h3 {
+    font-size: 14px;
+    margin: 0;
+}
+
+.floor-list-head span {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.floor-scroll-container {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 4px;
+}
+
+.floor-btn {
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    text-align: left;
+    color: #5d6761;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.floor-btn:hover {
+    background: #edf3ef;
+    color: var(--color-primary-dark);
+}
+
+.floor-btn.active {
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.floor-btn small {
+    color: #8c9791;
+    font-size: 10.5px;
+}
+
+.floor-btn.active small {
+    color: #e2f1ea;
+}
+
+/* Khung hiển thị các phòng trên tầng */
+.map-panel {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.map-head h3 {
+    font-size: 17px;
+    margin: 0;
+}
+
+/* Lưới 5 phòng trên tầng */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+/* Thẻ phòng trực quan (Room Tile) */
+.room-tile {
+    border: 1px solid #dce4de;
+    background: #f7faf8;
+    border-radius: var(--radius-md);
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    user-select: none;
+}
+
+.room-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.room-tile.selected {
+    outline: 2.5px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(109, 152, 134, 0.2);
+}
+
+.room-tile-code {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-dark);
+}
+
+.room-tile-quality {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #6a4f1d;
+    background: #f6ecdc;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.room-tile-view {
+    font-size: 10px;
+    color: #0277bd;
+}
+
+.room-tile-status {
+    font-size: 10.5px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Màu trạng thái thẻ phòng */
+.room-tile.available {
+    background: #f1f8f3;
+    border-color: #cce3d2;
+}
+.room-tile.available .room-tile-status {
+    color: #2e7d32;
+}
+
+.room-tile.occupied {
+    background: #fffcf2;
+    border-color: #fae4ab;
+}
+.room-tile.occupied .room-tile-status {
+    color: #b78103;
+}
+
+.room-tile.maintenance {
+    background: #fdf5f5;
+    border-color: #f7d2d2;
+}
+.room-tile.maintenance .room-tile-status {
+    color: #c62828;
+}
+
+/* ==================== 3. KHUNG CHI TIẾT PHÒNG ĐƯỢC CHỌN ==================== */
+.room-detail-card {
+    background: #fbfcfb;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px 22px;
+    margin-top: auto;
+}
+
+.room-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.room-detail-info h4 {
+    font-size: 18px;
+    margin: 0 0 4px;
+    color: var(--color-dark);
+}
+
+.room-detail-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.room-detail-price {
+    text-align: right;
+}
+
+.room-detail-price b {
+    font-size: 18px;
+    color: var(--color-primary-dark);
+    display: block;
+}
+
+.room-detail-price small {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+/* Danh sách tiện nghi đã gắn cho phòng */
+.room-amenities-list {
+    margin: 12px 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+.room-amenities-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #555f58;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.room-amenity-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.amenity-pill {
+    background: #ffffff;
+    border: 1px solid #dce2de;
+    border-radius: var(--radius-sm);
+    padding: 3px 9px;
+    font-size: 11px;
+    color: #3b443e;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Hàng nút thao tác phòng */
+.room-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+    flex-wrap: wrap;
+}
+
+/* ==================== 4. TRANG LOẠI PHÒNG (ROOM TYPES CATALOG) ==================== */
+.roomtypes-showcase {
+    display: grid;
+    gap: 20px;
+}
+
+.type-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin: 10px 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.type-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.room-spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.room-spec-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.room-spec-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.room-spec-card h4 {
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: var(--color-dark);
+}
+
+.room-spec-card p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.room-spec-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: grid;
+    gap: 6px;
+}
+
+.room-spec-features li {
+    font-size: 11.5px;
+    color: #4b554e;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.room-spec-features li::before {
+    content: "✓";
+    color: var(--color-primary);
+    font-weight: 700;
+}

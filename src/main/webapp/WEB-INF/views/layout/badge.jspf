@@ -1,11 +1,13 @@
+<%@ page pageEncoding="UTF-8" %>
 <%-- Dùng: <c:set var="tt" value="${...trangThai}"/> rồi include file này --%>
-<span class="badge st-${tt}"><c:choose>
-  <c:when test="${tt eq 'CHO_COC'}">Chờ cọc</c:when>
-  <c:when test="${tt eq 'DA_XAC_NHAN'}">Đã xác nhận</c:when>
-  <c:when test="${tt eq 'DANG_LUU_TRU'}">Đang lưu trú</c:when>
-  <c:when test="${tt eq 'DA_TRA_PHONG'}">Đã trả phòng</c:when>
-  <c:when test="${tt eq 'KHACH_HUY'}">Khách hủy</c:when>
-  <c:when test="${tt eq 'KHACH_SAN_HUY'}">Khách sạn hủy</c:when>
-  <c:when test="${tt eq 'TU_HUY'}">Tự hủy</c:when>
-  <c:otherwise><c:out value="${tt}"/></c:otherwise>
-</c:choose></span>
+<c:choose>
+  <c:when test="${tt eq 'CHO_COC'}"><c:set var="stCls" value="status-warning"/><c:set var="stTxt" value="Chờ cọc"/></c:when>
+  <c:when test="${tt eq 'DA_XAC_NHAN'}"><c:set var="stCls" value="status-success"/><c:set var="stTxt" value="Đã xác nhận"/></c:when>
+  <c:when test="${tt eq 'DANG_LUU_TRU'}"><c:set var="stCls" value="status-occupied"/><c:set var="stTxt" value="Đang lưu trú"/></c:when>
+  <c:when test="${tt eq 'DA_TRA_PHONG'}"><c:set var="stCls" value="status-neutral"/><c:set var="stTxt" value="Đã trả phòng"/></c:when>
+  <c:when test="${tt eq 'KHACH_HUY'}"><c:set var="stCls" value="status-danger"/><c:set var="stTxt" value="Khách hủy"/></c:when>
+  <c:when test="${tt eq 'KHACH_SAN_HUY'}"><c:set var="stCls" value="status-danger"/><c:set var="stTxt" value="Khách sạn hủy"/></c:when>
+  <c:when test="${tt eq 'TU_HUY'}"><c:set var="stCls" value="status-danger"/><c:set var="stTxt" value="Tự hủy"/></c:when>
+  <c:otherwise><c:set var="stCls" value="status-neutral"/><c:set var="stTxt" value="${tt}"/></c:otherwise>
+</c:choose>
+<span class="status ${stCls}"><span class="status-dot"></span><c:out value="${stTxt}"/></span>

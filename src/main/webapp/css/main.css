@@ -1,0 +1,20 @@
+/* ==========================================================================
+   THE ROYAL HOTEL — HỆ THỐNG QUẢN LÝ KHÁCH SẠN HOÀNG GIA
+   MAIN STYLESHEET (TẬP HỢP CÁC PHẦN CSS THEO CẤU TRÚC CHUẨN)
+   Tham khảo phong cách trình bày từ bài assm (Chú thích phân đoạn rõ ràng)
+   ========================================================================== */
+
+/* 1. Thiết lập cơ sở, font chữ và biến màu */
+@import url('base.css');
+
+/* 2. Khung bố cục chính: Sidebar, Header, Content, Footer */
+@import url('layout.css');
+
+/* 3. Các thành phần giao diện: Nút bấm, Bảng, Biểu mẫu, Modal, Thông báo */
+@import url('components.css');
+
+/* 4. Nội dung chi tiết từng trang: Dashboard, Sơ đồ 300 phòng 2 tòa */
+@import url('pages.css');
+
+/* 5. Giao diện đáp ứng cho Tablet và Điện thoại di động */
+@import url('responsive.css');
