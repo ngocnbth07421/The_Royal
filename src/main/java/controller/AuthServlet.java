@@ -294,8 +294,15 @@ public class AuthServlet extends HttpServlet {
         session.setAttribute("forgotOtp", otp);
         session.setAttribute("forgotOtpTime", System.currentTimeMillis());
 
-        // Chuyển sang Bước 2: Nhập mã xác nhận (kèm mã demo để kiểm thử ngay)
-        resp.sendRedirect(req.getContextPath() + "/index.jsp?forgotStep=2&email=" + email + "&otpDemo=" + otp);
+        // Gửi email thật qua Gmail SMTP (bất đồng bộ)
+        boolean hasMailConfig = util.EmailUtil.isConfigured();
+        if (hasMailConfig) {
+            util.EmailUtil.guiEmailOtpAsync(email, otp);
+            resp.sendRedirect(req.getContextPath() + "/index.jsp?forgotStep=2&email=" + email + "&sentRealEmail=true");
+        } else {
+            // Nếu chưa điền App Password trong mail.properties thì hiển thị mã dự phòng để kiểm thử
+            resp.sendRedirect(req.getContextPath() + "/index.jsp?forgotStep=2&email=" + email + "&otpDemo=" + otp);
+        }
     }
 
     /**

@@ -359,11 +359,18 @@
                 <b style="color: #222831;">${param.email}</b>
             </p>
 
-            <!-- Hộp mã xác nhận OTP gửi về email (mô phỏng để test ngay lập tức) -->
+            <!-- Thông báo khi gửi email thật qua Gmail thành công -->
+            <c:if test="${param.sentRealEmail == 'true'}">
+                <div class="alert-box alert-success" style="margin-bottom: 14px;">
+                    <i class='bx bx-check-circle'></i> Mã xác thực đã được gửi đến hộp thư Gmail của bạn. Vui lòng kiểm tra Hộp thư đến (hoặc thư mục Spam / Rác)!
+                </div>
+            </c:if>
+
+            <!-- Hộp mã xác nhận OTP (hiển thị khi chưa cấu hình mật khẩu ứng dụng Gmail) -->
             <c:if test="${not empty param.otpDemo}">
                 <div class="alert-box alert-info" style="margin-bottom: 14px; display: block; text-align: center;">
                     <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
-                        <i class='bx bx-envelope'></i> Mã xác nhận vừa gửi tới email:
+                        <i class='bx bx-envelope'></i> Mã xác nhận (Chế độ mô phỏng khi chưa nhập App Password):
                     </div>
                     <div style="font-size: 22px; font-weight: 800; letter-spacing: 6px; color: #0d47a1;">${param.otpDemo}</div>
                     <div style="font-size: 10.5px; color: #546e7a; margin-top: 4px;">(Mã có hiệu lực trong 10 phút)</div>
