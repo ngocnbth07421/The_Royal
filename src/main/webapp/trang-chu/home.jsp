@@ -168,86 +168,226 @@
         /* Ma trận sơ đồ phòng */
         .matrix-container {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid #e5ebe7;
-            padding: 20px;
-            margin-bottom: 24px;
+            padding: 24px;
+            margin-bottom: 28px;
             box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         }
 
         .matrix-legend {
             display: flex;
-            gap: 18px;
-            margin-bottom: 16px;
+            gap: 20px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            font-size: 12px;
+            font-size: 12.5px;
             color: #49584e;
             font-weight: 600;
-            padding-bottom: 12px;
+            padding-bottom: 14px;
             border-bottom: 1px solid #f0f4f2;
         }
 
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+        .legend-item { display: flex; align-items: center; gap: 7px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
         .dot-ready { background: #2e7d32; }
         .dot-occupied { background: #1565c0; }
         .dot-cleaning { background: #f57f17; }
         .dot-maintain { background: #c62828; }
 
-        .floor-row {
+        /* Quick Floor Filter Tabs */
+        .floor-tabs-bar {
             display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 8px 0;
-            border-bottom: 1px dashed #e8eee9;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            border-bottom: 1px dashed #e5ebe7;
         }
 
-        .floor-label {
-            width: 80px;
-            font-size: 12px;
-            font-weight: 800;
-            color: #222831;
-            background: #eef2ef;
-            padding: 6px 10px;
-            border-radius: 6px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .floor-rooms {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-
-        .room-box {
-            flex: 1;
-            min-width: 120px;
-            max-width: 170px;
-            padding: 10px 12px;
+        .floor-tab-btn {
+            padding: 7px 15px;
             border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #f4f7f5;
+            color: #49584e;
             border: 1px solid #dce5df;
-            background: #fff;
             cursor: pointer;
+            white-space: nowrap;
             transition: all 0.2s ease;
-            position: relative;
         }
 
-        .room-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .floor-tab-btn:hover {
+            background: #eaf1ed;
+            color: #2b3a33;
             border-color: #557c56;
         }
 
-        .room-box.st-ready { border-left: 4px solid #2e7d32; }
-        .room-box.st-occupied { border-left: 4px solid #1565c0; background: #f6faff; }
-        .room-box.st-cleaning { border-left: 4px solid #f57f17; background: #fffcf5; }
-        .room-box.st-maintain { border-left: 4px solid #c62828; background: #fff8f8; }
+        .floor-tab-btn.active {
+            background: #557c56;
+            color: #ffffff;
+            border-color: #557c56;
+            box-shadow: 0 2px 6px rgba(85, 124, 86, 0.3);
+        }
 
-        .r-code { font-size: 13px; font-weight: 800; color: #222831; display: flex; justify-content: space-between; align-items: center; }
-        .r-type { font-size: 11px; color: #6b7a70; margin-top: 2px; }
-        .r-view { font-size: 10px; font-weight: 600; color: #006064; margin-top: 4px; }
+        .floor-row {
+            display: flex;
+            align-items: stretch;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f2;
+            transition: all 0.2s ease;
+        }
+
+        .floor-row:last-child {
+            border-bottom: none;
+        }
+
+        .floor-label {
+            width: 88px;
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #222831;
+            background: #f4f7f5;
+            padding: 12px 8px;
+            border-radius: 10px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: 1px solid #e2ece5;
+        }
+
+        .floor-label i {
+            font-size: 18px;
+            color: #557c56;
+        }
+
+        .floor-rooms {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .room-box {
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #dce5df;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 86px;
+            box-sizing: border-box;
+        }
+
+        .room-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            border-color: #557c56;
+        }
+
+        .room-box.st-ready {
+            border-left: 4px solid #2e7d32;
+            background: #ffffff;
+        }
+        .room-box.st-ready:hover {
+            background: #f9fdfa;
+        }
+
+        .room-box.st-occupied {
+            border-left: 4px solid #1565c0;
+            background: #f8fbff;
+        }
+        .room-box.st-occupied:hover {
+            background: #f0f6ff;
+        }
+
+        .room-box.st-cleaning {
+            border-left: 4px solid #f57f17;
+            background: #fffdf7;
+        }
+        .room-box.st-cleaning:hover {
+            background: #fff8e8;
+        }
+
+        .room-box.st-maintain {
+            border-left: 4px solid #c62828;
+            background: #fff9f9;
+        }
+        .room-box.st-maintain:hover {
+            background: #fff0f0;
+        }
+
+        .r-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .r-code {
+            font-size: 14px;
+            font-weight: 800;
+            color: #222831;
+            letter-spacing: 0.5px;
+        }
+
+        .r-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .badge-ready { background: #e8f5e9; color: #2e7d32; }
+        .badge-occupied { background: #e3f2fd; color: #1565c0; }
+        .badge-cleaning { background: #fff8e1; color: #f57f17; }
+        .badge-maintain { background: #ffebee; color: #c62828; }
+
+        .r-type {
+            font-size: 11.5px;
+            color: #49584e;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
+
+        .r-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            padding-top: 6px;
+            border-top: 1px dashed rgba(0,0,0,0.06);
+        }
+
+        .r-view {
+            font-weight: 600;
+            color: #006064;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .r-price {
+            font-weight: 800;
+            color: #b78103;
+        }
 
         /* ================================================================= */
         /* RIGHT SIDE PANEL (DRAWER CHI TIẾT PHÒNG BÊN PHẢI MÀN HÌNH)        */
@@ -609,142 +749,90 @@
                         <div class="legend-item"><span class="legend-dot dot-maintain"></span> Đang bảo trì kỹ thuật</div>
                     </div>
 
-                    <div style="max-height: 520px; overflow-y: auto; padding-right: 6px;">
+                    <!-- THANH CHỌN TẦNG NHANH: Xem rõ ràng, không bị kéo dọc quá dài -->
+                    <div class="floor-tabs-bar">
+                        <button type="button" class="floor-tab-btn active" onclick="filterFloorTab('ALL', this)">
+                            <i class='bx bx-grid-alt'></i> Tất cả các tầng
+                        </button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('1-5', this)">Tầng 1 - 5</button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('6-10', this)">Tầng 6 - 10</button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('11-15', this)">Tầng 11 - 15</button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('16-20', this)">Tầng 16 - 20</button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('21-25', this)">Tầng 21 - 25</button>
+                        <button type="button" class="floor-tab-btn" onclick="filterFloorTab('26-30', this)">Tầng 26 - 30</button>
+                    </div>
+
+                    <!-- KHU VỰC CÁC TẦNG & PHÒNG (CHIỀU CAO TỰ NHIÊN, KHÔNG CÓ CUỘN DỌC CỤC BỘ) -->
+                    <div class="matrix-floors-wrapper" id="matrixFloorsList">
                         <c:forEach items="${matrixFloors}" var="entry">
-                            <div class="floor-row">
+                            <div class="floor-row" data-floor="${entry.key}">
                                 <div class="floor-label">
-                                    <i class='bx bx-layer'></i> Tầng ${entry.key}
+                                    <i class='bx bx-layer'></i>
+                                    <span>Tầng ${entry.key < 10 ? '0' : ''}${entry.key}</span>
                                 </div>
                                 <div class="floor-rooms">
                                     <c:forEach items="${entry.value}" var="room">
                                         <c:set var="lpInfo" value="${mapLoaiPhong[room.idLoaiPhong]}" />
-                                        <c:set var="stClass" value="" />
+                                        <c:set var="stClass" value="st-ready" />
+                                        <c:set var="stBadge" value="badge-ready" />
+                                        <c:set var="stIcon" value="bx-check-circle" />
+                                        <c:set var="stText" value="Trống" />
                                         <c:choose>
-                                            <c:when test="${room.trangThai == 'SAN_SANG'}"><c:set var="stClass" value="st-ready" /></c:when>
-                                            <c:when test="${room.trangThai == 'DANG_O'}"><c:set var="stClass" value="st-occupied" /></c:when>
-                                            <c:when test="${room.trangThai == 'CAN_DON'}"><c:set var="stClass" value="st-cleaning" /></c:when>
-                                            <c:when test="${room.trangThai == 'BAO_TRI'}"><c:set var="stClass" value="st-maintain" /></c:when>
+                                            <c:when test="${room.trangThai == 'DANG_O'}">
+                                                <c:set var="stClass" value="st-occupied" />
+                                                <c:set var="stBadge" value="badge-occupied" />
+                                                <c:set var="stIcon" value="bx-user" />
+                                                <c:set var="stText" value="Đang ở" />
+                                            </c:when>
+                                            <c:when test="${room.trangThai == 'CAN_DON'}">
+                                                <c:set var="stClass" value="st-cleaning" />
+                                                <c:set var="stBadge" value="badge-cleaning" />
+                                                <c:set var="stIcon" value="bx-brush" />
+                                                <c:set var="stText" value="Cần dọn" />
+                                            </c:when>
+                                            <c:when test="${room.trangThai == 'BAO_TRI'}">
+                                                <c:set var="stClass" value="st-maintain" />
+                                                <c:set var="stBadge" value="badge-maintain" />
+                                                <c:set var="stIcon" value="bx-wrench" />
+                                                <c:set var="stText" value="Bảo trì" />
+                                            </c:when>
                                         </c:choose>
 
-                                        <!-- Khi click mở Drawer bên phải -->
+                                        <!-- Thẻ phòng sang trọng, thông thoáng -->
                                         <div class="room-box ${stClass}" 
                                              onclick="openRoomDrawer('${room.idPhong}', '${room.maPhong}', '${lpInfo != null ? lpInfo.ten : 'Phòng Tiêu Chuẩn'}', '${room.ghiChu}', '${lpInfo != null ? lpInfo.giaMoiDem : 0}', '${room.trangThai}', '${entry.key}', '${selectedBuildingCode == 'CL' ? 'Clarence' : 'Windsor'}')"
                                              title="Nhấp để xem chi tiết phòng ${room.maPhong}">
-                                            <div class="r-code">
-                                                <span>${room.maPhong}</span>
-                                                <c:choose>
-                                                    <c:when test="${room.trangThai == 'SAN_SANG'}"><i class='bx bx-plus-circle' style="color:#2e7d32;"></i></c:when>
-                                                    <c:when test="${room.trangThai == 'DANG_O'}"><i class='bx bx-user' style="color:#1565c0;"></i></c:when>
-                                                    <c:when test="${room.trangThai == 'CAN_DON'}"><i class='bx bx-brush' style="color:#f57f17;"></i></c:when>
-                                                    <c:when test="${room.trangThai == 'BAO_TRI'}"><i class='bx bx-wrench' style="color:#c62828;"></i></c:when>
-                                                </c:choose>
+                                            <div class="r-header">
+                                                <span class="r-code">${room.maPhong}</span>
+                                                <span class="r-badge ${stBadge}">
+                                                    <i class='bx ${stIcon}'></i> ${stText}
+                                                </span>
                                             </div>
-                                            <div class="r-type">${lpInfo != null ? lpInfo.ten : 'Phòng'}</div>
-                                            <div class="r-view">${room.ghiChu}</div>
+                                            <div class="r-type" title="${lpInfo != null ? lpInfo.ten : 'Phòng Tiêu Chuẩn'}">
+                                                ${lpInfo != null ? lpInfo.ten : 'Tiêu Chuẩn'}
+                                            </div>
+                                            <div class="r-footer">
+                                                <span class="r-view" title="${room.ghiChu}">
+                                                    ${room.ghiChu}
+                                                </span>
+                                                <span class="r-price">
+                                                    <fmt:formatNumber value="${lpInfo != null ? lpInfo.giaMoiDem : 0}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                                </span>
+                                            </div>
                                         </div>
                                     </c:forEach>
                                 </div>
                             </div>
                         </c:forEach>
+                        <c:if test="${empty matrixFloors}">
+                            <div style="padding: 40px; text-align: center; color: #8b9990;">
+                                <i class='bx bx-search' style="font-size: 36px; display: block; margin-bottom: 8px;"></i>
+                                Không tìm thấy phòng nào phù hợp với bộ lọc hiện tại.
+                            </div>
+                        </c:if>
                     </div>
                 </div>
 
-                <!-- 4. BẢNG DANH SÁCH CHI TIẾT PHÒNG: ĐÚNG 10 DÒNG / TRANG -->
-                <div class="card" style="padding: 0; overflow: hidden; background: #fff; border-radius: 12px; border: 1px solid #e5ebe7;">
-                    <div style="padding: 16px 20px; border-bottom: 1px solid #eef2ef; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                        <div>
-                            <h3 style="font-size: 15px; font-weight: 700; color: #222831; margin: 0 0 2px 0;">Danh Sách Chi Tiết Phòng Đã Lọc</h3>
-                            <small style="color: #6b7a70;">Hiển thị 10 dòng mỗi trang — Tổng cộng ${totalFiltered} phòng phù hợp</small>
-                        </div>
-                    </div>
-
-                    <div style="overflow-x: auto; width: 100%;">
-                        <table class="table" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                            <tr style="background: #f8faf9; border-bottom: 1px solid #e5ebe7; text-align: left;">
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">MÃ PHÒNG</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">VỊ TRÍ</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">LOẠI PHÒNG</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">TẦM NHÌN (VIEW)</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">GIÁ NIÊM YẾT / ĐÊM</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e;">TRẠNG THÁI</th>
-                                <th style="padding: 11px 16px; font-size: 12px; font-weight: 700; color: #49584e; text-align: center;">CHI TIẾT</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach items="${pagedRooms}" var="p">
-                                <c:set var="t" value="${mapTang[p.idTang]}" />
-                                <c:set var="tn" value="${t != null ? mapToaNha[t.idToaNha] : null}" />
-                                <c:set var="lp" value="${mapLoaiPhong[p.idLoaiPhong]}" />
-                                <tr style="border-bottom: 1px solid #f0f4f2;">
-                                    <td style="padding: 11px 16px; font-size: 13px; font-weight: 700; color: #222831;">${p.maPhong}</td>
-                                    <td style="padding: 11px 16px; font-size: 13px; color: #49584e;">Tòa ${tn != null ? tn.ten : 'Chung'} — Tầng ${t != null ? t.soTang : 'N/A'}</td>
-                                    <td style="padding: 11px 16px; font-size: 13px; font-weight: 600; color: #2b3a33;">${lp != null ? lp.ten : 'Tiêu chuẩn'}</td>
-                                    <td style="padding: 11px 16px; font-size: 12px; font-weight: 600; color: #006064;">${p.ghiChu}</td>
-                                    <td style="padding: 11px 16px; font-size: 13px; font-weight: 700; color: #b78103;">
-                                        <fmt:formatNumber value="${lp != null ? lp.giaMoiDem : 0}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
-                                    </td>
-                                    <td style="padding: 11px 16px; font-size: 12px;">
-                                        <c:choose>
-                                            <c:when test="${p.trangThai == 'SAN_SANG'}"><span class="badge" style="background:#e8f5e9; color:#2e7d32; padding: 4px 10px; border-radius: 12px; font-weight: 700;">Sẵn sàng</span></c:when>
-                                            <c:when test="${p.trangThai == 'DANG_O'}"><span class="badge" style="background:#e3f2fd; color:#1565c0; padding: 4px 10px; border-radius: 12px; font-weight: 700;">Đang ở</span></c:when>
-                                            <c:when test="${p.trangThai == 'CAN_DON'}"><span class="badge" style="background:#fff8e1; color:#f57f17; padding: 4px 10px; border-radius: 12px; font-weight: 700;">Cần dọn</span></c:when>
-                                            <c:when test="${p.trangThai == 'BAO_TRI'}"><span class="badge" style="background:#ffebee; color:#c62828; padding: 4px 10px; border-radius: 12px; font-weight: 700;">Bảo trì</span></c:when>
-                                        </c:choose>
-                                    </td>
-                                    <td style="padding: 11px 16px; text-align: center;">
-                                        <button type="button" class="btn btn-ghost" style="padding: 5px 12px; font-size: 12px;" onclick="openRoomDrawer('${p.idPhong}', '${p.maPhong}', '${lp != null ? lp.ten : 'Tiêu chuẩn'}', '${p.ghiChu}', '${lp != null ? lp.giaMoiDem : 0}', '${p.trangThai}', '${t != null ? t.soTang : 1}', '${tn != null ? tn.ten : 'Clarence'}')">
-                                            <i class='bx bx-sidebar'></i> Xem
-                                        </button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                            <c:if test="${empty pagedRooms}">
-                                <tr>
-                                    <td colspan="7" style="padding: 30px; text-align: center; color: #8b9990;">
-                                        <i class='bx bx-search' style="font-size: 32px; display: block; margin-bottom: 8px;"></i>
-                                        Không tìm thấy phòng nào phù hợp với bộ lọc hiện tại.
-                                    </td>
-                                </tr>
-                            </c:if>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- THANH ĐIỀU HƯỚNG PHÂN TRANG: 10 DÒNG/TRANG -->
-                    <div class="pagination-container">
-                        <span style="font-size: 12px; color: #6b7a70;">
-                            Đang xem trang <b>${currentPage}</b> / <b>${totalPages}</b> (10 dòng/trang)
-                        </span>
-
-                        <div style="display: flex; gap: 6px;">
-                            <c:set var="urlParams" value="building=${selectedBuildingCode}&tang=${filterTang}&loaiPhong=${filterLoaiPhong}&view=${filterView}&trangThai=${filterTrangThai}&search=${searchKeyword}" />
-
-                            <!-- Nút Trước -->
-                            <c:if test="${currentPage > 1}">
-                                <a href="${pageContext.request.contextPath}/trang-chu?${urlParams}&page=${currentPage - 1}" class="page-link-btn">
-                                    <i class='bx bx-chevron-left'></i> Trước
-                                </a>
-                            </c:if>
-
-                            <!-- Các trang lân cận -->
-                            <c:set var="startP" value="${currentPage - 2 > 1 ? currentPage - 2 : 1}" />
-                            <c:set var="endP" value="${startP + 4 < totalPages ? startP + 4 : totalPages}" />
-                            <c:forEach begin="${startP}" end="${endP}" var="pg">
-                                <a href="${pageContext.request.contextPath}/trang-chu?${urlParams}&page=${pg}" class="page-link-btn ${pg == currentPage ? 'active' : ''}">
-                                    ${pg}
-                                </a>
-                            </c:forEach>
-
-                            <!-- Nút Sau -->
-                            <c:if test="${currentPage < totalPages}">
-                                <a href="${pageContext.request.contextPath}/trang-chu?${urlParams}&page=${currentPage + 1}" class="page-link-btn">
-                                    Sau <i class='bx bx-chevron-right'></i>
-                                </a>
-                            </c:if>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <!-- THANH FOOTER CỐ ĐỊNH -->
@@ -958,6 +1046,31 @@
         function submitStatusChange(newStatus) {
             document.getElementById('drawerStatusNewVal').value = newStatus;
             document.getElementById('statusChangeForm').submit();
+        }
+
+        // Lọc tầng hiển thị nhanh ở sơ đồ (Không làm tải lại trang)
+        function filterFloorTab(range, btn) {
+            document.querySelectorAll('.floor-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const rows = document.querySelectorAll('.floor-row');
+            if (range === 'ALL') {
+                rows.forEach(r => r.style.display = 'flex');
+                return;
+            }
+
+            const parts = range.split('-');
+            const minF = parseInt(parts[0]);
+            const maxF = parseInt(parts[1]);
+
+            rows.forEach(r => {
+                const f = parseInt(r.getAttribute('data-floor'));
+                if (f >= minF && f <= maxF) {
+                    r.style.display = 'flex';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
         }
 
         // Bấm phím Escape đóng drawer

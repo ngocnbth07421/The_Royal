@@ -158,11 +158,11 @@ public class HomeServlet extends HttpServlet {
         int toIndex = Math.min(fromIndex + pageSize, totalFiltered);
         List<Phong> pagedRooms = (fromIndex < totalFiltered) ? filteredRooms.subList(fromIndex, toIndex) : Collections.emptyList();
 
-        // Chuẩn bị ma trận sơ đồ phòng theo Tầng (Matrix Floor -> Rooms)
+        // Chuẩn bị ma trận sơ đồ phòng theo Tầng (từ danh sách phòng đã lọc hoặc toàn bộ tòa nhà)
         Map<Integer, List<Phong>> matrixFloors = new TreeMap<>(Collections.reverseOrder());
-        for (Phong p : allRooms) {
+        for (Phong p : filteredRooms) {
             Tang t = mapTang.get(p.getIdTang());
-            if (t != null && selectedBuildingId != null && selectedBuildingId.equals(t.getIdToaNha())) {
+            if (t != null) {
                 matrixFloors.computeIfAbsent(t.getSoTang(), k -> new ArrayList<>()).add(p);
             }
         }
