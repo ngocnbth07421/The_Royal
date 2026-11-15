@@ -12,11 +12,10 @@
     <packaging>war</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>27</maven.compiler.release>
-        <junit.version>5.14.4</junit.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <junit.version>5.10.2</junit.version>
     </properties>
-
     <dependencies>
 
         <!-- Jakarta Servlet for Tomcat 10.1 -->
@@ -60,7 +59,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
 
@@ -88,7 +87,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
                 <configuration>
-                    <release>27</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
 
