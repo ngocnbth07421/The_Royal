@@ -48,8 +48,9 @@
         }
 
         .content {
-            padding: 24px 32px 48px;
+            padding: 20px 24px 48px;
             flex: 1;
+            width: 100%;
             max-width: 100%;
             box-sizing: border-box;
             overflow-x: hidden;
@@ -171,8 +172,10 @@
             background: #fff;
             border-radius: 14px;
             border: 1px solid #e5ebe7;
-            padding: 24px;
+            padding: 18px 20px;
             margin-bottom: 28px;
+            width: 100%;
+            max-width: 100%;
             box-sizing: border-box;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         }
@@ -201,14 +204,16 @@
         .floor-tabs-bar {
             display: flex;
             gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 14px;
-            margin-bottom: 18px;
+            flex-wrap: wrap;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
             border-bottom: 1px dashed #e5ebe7;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .floor-tab-btn {
-            padding: 7px 15px;
+            padding: 6px 13px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 700;
@@ -236,10 +241,13 @@
         .floor-row {
             display: flex;
             align-items: stretch;
-            gap: 16px;
-            padding: 12px 0;
+            gap: 10px;
+            padding: 8px 0;
             border-bottom: 1px solid #f0f4f2;
             transition: all 0.2s ease;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .floor-row:last-child {
@@ -247,12 +255,13 @@
         }
 
         .floor-label {
-            width: 88px;
-            font-size: 12.5px;
+            width: 72px;
+            min-width: 72px;
+            font-size: 11.5px;
             font-weight: 800;
             color: #222831;
             background: #f4f7f5;
-            padding: 12px 8px;
+            padding: 8px 4px;
             border-radius: 10px;
             text-align: center;
             flex-shrink: 0;
@@ -260,27 +269,29 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
             border: 1px solid #e2ece5;
+            box-sizing: border-box;
         }
 
         .floor-label i {
-            font-size: 18px;
+            font-size: 16px;
             color: #557c56;
         }
 
         .floor-rooms {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
             flex: 1;
+            min-width: 0;
             width: 100%;
             box-sizing: border-box;
         }
 
         .room-box {
-            padding: 12px 14px;
-            border-radius: 10px;
+            padding: 8px 10px;
+            border-radius: 9px;
             border: 1px solid #dce5df;
             background: #ffffff;
             cursor: pointer;
@@ -289,13 +300,15 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 86px;
+            min-height: 74px;
             box-sizing: border-box;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .room-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
             border-color: #557c56;
         }
 
@@ -343,24 +356,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
+            gap: 4px;
+            min-width: 0;
         }
 
         .r-code {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             color: #222831;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         .r-badge {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 10px;
+            padding: 2px 5px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         .badge-ready { background: #e8f5e9; color: #2e7d32; }
         .badge-reserved { background: #f3e5f5; color: #8e24aa; }
@@ -369,22 +387,25 @@
         .badge-maintain { background: #ffebee; color: #c62828; }
 
         .r-type {
-            font-size: 11.5px;
+            font-size: 10.5px;
             color: #49584e;
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            min-width: 0;
         }
 
         .r-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
-            padding-top: 6px;
+            font-size: 10px;
+            padding-top: 4px;
             border-top: 1px dashed rgba(0,0,0,0.06);
+            min-width: 0;
+            gap: 4px;
         }
 
         .r-view {
@@ -392,12 +413,20 @@
             color: #006064;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            flex: 1;
         }
 
         .r-price {
             font-weight: 800;
             color: #b78103;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-size: 10.5px;
         }
 
         /* ================================================================= */
@@ -840,7 +869,12 @@
                                             </div>
                                             <div class="r-footer">
                                                 <span class="r-view" title="${room.ghiChu}">
-                                                    ${room.ghiChu}
+                                                    <c:choose>
+                                                        <c:when test="${room.ghiChu != null && room.ghiChu.contains('Ocean')}">🌊 Hướng biển</c:when>
+                                                        <c:when test="${room.ghiChu != null && room.ghiChu.contains('City')}">🏙️ Hướng phố</c:when>
+                                                        <c:when test="${room.ghiChu != null && room.ghiChu.contains('Mountain')}">⛰️ Hướng núi</c:when>
+                                                        <c:otherwise>${room.ghiChu}</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                                 <span class="r-price">
                                                     <fmt:formatNumber value="${lpInfo != null ? lpInfo.giaMoiDem : 0}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>

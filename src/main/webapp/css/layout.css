@@ -81,11 +81,12 @@
 }
 
 .brand-sub {
-    font-size: 8.5px;
-    letter-spacing: 2px;
+    font-size: 8px;
+    letter-spacing: 1px;
     color: #aeb8b3;
     margin-top: 3px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 /* Nhãn phân mục điều hướng */
@@ -215,6 +216,9 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+    box-sizing: border-box;
     background: transparent; /* Hiển thị nền gradient từ photogradient (#222831 & #EEEEEE) */
 }
 
@@ -450,10 +454,13 @@
 
 /* ==================== KHU VỰC NỘI DUNG (CONTENT) ==================== */
 .content {
-    padding: 28px 36px 45px;
+    padding: 20px 24px 45px;
     flex: 1;
     position: relative;
     isolation: isolate;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Tiêu đề trang */
