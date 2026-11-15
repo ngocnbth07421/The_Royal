@@ -42,7 +42,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
             width: 100%;
-            max-width: 440px;
+            max-width: 450px;
             padding: 40px 36px;
             box-sizing: border-box;
             position: relative;
@@ -52,7 +52,7 @@
 
         .login-brand {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .login-logo {
@@ -165,9 +165,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            line-height: 1.4;
         }
         .alert-error { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
         .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .alert-info { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
 
         /* Modal popup */
         .modal-wrap {
@@ -182,12 +184,54 @@
         .modal-body-custom {
             background: #fff;
             padding: 28px;
-            border-radius: 14px;
+            border-radius: 16px;
             width: 90%;
-            max-width: 420px;
+            max-width: 440px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             box-sizing: border-box;
+            position: relative;
         }
+
+        /* Demo role chips */
+        .demo-roles {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2d2ba;
+        }
+        .demo-roles-title {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7a70;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .role-chip {
+            background: #f7faf8;
+            border: 1px solid #d8e4dc;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 11.5px;
+            color: #2b3a33;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .role-chip:hover {
+            background: #557c56;
+            color: #ffffff;
+            border-color: #557c56;
+        }
+        .role-chip i { font-size: 14px; }
     </style>
 </head>
 
@@ -201,7 +245,7 @@
             <div class="hotel-sub">HOTEL MANAGEMENT SYSTEM</div>
         </div>
 
-        <!-- Thông báo phản hồi hệ thống -->
+        <!-- THÔNG BÁO HỆ THỐNG -->
         <c:if test="${param.error == 'not_found'}">
             <div class="alert-box alert-error"><i class='bx bx-error-circle'></i> Tài khoản không tồn tại trên hệ thống!</div>
         </c:if>
@@ -217,31 +261,35 @@
         <c:if test="${param.error == 'email_exists'}">
             <div class="alert-box alert-error"><i class='bx bx-error'></i> Email này đã được đăng ký trước đó!</div>
         </c:if>
+        <c:if test="${param.error == 'phone_exists'}">
+            <div class="alert-box alert-error"><i class='bx bx-error'></i> Số điện thoại này đã có tài khoản khách hàng!</div>
+        </c:if>
         <c:if test="${param.msg == 'require_login'}">
             <div class="alert-box alert-error"><i class='bx bx-log-in-circle'></i> Vui lòng đăng nhập để truy cập hệ thống!</div>
         </c:if>
         <c:if test="${param.msg == 'logged_out'}">
             <div class="alert-box alert-success"><i class='bx bx-check-circle'></i> Bạn đã đăng xuất thành công khỏi hệ thống!</div>
         </c:if>
-        <c:if test="${param.msg == 'register_success'}">
-            <div class="alert-box alert-success"><i class='bx bx-check-circle'></i> Đăng ký thành công! Bạn có thể đăng nhập ngay.</div>
+        <c:if test="${param.msg == 'reset_success'}">
+            <div class="alert-box alert-success"><i class='bx bx-check-circle'></i> <b>Đổi mật khẩu thành công!</b> Bạn có thể đăng nhập bằng mật khẩu mới.</div>
         </c:if>
-        <c:if test="${param.msg == 'pwd_reset_success'}">
-            <div class="alert-box alert-success"><i class='bx bx-check-circle'></i> Mật khẩu đã được reset về mặc định: <b>123456</b></div>
+        <c:if test="${param.msg == 'register_customer_success'}">
+            <div class="alert-box alert-success"><i class='bx bx-check-circle'></i> Đăng ký tài khoản khách hàng thành công! Bạn có thể đăng nhập ngay.</div>
         </c:if>
 
-        <!-- Form Đăng Nhập Chính Thức -->
+        <!-- FORM ĐĂNG NHẬP CHÍNH THỨC: HỖ TRỢ EMAIL HOẶC SỐ ĐIỆN THOẠI HOẶC MÃ NV -->
         <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
             <div class="input-group">
-                <label class="form-label" for="taiKhoan">Email hoặc Mã Nhân Viên</label>
+                <label class="form-label" for="taiKhoan">Email hoặc Số điện thoại</label>
                 <i class='bx bx-user'></i>
-                <input type="text" id="taiKhoan" name="taiKhoan" class="form-input" placeholder="VD: lananh.tran@theroyal.com hoặc NV002" required autofocus>
+                <input type="text" id="taiKhoan" name="taiKhoan" class="form-input"
+                       placeholder="Email, Số điện thoại hoặc Mã NV" required autofocus>
             </div>
 
             <div class="input-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                     <label class="form-label" for="password" style="margin-bottom: 0;">Mật Khẩu</label>
-                    <a href="javascript:void(0)" onclick="openModal('forgotModal')" style="font-size: 12px; color: #557c56; text-decoration: none; font-weight: 600;">Quên mật khẩu?</a>
+                    <a href="javascript:void(0)" onclick="openModal('forgotStep1Modal')" style="font-size: 12px; color: #557c56; text-decoration: none; font-weight: 600;">Quên mật khẩu?</a>
                 </div>
                 <i class='bx bx-lock-alt' style="top: 38px;"></i>
                 <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
@@ -251,75 +299,254 @@
                 <i class='bx bx-log-in'></i> Đăng Nhập Vào Hệ Thống
             </button>
 
+            <!-- ĐĂNG KÝ TÀI KHOẢN CHỈ CHO KHÁCH HÀNG (LÀM SAU) CÓ SỐ ĐIỆN THOẠI -->
             <div style="text-align: center; margin-top: 18px; font-size: 13px; color: #6b7a70;">
-                Chưa có tài khoản? <a href="javascript:void(0)" onclick="openModal('registerModal')" style="color: #557c56; font-weight: 700; text-decoration: none;">Đăng ký ngay</a>
+                Chưa có tài khoản khách hàng?
+                <a href="javascript:void(0)" onclick="openModal('registerCustomerModal')" style="color: #557c56; font-weight: 700; text-decoration: none;">Đăng ký ngay</a>
             </div>
         </form>
+
+        <!-- CHỌN NHANH VAI TRÒ ĐĂNG NHẬP (DEMO DỮ LIỆU CÓ SẴN CẢ EMAIL & SỐ ĐIỆN THOẠI) -->
+        <div class="demo-roles">
+            <div class="demo-roles-title">Chọn nhanh tài khoản kiểm thử:</div>
+            <div class="role-grid">
+                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('lananh.tran@theroyal.com', '123456')">
+                    <i class='bx bx-shield-quarter'></i> Quản lý (Lan Anh)
+                </a>
+                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('0901111004', '123456')">
+                    <i class='bx bx-phone'></i> SĐT Lễ tân (0901...)
+                </a>
+                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('thu.bui@theroyal.com', '123456')">
+                    <i class='bx bx-brush'></i> Dọn phòng (Thu Bùi)
+                </a>
+                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('bich.ho@theroyal.com', '123456')">
+                    <i class='bx bx-calculator'></i> Kế toán (Hồ Bích)
+                </a>
+            </div>
+            <div style="margin-top: 8px;">
+                <a class="role-chip" style="justify-content: center; font-weight: 700;" href="javascript:void(0)" onclick="quickFill('ngocnbth07421@gmail.com', '123456')">
+                    <i class='bx bx-crown'></i> Quản trị viên Admin (Bảo Ngọc)
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- MODAL 1: ĐĂNG KÝ TÀI KHOẢN -->
-    <div class="modal-wrap" id="registerModal">
+    <!-- ===================================================================== -->
+    <!-- MODAL ĐĂNG KÝ TÀI KHOẢN: CHỈ DÀNH CHO KHÁCH HÀNG (CÓ SỐ ĐIỆN THOẠI)   -->
+    <!-- (Tài khoản nhân viên do Quản lý và Admin thêm trong hệ thống)          -->
+    <!-- ===================================================================== -->
+    <div class="modal-wrap" id="registerCustomerModal">
         <div class="modal-body-custom">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;"><i class='bx bx-user-plus'></i> Đăng Ký Tài Khoản</h3>
-                <span onclick="closeModal('registerModal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;">
+                    <i class='bx bx-user-plus' style="color: #557c56;"></i> Đăng Ký Tài Khoản Khách Hàng
+                </h3>
+                <span onclick="closeModal('registerCustomerModal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
             </div>
+
+            <div style="background: #f0f7f2; border: 1px solid #d4e8d8; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #3b6041; margin-bottom: 16px; line-height: 1.4;">
+                <i class='bx bx-info-circle'></i> <b>Lưu ý:</b> Cổng đăng ký tài khoản tự do <b>chỉ dành cho Khách hàng</b> (đặt phòng & thành viên tích điểm). Tài khoản cán bộ nhân viên do <b>Quản lý hoặc Admin</b> trực tiếp cấp trong phân hệ Quản lý nhân viên.
+            </div>
+
             <form action="${pageContext.request.contextPath}/dang-ky" method="post">
                 <div style="margin-bottom: 12px;">
-                    <label class="form-label">Email tài khoản <span style="color:red">*</span></label>
-                    <input type="email" name="email" class="form-input" style="padding-left: 14px;" placeholder="name@theroyal.com" required>
+                    <label class="form-label">Họ và tên khách hàng <span style="color:red">*</span></label>
+                    <input type="text" name="hoTen" class="form-input" style="padding-left: 14px;" placeholder="VD: Nguyễn Văn An" required>
                 </div>
                 <div style="margin-bottom: 12px;">
+                    <label class="form-label">Số điện thoại liên hệ <span style="color:red">*</span></label>
+                    <input type="tel" name="soDienThoai" class="form-input" style="padding-left: 14px;" placeholder="VD: 0912001001" required>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label">Email tài khoản <span style="color:red">*</span></label>
+                    <input type="email" name="email" class="form-input" style="padding-left: 14px;" placeholder="an.nguyen@gmail.com" required>
+                </div>
+                <div style="margin-bottom: 18px;">
                     <label class="form-label">Mật khẩu khởi tạo <span style="color:red">*</span></label>
                     <input type="password" name="matKhau" class="form-input" style="padding-left: 14px;" placeholder="••••••••" required>
                 </div>
-                <div style="margin-bottom: 18px;">
-                    <label class="form-label">Vai trò mong muốn</label>
-                    <select name="idVaiTro" class="form-input" style="padding-left: 14px;">
-                        <option value="2">Nhân viên Lễ tân</option>
-                        <option value="3">Nhân viên Dọn phòng</option>
-                        <option value="4">Nhân viên Kế toán</option>
-                        <option value="5">Quản lý</option>
-                        <option value="6">Quản trị viên (Admin)</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-submit"><i class='bx bx-check'></i> Xác Nhận Đăng Ký</button>
+                <button type="submit" class="btn-submit"><i class='bx bx-check'></i> Xác Nhận Đăng Ký Khách Hàng</button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 2: QUÊN MẬT KHẨU -->
-    <div class="modal-wrap" id="forgotModal">
+    <!-- ===================================================================== -->
+    <!-- QUY TRÌNH QUÊN MẬT KHẨU THEO CHUẨN SƠ ĐỒ HOẠT ĐỘNG (HÌNH 3)           -->
+    <!-- BƯỚC 1: NHẬP EMAIL & KIỂM TRA TỒN TẠI                                -->
+    <!-- ===================================================================== -->
+    <div class="modal-wrap" id="forgotStep1Modal">
         <div class="modal-body-custom">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;"><i class='bx bx-help-circle'></i> Quên Mật Khẩu</h3>
-                <span onclick="closeModal('forgotModal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
+                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;">
+                    <i class='bx bx-mail-send' style="color: #557c56;"></i> Quên Mật Khẩu (Bước 1/3)
+                </h3>
+                <span onclick="closeModal('forgotStep1Modal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
             </div>
+
             <p style="font-size: 13px; color: #6b7a70; margin-bottom: 14px; line-height: 1.5;">
-                Nhập email tài khoản của bạn để hệ thống tự động reset mật khẩu về mặc định: <b>123456</b>
+                Vui lòng nhập địa chỉ Email đăng ký tài khoản. Hệ thống sẽ kiểm tra và gửi mã xác nhận OTP 6 số đến hòm thư của bạn.
             </p>
-            <form action="${pageContext.request.contextPath}/quen-mat-khau" method="post">
-                <div style="margin-bottom: 16px;">
-                    <label class="form-label">Email tài khoản</label>
-                    <input type="email" name="email" class="form-input" style="padding-left: 14px;" placeholder="name@theroyal.com" required>
+
+            <c:if test="${param.error == 'email_not_found'}">
+                <div class="alert-box alert-error" style="margin-bottom: 14px;">
+                    <i class='bx bx-error-circle'></i> Email [<b>${param.inputEmail}</b>] không tồn tại trên hệ thống! Vui lòng thử lại.
                 </div>
-                <button type="submit" class="btn-submit"><i class='bx bx-refresh'></i> Khôi Phục Mật Khẩu</button>
+            </c:if>
+
+            <form action="${pageContext.request.contextPath}/quen-mat-khau" method="post">
+                <div style="margin-bottom: 18px;">
+                    <label class="form-label">Email tài khoản</label>
+                    <input type="email" name="email" class="form-input" style="padding-left: 14px;"
+                           placeholder="name@theroyal.com hoặc user@gmail.com"
+                           value="${param.inputEmail != null ? param.inputEmail : ''}" required>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class='bx bx-send'></i> Gửi Mã Xác Nhận Qua Email
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- BƯỚC 2: NHẬP MÃ XÁC NHẬN GỬI VỀ EMAIL                                 -->
+    <!-- ===================================================================== -->
+    <div class="modal-wrap" id="forgotStep2Modal">
+        <div class="modal-body-custom">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;">
+                    <i class='bx bx-check-shield' style="color: #557c56;"></i> Nhập Mã Xác Nhận (Bước 2/3)
+                </h3>
+                <span onclick="closeModal('forgotStep2Modal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
+            </div>
+
+            <p style="font-size: 13px; color: #6b7a70; margin-bottom: 12px; line-height: 1.5;">
+                Hệ thống đã gửi mã xác nhận 6 số đến email: <br>
+                <b style="color: #222831;">${param.email}</b>
+            </p>
+
+            <!-- Hộp mã xác nhận OTP gửi về email (mô phỏng để test ngay lập tức) -->
+            <c:if test="${not empty param.otpDemo}">
+                <div class="alert-box alert-info" style="margin-bottom: 14px; display: block; text-align: center;">
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                        <i class='bx bx-envelope'></i> Mã xác nhận vừa gửi tới email:
+                    </div>
+                    <div style="font-size: 22px; font-weight: 800; letter-spacing: 6px; color: #0d47a1;">${param.otpDemo}</div>
+                    <div style="font-size: 10.5px; color: #546e7a; margin-top: 4px;">(Mã có hiệu lực trong 10 phút)</div>
+                </div>
+            </c:if>
+
+            <c:if test="${param.error == 'wrong_otp'}">
+                <div class="alert-box alert-error" style="margin-bottom: 14px;">
+                    <i class='bx bx-error-circle'></i> Mã xác nhận không chính xác! Vui lòng nhập lại.
+                </div>
+            </c:if>
+            <c:if test="${param.error == 'otp_expired'}">
+                <div class="alert-box alert-error" style="margin-bottom: 14px;">
+                    <i class='bx bx-time-five'></i> Mã xác nhận đã hết hiệu lực! Vui lòng yêu cầu mã mới.
+                </div>
+            </c:if>
+
+            <form action="${pageContext.request.contextPath}/xac-nhan-ma" method="post">
+                <div style="margin-bottom: 18px;">
+                    <label class="form-label">Nhập mã xác nhận (OTP 6 số)</label>
+                    <input type="text" name="maXacNhan" class="form-input"
+                           style="padding-left: 14px; text-align: center; font-size: 18px; letter-spacing: 4px; font-weight: 700;"
+                           placeholder="••••••" maxlength="6" required autofocus>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class='bx bx-check-circle'></i> Xác Nhận Mã
+                </button>
+            </form>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px;">
+                <a href="${pageContext.request.contextPath}/index.jsp?forgotStep=1&inputEmail=${param.email}" style="color: #6b7a70; text-decoration: none;">
+                    <i class='bx bx-left-arrow-alt'></i> Đổi email khác
+                </a>
+                <form action="${pageContext.request.contextPath}/quen-mat-khau" method="post" style="margin: 0;">
+                    <input type="hidden" name="email" value="${param.email}">
+                    <button type="submit" style="background: none; border: none; color: #557c56; font-weight: 700; cursor: pointer; padding: 0;">
+                        <i class='bx bx-refresh'></i> Gửi lại mã
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- BƯỚC 3: ĐẶT MẬT KHẨU MỚI & CẬP NHẬT DATABASE                          -->
+    <!-- ===================================================================== -->
+    <div class="modal-wrap" id="forgotStep3Modal">
+        <div class="modal-body-custom">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831;">
+                    <i class='bx bx-lock-open-alt' style="color: #557c56;"></i> Đặt Mật Khẩu Mới (Bước 3/3)
+                </h3>
+                <span onclick="closeModal('forgotStep3Modal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
+            </div>
+
+            <p style="font-size: 13px; color: #6b7a70; margin-bottom: 14px; line-height: 1.5;">
+                Mã xác nhận hợp lệ. Vui lòng thiết lập mật khẩu mới cho tài khoản: <br>
+                <b style="color: #222831;">${param.email}</b>
+            </p>
+
+            <c:if test="${param.error == 'pwd_not_match'}">
+                <div class="alert-box alert-error" style="margin-bottom: 14px;">
+                    <i class='bx bx-error-circle'></i> Mật khẩu xác nhận không khớp!
+                </div>
+            </c:if>
+
+            <form action="${pageContext.request.contextPath}/dat-lai-mat-khau" method="post">
+                <div style="margin-bottom: 12px;">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" name="matKhauMoi" class="form-input" style="padding-left: 14px;" placeholder="••••••••" required autofocus>
+                </div>
+                <div style="margin-bottom: 18px;">
+                    <label class="form-label">Xác nhận mật khẩu mới</label>
+                    <input type="password" name="xacNhanMatKhau" class="form-input" style="padding-left: 14px;" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class='bx bx-save'></i> Cập Nhật Mật Khẩu Mới
+                </button>
             </form>
         </div>
     </div>
 
     <script>
         function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'flex';
         }
 
         function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'none';
         }
 
         window.onclick = function(event) {
             if (event.target.classList.contains('modal-wrap')) {
                 event.target.style.display = 'none';
+            }
+        };
+
+        function quickFill(user, pwd) {
+            document.getElementById('taiKhoan').value = user;
+            document.getElementById('password').value = pwd;
+        }
+
+        // Tự động mở đúng modal khi có tham số bước Quên Mật Khẩu từ URL
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const forgotStep = urlParams.get('forgotStep');
+            const modal = urlParams.get('modal');
+
+            if (forgotStep === '1') {
+                openModal('forgotStep1Modal');
+            } else if (forgotStep === '2') {
+                openModal('forgotStep2Modal');
+            } else if (forgotStep === '3') {
+                openModal('forgotStep3Modal');
+            } else if (modal === 'register') {
+                openModal('registerCustomerModal');
             }
         };
     </script>

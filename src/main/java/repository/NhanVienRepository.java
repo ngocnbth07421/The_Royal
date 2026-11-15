@@ -47,6 +47,14 @@ public class NhanVienRepository {
         }
     }
 
+    public NhanVien findBySoDienThoai(String soDienThoai) {
+        try (Session session = getSession()) {
+            return session.createQuery("FROM NhanVien WHERE soDienThoai = :soDienThoai", NhanVien.class)
+                    .setParameter("soDienThoai", soDienThoai)
+                    .uniqueResult();
+        }
+    }
+
     public void add(NhanVien nhanVien) {
         try (Session session = getSession()) {
             session.getTransaction().begin();

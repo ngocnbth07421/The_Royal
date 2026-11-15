@@ -143,6 +143,11 @@
                 <i class='bx bx-key'></i>
             </button>
 
+            <!-- Nút thay đổi Email -->
+            <button type="button" onclick="openChangeEmailModal()" title="Thay đổi Email tài khoản" class="icon-btn" style="width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; color: #6b7a70; font-size: 18px; margin-left: 2px;">
+                <i class='bx bx-envelope'></i>
+            </button>
+
             <!-- Nút đăng xuất -->
             <a href="${pageContext.request.contextPath}/logout" title="Đăng xuất khỏi hệ thống" class="icon-btn" style="width: 32px; height: 32px; border: none; background: transparent; cursor: pointer; color: #c62828; font-size: 18px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                 <i class='bx bx-power-off'></i>
@@ -177,6 +182,36 @@
     </div>
 </div>
 
+<!-- MODAL THAY ĐỔI EMAIL TÀI KHOẢN -->
+<div id="changeEmailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+    <div style="background: #ffffff; width: 90%; max-width: 420px; padding: 26px; border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #222831; display: flex; align-items: center; gap: 8px;">
+                <i class='bx bx-envelope' style="color: #557c56;"></i> Thay Đổi Email Tài Khoản
+            </h3>
+            <span onclick="closeChangeEmailModal()" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
+        </div>
+        <form action="${pageContext.request.contextPath}/doi-email" method="post">
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: #2b3a33; margin-bottom: 5px;">Email hiện tại</label>
+                <input type="text" readonly style="width: 100%; padding: 10px 12px; border: 1px solid #e0e6e2; background: #f7faf8; border-radius: 8px; font-size: 13px; color: #6b7a70; box-sizing: border-box;" value="${sessionScope.currentNguoiDung.email}">
+            </div>
+            <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: #2b3a33; margin-bottom: 5px;">Email mới <span style="color: red;">*</span></label>
+                <input type="email" name="emailMoi" style="width: 100%; padding: 10px 12px; border: 1px solid #d4ddd7; border-radius: 8px; font-size: 13px; box-sizing: border-box;" placeholder="VD: email.moi@theroyal.com" required>
+            </div>
+            <div style="margin-bottom: 18px;">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: #2b3a33; margin-bottom: 5px;">Xác nhận mật khẩu hiện tại <span style="color: red;">*</span></label>
+                <input type="password" name="matKhauXacNhan" style="width: 100%; padding: 10px 12px; border: 1px solid #d4ddd7; border-radius: 8px; font-size: 13px; box-sizing: border-box;" placeholder="••••••••" required>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-ghost" onclick="closeChangeEmailModal()">Hủy</button>
+                <button type="submit" class="btn btn-primary"><i class='bx bx-check'></i> Cập Nhật Email</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function toggleNotifDropdown(e) {
         e.stopPropagation();
@@ -204,6 +239,14 @@
 
     function closeChangePwdModal() {
         document.getElementById('changePwdModal').style.display = 'none';
+    }
+
+    function openChangeEmailModal() {
+        document.getElementById('changeEmailModal').style.display = 'flex';
+    }
+
+    function closeChangeEmailModal() {
+        document.getElementById('changeEmailModal').style.display = 'none';
     }
 
     document.addEventListener('click', function(e) {

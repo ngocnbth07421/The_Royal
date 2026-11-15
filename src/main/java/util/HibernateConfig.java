@@ -41,6 +41,7 @@ public class HibernateConfig {
         conf.addAnnotatedClass(TienNghiPhong.class);
         conf.addAnnotatedClass(TienNghi.class);
         conf.addAnnotatedClass(NguoiDung.class);
+        conf.addAnnotatedClass(KhachHang.class);
 
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()

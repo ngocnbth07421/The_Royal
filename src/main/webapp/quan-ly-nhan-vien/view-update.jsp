@@ -162,9 +162,14 @@
                             <div class="form-group">
                                 <label>Trạng thái</label>
                                 <select name="trangThai" class="form-control">
-                                    <option value="HOAT_DONG" ${nhanVien.trangThai == 'HOAT_DONG' ? 'selected' : ''}>Đang hoạt động</option>
-                                    <option value="BI_KHOA" ${nhanVien.trangThai == 'BI_KHOA' ? 'selected' : ''}>Tạm khóa</option>
+                                    <option value="Hoạt động" ${nhanVien.trangThai == 'Hoạt động' || nhanVien.trangThai == 'HOAT_DONG' ? 'selected' : ''}>Đang hoạt động</option>
+                                    <option value="Bị khóa" ${nhanVien.trangThai == 'Bị khóa' || nhanVien.trangThai == 'BI_KHOA' ? 'selected' : ''}>Tạm khóa</option>
                                 </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email tài khoản đăng nhập</label>
+                                <input type="email" name="email" class="form-control" value="${accountEmail}" placeholder="name@theroyal.com">
                             </div>
                         </div>
 

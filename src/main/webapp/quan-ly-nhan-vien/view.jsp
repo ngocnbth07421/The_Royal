@@ -300,9 +300,19 @@
                             <div class="form-group">
                                 <label>Trạng thái</label>
                                 <select name="trangThai" class="form-control">
-                                    <option value="HOAT_DONG">Đang hoạt động</option>
-                                    <option value="BI_KHOA">Tạm khóa</option>
+                                    <option value="Hoạt động">Đang hoạt động</option>
+                                    <option value="Bị khóa">Tạm khóa</option>
                                 </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email tài khoản đăng nhập</label>
+                                <input type="email" name="email" class="form-control" placeholder="Tự sinh nếu để trống (vd: nv011@theroyal.com)">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mật khẩu khởi tạo</label>
+                                <input type="password" name="matKhau" class="form-control" placeholder="Mặc định: 123456" value="123456">
                             </div>
                         </div>
 

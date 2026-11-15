@@ -66,7 +66,8 @@ public class NhanVienServlet extends HttpServlet {
         long countHoatDong = 0;
         long countBiKhoa = 0;
         for (NhanVien nv : allStaff) {
-            if ("HOAT_DONG".equalsIgnoreCase(nv.getTrangThai())) {
+            String st = nv.getTrangThai();
+            if (st != null && (st.equalsIgnoreCase("Hoạt động") || st.equalsIgnoreCase("HOAT_DONG"))) {
                 countHoatDong++;
             } else {
                 countBiKhoa++;
@@ -140,6 +141,12 @@ public class NhanVienServlet extends HttpServlet {
 
         prepareMasterData(req);
         req.setAttribute("nhanVien", nhanVien);
+        try {
+            NguoiDung nd = nguoiDungRepository.findByNhanVien(nhanVien.getIdNhanVien());
+            if (nd != null) {
+                req.setAttribute("accountEmail", nd.getEmail());
+            }
+        } catch (Exception ignored) {}
 
         req.getRequestDispatcher("/quan-ly-nhan-vien/view-update.jsp").forward(req, resp);
     }
@@ -181,6 +188,8 @@ public class NhanVienServlet extends HttpServlet {
         String phuCapStr = req.getParameter("phuCap");
         String khauTruStr = req.getParameter("khauTru");
         String trangThai = req.getParameter("trangThai");
+        String email = req.getParameter("email");
+        String matKhau = req.getParameter("matKhau");
 
         if (maNhanVien == null || maNhanVien.trim().isEmpty() || hoTen == null || hoTen.trim().isEmpty() || idVaiTroStr == null) {
             resp.sendRedirect(req.getContextPath() + "/quan-ly-nhan-vien/view?error=invalid_input");
@@ -191,6 +200,13 @@ public class NhanVienServlet extends HttpServlet {
         if (nhanVienRepository.findByMaNhanVien(maNhanVien) != null) {
             resp.sendRedirect(req.getContextPath() + "/quan-ly-nhan-vien/view?error=duplicate_manv");
             return;
+        }
+
+        // Chuẩn hóa trạng thái tiếng Việt
+        if (trangThai == null || trangThai.trim().isEmpty() || "HOAT_DONG".equalsIgnoreCase(trangThai)) {
+            trangThai = "Hoạt động";
+        } else if ("BI_KHOA".equalsIgnoreCase(trangThai)) {
+            trangThai = "Bị khóa";
         }
 
         NhanVien nv = new NhanVien();
@@ -212,20 +228,35 @@ public class NhanVienServlet extends HttpServlet {
         nv.setLuongCoBan(parseBigDecimal(luongCoBanStr, BigDecimal.ZERO));
         nv.setPhuCap(parseBigDecimal(phuCapStr, BigDecimal.ZERO));
         nv.setKhauTru(parseBigDecimal(khauTruStr, BigDecimal.ZERO));
-        nv.setTrangThai(trangThai != null && !trangThai.isEmpty() ? trangThai : "HOAT_DONG");
+        nv.setTrangThai(trangThai);
 
         nhanVienRepository.add(nv);
 
-        // Tự động cấp tài khoản người dùng cho nhân viên mới
-        // Mật khẩu khởi tạo mặc định là 123456, Admin trên web KHÔNG có quyền biết mật khẩu riêng
+        // Tạo tài khoản người dùng tương ứng cho nhân viên
+        // Admin/Quản lý cấp email & mật khẩu khởi tạo (mặc định 123456 nếu để trống)
         try {
-            NguoiDung nd = new NguoiDung();
-            nd.setIdNhanVien(nv.getIdNhanVien());
-            nd.setEmail(maNhanVien.toLowerCase() + "@theroyal.com");
-            nd.setMatKhau("123456");
-            nd.setIdVaiTro(nv.getIdVaiTro());
-            nd.setTrangThai("HOAT_DONG");
-            nguoiDungRepository.add(nd);
+            if (email == null || email.trim().isEmpty()) {
+                email = maNhanVien.toLowerCase() + "@theroyal.com";
+            } else {
+                email = email.trim().toLowerCase();
+            }
+
+            if (matKhau == null || matKhau.trim().isEmpty()) {
+                matKhau = "123456";
+            } else {
+                matKhau = matKhau.trim();
+            }
+
+            // Kiểm tra tránh trùng email người dùng
+            if (nguoiDungRepository.findByEmail(email) == null) {
+                NguoiDung nd = new NguoiDung();
+                nd.setIdNhanVien(nv.getIdNhanVien());
+                nd.setEmail(email);
+                nd.setMatKhau(matKhau);
+                nd.setIdVaiTro(nv.getIdVaiTro());
+                nd.setTrangThai(trangThai);
+                nguoiDungRepository.add(nd);
+            }
         } catch (Exception ignored) {}
 
         resp.sendRedirect(req.getContextPath() + "/quan-ly-nhan-vien/view?success=add");
@@ -242,6 +273,7 @@ public class NhanVienServlet extends HttpServlet {
         String phuCapStr = req.getParameter("phuCap");
         String khauTruStr = req.getParameter("khauTru");
         String trangThai = req.getParameter("trangThai");
+        String email = req.getParameter("email");
 
         if (idParam == null || maNhanVien == null || maNhanVien.trim().isEmpty() || hoTen == null || hoTen.trim().isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/quan-ly-nhan-vien/view?error=invalid_input");
@@ -253,6 +285,13 @@ public class NhanVienServlet extends HttpServlet {
         if (nv == null) {
             resp.sendRedirect(req.getContextPath() + "/quan-ly-nhan-vien/view");
             return;
+        }
+
+        // Chuẩn hóa trạng thái tiếng Việt
+        if (trangThai == null || trangThai.trim().isEmpty() || "HOAT_DONG".equalsIgnoreCase(trangThai)) {
+            trangThai = "Hoạt động";
+        } else if ("BI_KHOA".equalsIgnoreCase(trangThai)) {
+            trangThai = "Bị khóa";
         }
 
         nv.setMaNhanVien(maNhanVien.trim().toUpperCase());
@@ -271,16 +310,19 @@ public class NhanVienServlet extends HttpServlet {
         nv.setLuongCoBan(parseBigDecimal(luongCoBanStr, nv.getLuongCoBan()));
         nv.setPhuCap(parseBigDecimal(phuCapStr, nv.getPhuCap()));
         nv.setKhauTru(parseBigDecimal(khauTruStr, nv.getKhauTru()));
-        nv.setTrangThai(trangThai != null ? trangThai : "HOAT_DONG");
+        nv.setTrangThai(trangThai);
 
         nhanVienRepository.update(nv);
 
-        // Cập nhật vai trò tài khoản nếu có
+        // Cập nhật vai trò, trạng thái và email tài khoản tương ứng
         try {
             NguoiDung nd = nguoiDungRepository.findByNhanVien(nv.getIdNhanVien());
             if (nd != null) {
                 nd.setIdVaiTro(nv.getIdVaiTro());
-                nd.setTrangThai(nv.getTrangThai());
+                nd.setTrangThai(trangThai);
+                if (email != null && !email.trim().isEmpty() && email.contains("@")) {
+                    nd.setEmail(email.trim().toLowerCase());
+                }
                 nguoiDungRepository.update(nd);
             }
         } catch (Exception ignored) {}
