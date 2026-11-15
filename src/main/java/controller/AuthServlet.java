@@ -23,6 +23,7 @@ import java.io.IOException;
         "/dang-ky",
         "/doi-mat-khau",
         "/doi-email",
+        "/sua-thong-tin",
         "/quen-mat-khau",
         "/xac-nhan-ma",
         "/dat-lai-mat-khau"
@@ -61,6 +62,8 @@ public class AuthServlet extends HttpServlet {
             xuLyDoiMatKhau(req, resp);
         } else if (uri.contains("doi-email")) {
             xuLyDoiEmail(req, resp);
+        } else if (uri.contains("sua-thong-tin")) {
+            xuLySuaThongTin(req, resp);
         } else if (uri.contains("quen-mat-khau")) {
             xuLyQuenMatKhau(req, resp);
         } else if (uri.contains("xac-nhan-ma")) {
@@ -266,6 +269,56 @@ public class AuthServlet extends HttpServlet {
         session.setAttribute("currentNguoiDung", nd);
 
         resp.sendRedirect(req.getContextPath() + "/trang-chu?success=email_changed");
+    }
+
+    /**
+     * Xem và sửa thông tin tài khoản cá nhân (Họ tên, Số điện thoại, Email)
+     */
+    private void xuLySuaThongTin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("currentNguoiDung") == null) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
+
+        NguoiDung nd = (NguoiDung) session.getAttribute("currentNguoiDung");
+        NhanVien nv = (NhanVien) session.getAttribute("currentUser");
+
+        String hoTen = req.getParameter("hoTen");
+        String soDienThoai = req.getParameter("soDienThoai");
+        String email = req.getParameter("email");
+
+        if (nv != null) {
+            if (hoTen != null && !hoTen.trim().isEmpty()) {
+                nv.setHoTen(hoTen.trim());
+            }
+            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
+                nv.setSoDienThoai(soDienThoai.trim());
+            }
+            nhanVienRepository.update(nv);
+            session.setAttribute("currentUser", nv);
+        }
+
+        if (email != null && !email.trim().isEmpty() && email.contains("@")) {
+            email = email.trim().toLowerCase();
+            if (!email.equalsIgnoreCase(nd.getEmail())) {
+                NguoiDung existing = nguoiDungRepository.findByEmail(email);
+                if (existing != null && !existing.getIdNguoiDung().equals(nd.getIdNguoiDung())) {
+                    resp.sendRedirect(req.getContextPath() + "/trang-chu?error=email_already_used");
+                    return;
+                }
+                nd.setEmail(email);
+                nguoiDungRepository.update(nd);
+                session.setAttribute("currentNguoiDung", nd);
+            }
+        }
+
+        String referer = req.getHeader("Referer");
+        if (referer != null && !referer.isEmpty()) {
+            resp.sendRedirect(referer + (referer.contains("?") ? "&" : "?") + "success=profile_updated");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/trang-chu?success=profile_updated");
+        }
     }
 
     /**
