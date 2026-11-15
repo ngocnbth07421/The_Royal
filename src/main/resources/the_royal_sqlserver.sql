@@ -147,7 +147,7 @@ CREATE TABLE phong (
                        ma_phong       VARCHAR(10)   NOT NULL UNIQUE,
                        hinh_anh_phong VARCHAR(500),
                        trang_thai     NVARCHAR(20)  NOT NULL DEFAULT N'Sẵn sàng'
-                           CHECK (trang_thai IN (N'Sẵn sàng', N'Đang ở', N'Cần dọn', N'Bảo trì')),
+                           CHECK (trang_thai IN (N'Sẵn sàng', N'Giữ chỗ', N'Đang ở', N'Cần dọn', N'Bảo trì', 'SAN_SANG', 'GIU_CHO', 'DANG_O', 'CAN_DON', 'BAO_TRI')),
                        ghi_chu        NVARCHAR(255)
 );
 
@@ -987,6 +987,9 @@ FROM (VALUES
 -- =====================================================================
 UPDATE phong SET trang_thai = N'Đang ở'
 WHERE ma_phong IN ('W1302','W1401');
+
+UPDATE phong SET trang_thai = N'Giữ chỗ'
+WHERE ma_phong IN ('C0104','C0203','C0303','W0102');
 
 UPDATE phong SET trang_thai = N'Cần dọn'
 WHERE ma_phong IN ('C0301','C0302','C3001','C0204','C0103','C1301');

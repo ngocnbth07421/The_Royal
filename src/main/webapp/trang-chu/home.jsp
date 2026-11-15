@@ -86,6 +86,7 @@
         }
         .icon-total { background: #eaf1ed; color: #557c56; }
         .icon-ready { background: #e8f5e9; color: #2e7d32; }
+        .icon-reserved { background: #f3e5f5; color: #8e24aa; }
         .icon-occupied { background: #e3f2fd; color: #1565c0; }
         .icon-cleaning { background: #fff8e1; color: #f57f17; }
         .icon-maintain { background: #ffebee; color: #c62828; }
@@ -191,6 +192,7 @@
         .legend-item { display: flex; align-items: center; gap: 7px; }
         .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
         .dot-ready { background: #2e7d32; }
+        .dot-reserved { background: #8e24aa; }
         .dot-occupied { background: #1565c0; }
         .dot-cleaning { background: #f57f17; }
         .dot-maintain { background: #c62828; }
@@ -305,6 +307,14 @@
             background: #f9fdfa;
         }
 
+        .room-box.st-reserved {
+            border-left: 4px solid #8e24aa;
+            background: #fdfaff;
+        }
+        .room-box.st-reserved:hover {
+            background: #f8f0fc;
+        }
+
         .room-box.st-occupied {
             border-left: 4px solid #1565c0;
             background: #f8fbff;
@@ -353,6 +363,7 @@
             gap: 3px;
         }
         .badge-ready { background: #e8f5e9; color: #2e7d32; }
+        .badge-reserved { background: #f3e5f5; color: #8e24aa; }
         .badge-occupied { background: #e3f2fd; color: #1565c0; }
         .badge-cleaning { background: #fff8e1; color: #f57f17; }
         .badge-maintain { background: #ffebee; color: #c62828; }
@@ -619,6 +630,14 @@
                     </div>
 
                     <div class="stat-card">
+                        <div class="stat-icon icon-reserved"><i class='bx bx-time-five'></i></div>
+                        <div>
+                            <div class="stat-val" style="color: #8e24aa;">${countReserved}</div>
+                            <div class="stat-name">Giữ Chỗ (Đã Đặt Trước)</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
                         <div class="stat-icon icon-occupied"><i class='bx bx-user-check'></i></div>
                         <div>
                             <div class="stat-val" style="color: #1565c0;">${countOccupied}</div>
@@ -698,6 +717,7 @@
                                 <select name="trangThai" class="form-select">
                                     <option value="ALL">Tất cả trạng thái</option>
                                     <option value="SAN_SANG" ${filterTrangThai == 'SAN_SANG' ? 'selected' : ''}>Sẵn sàng (Trống)</option>
+                                    <option value="GIU_CHO" ${filterTrangThai == 'GIU_CHO' ? 'selected' : ''}>Giữ chỗ (Đã đặt trước)</option>
                                     <option value="DANG_O" ${filterTrangThai == 'DANG_O' ? 'selected' : ''}>Đang ở</option>
                                     <option value="CAN_DON" ${filterTrangThai == 'CAN_DON' ? 'selected' : ''}>Cần dọn</option>
                                     <option value="BAO_TRI" ${filterTrangThai == 'BAO_TRI' ? 'selected' : ''}>Bảo trì</option>
@@ -744,6 +764,7 @@
 
                     <div class="matrix-legend">
                         <div class="legend-item"><span class="legend-dot dot-ready"></span> Sẵn sàng (Trống - Bấm để đặt)</div>
+                        <div class="legend-item"><span class="legend-dot dot-reserved"></span> Giữ chỗ (Đã đặt trước / Tác vụ)</div>
                         <div class="legend-item"><span class="legend-dot dot-occupied"></span> Khách đang lưu trú</div>
                         <div class="legend-item"><span class="legend-dot dot-cleaning"></span> Chờ dọn phòng</div>
                         <div class="legend-item"><span class="legend-dot dot-maintain"></span> Đang bảo trì kỹ thuật</div>
@@ -778,19 +799,25 @@
                                         <c:set var="stIcon" value="bx-check-circle" />
                                         <c:set var="stText" value="Trống" />
                                         <c:choose>
-                                            <c:when test="${room.trangThai == 'DANG_O'}">
+                                            <c:when test="${room.trangThai == 'GIU_CHO' || room.trangThai == 'Giữ chỗ'}">
+                                                <c:set var="stClass" value="st-reserved" />
+                                                <c:set var="stBadge" value="badge-reserved" />
+                                                <c:set var="stIcon" value="bx-time-five" />
+                                                <c:set var="stText" value="Giữ chỗ" />
+                                            </c:when>
+                                            <c:when test="${room.trangThai == 'DANG_O' || room.trangThai == 'Đang ở'}">
                                                 <c:set var="stClass" value="st-occupied" />
                                                 <c:set var="stBadge" value="badge-occupied" />
                                                 <c:set var="stIcon" value="bx-user" />
                                                 <c:set var="stText" value="Đang ở" />
                                             </c:when>
-                                            <c:when test="${room.trangThai == 'CAN_DON'}">
+                                            <c:when test="${room.trangThai == 'CAN_DON' || room.trangThai == 'Cần dọn'}">
                                                 <c:set var="stClass" value="st-cleaning" />
                                                 <c:set var="stBadge" value="badge-cleaning" />
                                                 <c:set var="stIcon" value="bx-brush" />
                                                 <c:set var="stText" value="Cần dọn" />
                                             </c:when>
-                                            <c:when test="${room.trangThai == 'BAO_TRI'}">
+                                            <c:when test="${room.trangThai == 'BAO_TRI' || room.trangThai == 'Bảo trì'}">
                                                 <c:set var="stClass" value="st-maintain" />
                                                 <c:set var="stBadge" value="badge-maintain" />
                                                 <c:set var="stIcon" value="bx-wrench" />
@@ -950,9 +977,14 @@
                         💰 Đặt cọc 30% giá phòng khi xác nhận. Phần còn lại thanh toán khi trả phòng.
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <i class='bx bx-check'></i> Xác Nhận Đặt Phòng Này
-                    </button>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button type="submit" name="loaiDat" value="GIU_CHO" class="btn" style="width: 100%; padding: 11px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; background: #8e24aa; color: #ffffff; border: 1px solid #8e24aa; border-radius: 8px; cursor: pointer;">
+                            <i class='bx bx-bookmark-plus'></i> Đặt Cọc &amp; Giữ Chỗ Trước (Khách Chưa Đến)
+                        </button>
+                        <button type="submit" name="loaiDat" value="DANG_O" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class='bx bx-check-circle'></i> Khách Đến Nhận Phòng Ngay (Check-in)
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -997,11 +1029,34 @@
             const otherMsg = document.getElementById('otherStatusMsg');
             const actionBtns = document.getElementById('statusActionButtons');
 
-            if (status === 'SAN_SANG') {
+            if (status === 'SAN_SANG' || status === 'Sẵn sàng') {
                 badgeEl.innerHTML = '<span class="badge" style="background:#e8f5e9; color:#2e7d32; padding:4px 10px; border-radius:12px; font-weight:700;">Sẵn sàng (Trống)</span>';
                 bookingSection.style.display = 'block';
                 otherSection.style.display = 'none';
-            } else if (status === 'DANG_O') {
+            } else if (status === 'GIU_CHO' || status === 'Giữ chỗ') {
+                badgeEl.innerHTML = '<span class="badge" style="background:#f3e5f5; color:#8e24aa; padding:4px 10px; border-radius:12px; font-weight:700;"><i class=\'bx bx-time-five\'></i> Giữ chỗ (Đã đặt trước)</span>';
+                bookingSection.style.display = 'none';
+                otherSection.style.display = 'block';
+                otherMsg.innerHTML = `
+                    <div style="background:#faf5fc; border:1px solid #e1bee7; border-radius:8px; padding:10px 12px; margin-bottom:12px; color:#6a1b9a;">
+                        <div style="font-weight:700; display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                            <i class='bx bx-lock-alt' style="font-size:16px;"></i> Phòng đang được giữ chỗ / đặt trước
+                        </div>
+                        <div style="font-size:12px; line-height:1.4;">
+                            Phòng đã được đặt cọc trước (khách chưa đến nhận phòng) hoặc đang có một tài khoản khác trong phiên thực hiện tác vụ đặt phòng này. Hệ thống tạm khóa form để tránh việc 2 người cùng đặt đè.
+                        </div>
+                    </div>
+                    <span style="font-size:12.5px; font-weight:700; color:#2b3a33;">Thao tác khả dụng cho Lễ tân / Quản lý:</span>
+                `;
+                actionBtns.innerHTML = `
+                    <button type="button" class="btn" style="padding:10px; font-size:13px; font-weight:700; background:#1565c0; color:#fff; border:1px solid #1565c0; border-radius:8px;" onclick="submitStatusChange('DANG_O')">
+                        <i class='bx bx-log-in-circle'></i> Khách Đến Nhận Phòng (Check-in) -> Đang Ở
+                    </button>
+                    <button type="button" class="btn btn-ghost" style="padding:10px; font-size:13px; font-weight:700; color:#c62828; border:1px solid #ef9a9a; border-radius:8px;" onclick="if(confirm('Bạn có chắc muốn hủy phiên giữ chỗ và trả phòng về trạng thái Sẵn sàng?')) submitStatusChange('SAN_SANG')">
+                        <i class='bx bx-x-circle'></i> Hủy Giữ Chỗ -> Trả Lại Sẵn Sàng (Trống)
+                    </button>
+                `;
+            } else if (status === 'DANG_O' || status === 'Đang ở') {
                 badgeEl.innerHTML = '<span class="badge" style="background:#e3f2fd; color:#1565c0; padding:4px 10px; border-radius:12px; font-weight:700;">Khách đang ở</span>';
                 bookingSection.style.display = 'none';
                 otherSection.style.display = 'block';
@@ -1011,7 +1066,7 @@
                         <i class='bx bx-log-out-circle'></i> Khách Trả Phòng (Check-out) -> Cần Dọn
                     </button>
                 `;
-            } else if (status === 'CAN_DON') {
+            } else if (status === 'CAN_DON' || status === 'Cần dọn') {
                 badgeEl.innerHTML = '<span class="badge" style="background:#fff8e1; color:#f57f17; padding:4px 10px; border-radius:12px; font-weight:700;">Chờ dọn dẹp</span>';
                 bookingSection.style.display = 'none';
                 otherSection.style.display = 'block';
@@ -1021,7 +1076,7 @@
                         <i class='bx bx-check-double'></i> Đã Dọn Phòng Xong -> Sẵn Sàng Đón Khách
                     </button>
                 `;
-            } else if (status === 'BAO_TRI') {
+            } else if (status === 'BAO_TRI' || status === 'Bảo trì') {
                 badgeEl.innerHTML = '<span class="badge" style="background:#ffebee; color:#c62828; padding:4px 10px; border-radius:12px; font-weight:700;">Đang bảo trì</span>';
                 bookingSection.style.display = 'none';
                 otherSection.style.display = 'block';

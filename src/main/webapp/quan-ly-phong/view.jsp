@@ -314,6 +314,7 @@
                                 <label>Trạng thái ban đầu</label>
                                 <select name="trangThai" class="form-control">
                                     <option value="SAN_SANG">Sẵn sàng đón khách</option>
+                                    <option value="GIU_CHO">Giữ chỗ (Đã đặt trước)</option>
                                     <option value="DANG_O">Đang ở</option>
                                     <option value="CAN_DON">Cần dọn</option>
                                     <option value="BAO_TRI">Bảo trì</option>
@@ -396,16 +397,19 @@
                                     </td>
                                     <td style="padding: 12px 16px; font-size: 12px;">
                                         <c:choose>
-                                            <c:when test="${p.trangThai == 'SAN_SANG'}">
+                                            <c:when test="${p.trangThai == 'SAN_SANG' || p.trangThai == 'Sẵn sàng'}">
                                                 <span class="badge badge-ready">Sẵn sàng</span>
                                             </c:when>
-                                            <c:when test="${p.trangThai == 'DANG_O'}">
+                                            <c:when test="${p.trangThai == 'GIU_CHO' || p.trangThai == 'Giữ chỗ'}">
+                                                <span class="badge" style="background:#f3e5f5; color:#8e24aa;">Giữ chỗ</span>
+                                            </c:when>
+                                            <c:when test="${p.trangThai == 'DANG_O' || p.trangThai == 'Đang ở'}">
                                                 <span class="badge badge-occupied">Đang ở</span>
                                             </c:when>
-                                            <c:when test="${p.trangThai == 'CAN_DON'}">
+                                            <c:when test="${p.trangThai == 'CAN_DON' || p.trangThai == 'Cần dọn'}">
                                                 <span class="badge badge-cleaning">Cần dọn</span>
                                             </c:when>
-                                            <c:when test="${p.trangThai == 'BAO_TRI'}">
+                                            <c:when test="${p.trangThai == 'BAO_TRI' || p.trangThai == 'Bảo trì'}">
                                                 <span class="badge badge-maintain">Bảo trì</span>
                                             </c:when>
                                             <c:otherwise>

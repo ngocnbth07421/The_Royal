@@ -53,15 +53,18 @@ public class HomeServlet extends HttpServlet {
 
         // Đếm trạng thái phòng
         long countReady = 0;
+        long countReserved = 0;
         long countOccupied = 0;
         long countCleaning = 0;
         long countMaintain = 0;
 
         for (Phong p : allRooms) {
-            if ("SAN_SANG".equalsIgnoreCase(p.getTrangThai())) countReady++;
-            else if ("DANG_O".equalsIgnoreCase(p.getTrangThai())) countOccupied++;
-            else if ("CAN_DON".equalsIgnoreCase(p.getTrangThai())) countCleaning++;
-            else if ("BAO_TRI".equalsIgnoreCase(p.getTrangThai())) countMaintain++;
+            String tt = p.getTrangThai();
+            if ("SAN_SANG".equalsIgnoreCase(tt) || "Sẵn sàng".equalsIgnoreCase(tt)) countReady++;
+            else if ("GIU_CHO".equalsIgnoreCase(tt) || "Giữ chỗ".equalsIgnoreCase(tt)) countReserved++;
+            else if ("DANG_O".equalsIgnoreCase(tt) || "Đang ở".equalsIgnoreCase(tt)) countOccupied++;
+            else if ("CAN_DON".equalsIgnoreCase(tt) || "Cần dọn".equalsIgnoreCase(tt)) countCleaning++;
+            else if ("BAO_TRI".equalsIgnoreCase(tt) || "Bảo trì".equalsIgnoreCase(tt)) countMaintain++;
         }
 
         // Đọc các tham số bộ lọc và tìm kiếm
@@ -119,7 +122,15 @@ public class HomeServlet extends HttpServlet {
 
             // Lọc trạng thái
             if (filterTrangThai != null && !filterTrangThai.isEmpty() && !filterTrangThai.equals("ALL")) {
-                if (!filterTrangThai.equalsIgnoreCase(p.getTrangThai())) continue;
+                String tt = p.getTrangThai();
+                boolean match = false;
+                if ("SAN_SANG".equalsIgnoreCase(filterTrangThai) && ("SAN_SANG".equalsIgnoreCase(tt) || "Sẵn sàng".equalsIgnoreCase(tt))) match = true;
+                else if ("GIU_CHO".equalsIgnoreCase(filterTrangThai) && ("GIU_CHO".equalsIgnoreCase(tt) || "Giữ chỗ".equalsIgnoreCase(tt))) match = true;
+                else if ("DANG_O".equalsIgnoreCase(filterTrangThai) && ("DANG_O".equalsIgnoreCase(tt) || "Đang ở".equalsIgnoreCase(tt))) match = true;
+                else if ("CAN_DON".equalsIgnoreCase(filterTrangThai) && ("CAN_DON".equalsIgnoreCase(tt) || "Cần dọn".equalsIgnoreCase(tt))) match = true;
+                else if ("BAO_TRI".equalsIgnoreCase(filterTrangThai) && ("BAO_TRI".equalsIgnoreCase(tt) || "Bảo trì".equalsIgnoreCase(tt))) match = true;
+                else if (filterTrangThai.equalsIgnoreCase(tt)) match = true;
+                if (!match) continue;
             }
 
             // Lọc view
@@ -181,6 +192,7 @@ public class HomeServlet extends HttpServlet {
 
         req.setAttribute("totalRooms", allRooms.size());
         req.setAttribute("countReady", countReady);
+        req.setAttribute("countReserved", countReserved);
         req.setAttribute("countOccupied", countOccupied);
         req.setAttribute("countCleaning", countCleaning);
         req.setAttribute("countMaintain", countMaintain);
@@ -221,12 +233,18 @@ public class HomeServlet extends HttpServlet {
     private void datPhongNhanh(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String idPhongStr = req.getParameter("idPhong");
         String building = req.getParameter("building");
+        String loaiDat = req.getParameter("loaiDat"); // "GIU_CHO" hoặc "DANG_O"
 
         if (idPhongStr != null && !idPhongStr.isEmpty()) {
             Long idPhong = Long.valueOf(idPhongStr);
             Phong phong = phongRepository.getOne(idPhong);
             if (phong != null) {
-                phong.setTrangThai("DANG_O");
+                if ("DANG_O".equalsIgnoreCase(loaiDat)) {
+                    phong.setTrangThai("DANG_O");
+                } else {
+                    // Mặc định hoặc khi chọn giữ chỗ / đặt trước
+                    phong.setTrangThai("GIU_CHO");
+                }
                 phongRepository.update(phong);
             }
         }

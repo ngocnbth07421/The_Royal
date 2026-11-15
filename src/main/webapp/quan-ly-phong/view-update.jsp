@@ -152,10 +152,11 @@
                             <div class="form-group">
                                 <label>Trạng thái phòng</label>
                                 <select name="trangThai" class="form-control">
-                                    <option value="SAN_SANG" ${phong.trangThai == 'SAN_SANG' ? 'selected' : ''}>Sẵn sàng đón khách</option>
-                                    <option value="DANG_O" ${phong.trangThai == 'DANG_O' ? 'selected' : ''}>Đang ở</option>
-                                    <option value="CAN_DON" ${phong.trangThai == 'CAN_DON' ? 'selected' : ''}>Cần dọn</option>
-                                    <option value="BAO_TRI" ${phong.trangThai == 'BAO_TRI' ? 'selected' : ''}>Bảo trì kỹ thuật</option>
+                                    <option value="SAN_SANG" ${phong.trangThai == 'SAN_SANG' || phong.trangThai == 'Sẵn sàng' ? 'selected' : ''}>Sẵn sàng đón khách</option>
+                                    <option value="GIU_CHO" ${phong.trangThai == 'GIU_CHO' || phong.trangThai == 'Giữ chỗ' ? 'selected' : ''}>Giữ chỗ (Đã đặt trước)</option>
+                                    <option value="DANG_O" ${phong.trangThai == 'DANG_O' || phong.trangThai == 'Đang ở' ? 'selected' : ''}>Đang ở</option>
+                                    <option value="CAN_DON" ${phong.trangThai == 'CAN_DON' || phong.trangThai == 'Cần dọn' ? 'selected' : ''}>Cần dọn</option>
+                                    <option value="BAO_TRI" ${phong.trangThai == 'BAO_TRI' || phong.trangThai == 'Bảo trì' ? 'selected' : ''}>Bảo trì kỹ thuật</option>
                                 </select>
                             </div>
 

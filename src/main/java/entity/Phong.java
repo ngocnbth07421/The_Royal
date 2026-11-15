@@ -30,8 +30,8 @@ public class Phong {
     @Column(name = "hinh_anh_phong", length = 500)
     private String hinhAnhPhong;
 
-    @Column(name = "trang_thai", length = 15, nullable = false)
-    private String trangThai; // SAN_SANG, DANG_O, CAN_DON, BAO_TRI
+    @Column(name = "trang_thai", length = 25, nullable = false)
+    private String trangThai; // SAN_SANG, GIU_CHO, DANG_O, CAN_DON, BAO_TRI
 
     @Column(name = "ghi_chu", length = 255)
     private String ghiChu; // View phòng: Ocean View, City View, Mountain View

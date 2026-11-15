@@ -159,10 +159,12 @@
                             <span class="info-label">Trạng thái hiện tại:</span>
                             <span class="info-val">
                                 <c:choose>
-                                    <c:when test="${phong.trangThai == 'SAN_SANG'}"><span style="color:#2e7d32;">● Sẵn sàng đón khách</span></c:when>
-                                    <c:when test="${phong.trangThai == 'DANG_O'}"><span style="color:#1565c0;">● Khách đang ở</span></c:when>
-                                    <c:when test="${phong.trangThai == 'CAN_DON'}"><span style="color:#f57f17;">● Cần dọn phòng</span></c:when>
-                                    <c:when test="${phong.trangThai == 'BAO_TRI'}"><span style="color:#c62828;">● Đang bảo trì</span></c:when>
+                                    <c:when test="${phong.trangThai == 'SAN_SANG' || phong.trangThai == 'Sẵn sàng'}"><span style="color:#2e7d32;">● Sẵn sàng đón khách</span></c:when>
+                                    <c:when test="${phong.trangThai == 'GIU_CHO' || phong.trangThai == 'Giữ chỗ'}"><span style="color:#8e24aa;">● Giữ chỗ (Đã đặt trước)</span></c:when>
+                                    <c:when test="${phong.trangThai == 'DANG_O' || phong.trangThai == 'Đang ở'}"><span style="color:#1565c0;">● Khách đang ở</span></c:when>
+                                    <c:when test="${phong.trangThai == 'CAN_DON' || phong.trangThai == 'Cần dọn'}"><span style="color:#f57f17;">● Cần dọn phòng</span></c:when>
+                                    <c:when test="${phong.trangThai == 'BAO_TRI' || phong.trangThai == 'Bảo trì'}"><span style="color:#c62828;">● Đang bảo trì</span></c:when>
+                                    <c:otherwise><span>${phong.trangThai}</span></c:otherwise>
                                 </c:choose>
                             </span>
                         </div>
