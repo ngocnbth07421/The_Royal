@@ -22,6 +22,7 @@ USE THE_ROYAL;
 GO
 
 -- Xoa cac bang theo thu tu nguoc neu da ton tai (an toan tuyet doi cho connection SSMS)
+DROP TABLE IF EXISTS nguoi_dung;
 DROP TABLE IF EXISTS bang_thu_chi;
 DROP TABLE IF EXISTS bang_luong;
 DROP TABLE IF EXISTS danh_gia;
@@ -73,6 +74,17 @@ CREATE TABLE nhan_vien (
                                CHECK (trang_thai IN ('HOAT_DONG','BI_KHOA'))
 );
 
+
+CREATE TABLE nguoi_dung (
+    id_nguoi_dung BIGINT        IDENTITY(1,1) PRIMARY KEY,
+    id_nhan_vien  BIGINT        NULL REFERENCES nhan_vien(id_nhan_vien),
+    email         VARCHAR(150)  NOT NULL UNIQUE,
+    mat_khau      VARCHAR(255)  NOT NULL,
+    id_vai_tro    BIGINT        NOT NULL REFERENCES vai_tro(id_vai_tro),
+    trang_thai    VARCHAR(15)   NOT NULL DEFAULT 'HOAT_DONG'
+        CHECK (trang_thai IN ('HOAT_DONG','BI_KHOA'))
+);
+
 CREATE TABLE khach_hang (
                             id_khach_hang BIGINT        IDENTITY(1,1) PRIMARY KEY,
                             ho_ten        NVARCHAR(150) NOT NULL,
@@ -81,6 +93,7 @@ CREATE TABLE khach_hang (
                             trang_thai    VARCHAR(15)   NOT NULL DEFAULT 'HOAT_DONG'
                                 CHECK (trang_thai IN ('HOAT_DONG','BI_KHOA'))
 );
+
 
 -- ---------------------------------------------------------------------
 -- NHOM DANH MUC PHONG
@@ -414,6 +427,7 @@ GO
 -- PHAN 3: CHI MUC (INDEX)
 -- =====================================================================
 CREATE INDEX ix_phong_loai_trang_thai  ON phong(id_loai_phong, trang_thai);
+CREATE INDEX ix_nguoi_dung_email       ON nguoi_dung(email);
 CREATE INDEX ix_dat_phong_khach_hang   ON dat_phong(id_khach_hang);
 CREATE INDEX ix_dat_phong_trang_thai   ON dat_phong(trang_thai, thoi_gian_nhan_phong);
 CREATE INDEX ix_dat_phong_chi_tiet_dat ON dat_phong_chi_tiet(id_dat_phong);
@@ -598,7 +612,29 @@ INSERT INTO nhan_vien(id_vai_tro, ma_nhan_vien, ho_ten, so_dien_thoai,
                                                                                      (3, 'NV007', N'Bui Thi Thu',      '0901111007', '2022-09-01', 10000000, 1000000, 150000, 'HOAT_DONG'),
                                                                                      (3, 'NV008', N'Dang Van Long',    '0901111008', '2023-01-15', 10000000, 1000000, 150000, 'HOAT_DONG'),
                                                                                      (4, 'NV009', N'Ho Thi Bich',      '0901111009', '2021-11-01', 15000000, 2000000, 300000, 'HOAT_DONG'),
-                                                                                     (5, 'NV010', N'Truong Van Khanh', '0901111010', '2024-03-01', 20000000, 2500000, 400000, 'BI_KHOA');
+                                                                                     (5, 'NV010', N'Truong Van Khanh', '0901111010', '2024-03-01', 20000000, 2500000, 400000, 'BI_KHOA'),
+                                                                                     (6, 'NV011', N'Nguyễn Bảo Ngọc', '0912345678', '2024-01-01', 25000000, 3000000, 500000, 'HOAT_DONG');
+
+-- ---------------------------------------------------------------------
+-- TAI KHOAN NGUOI DUNG HE THONG (nguoi_dung) - 11 TAI KHOAN THEO NHAN VIEN
+-- Mat khau khoi tao mac dinh: 123456
+-- ---------------------------------------------------------------------
+INSERT INTO nguoi_dung(id_nhan_vien, email, mat_khau, id_vai_tro, trang_thai)
+SELECT nv.id_nhan_vien, d.email, d.mat_khau, nv.id_vai_tro, d.trang_thai
+FROM (VALUES
+          ('NV001', 'duc.nguyen@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV002', 'lananh.tran@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV003', 'thanh.le@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV004', 'huong.pham@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV005', 'mai.vo@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV006', 'huy.nguyen@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV007', 'thu.bui@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV008', 'long.dang@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV009', 'bich.ho@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV010', 'khanh.truong@theroyal.com', '123456', 'HOAT_DONG'),
+          ('NV011', 'ngocnbth07421@gmail.com', '123456', 'HOAT_DONG')
+     ) AS d(ma_nv, email, mat_khau, trang_thai)
+JOIN nhan_vien nv ON nv.ma_nhan_vien = d.ma_nv;
 
 INSERT INTO khach_hang(ho_ten, so_dien_thoai, email, trang_thai) VALUES
                                                                      (N'Nguyen Van An',      '0912001001', 'an.nguyen@gmail.com',   'HOAT_DONG'),
@@ -971,6 +1007,7 @@ SELECT bang, so_dong FROM (
                               UNION ALL SELECT 'dich_vu',             COUNT(*) FROM dich_vu
                               UNION ALL SELECT 'danh_muc_chi',        COUNT(*) FROM danh_muc_chi
                               UNION ALL SELECT 'nhan_vien',           COUNT(*) FROM nhan_vien
+                              UNION ALL SELECT 'nguoi_dung',          COUNT(*) FROM nguoi_dung
                               UNION ALL SELECT 'khach_hang',          COUNT(*) FROM khach_hang
                               UNION ALL SELECT 'ma_giam_gia',         COUNT(*) FROM ma_giam_gia
                               UNION ALL SELECT 'the_thanh_vien',      COUNT(*) FROM the_thanh_vien
@@ -987,3 +1024,4 @@ SELECT bang, so_dong FROM (
                               UNION ALL SELECT 'bang_luong',          COUNT(*) FROM bang_luong
                               UNION ALL SELECT 'bang_thu_chi',        COUNT(*) FROM bang_thu_chi
                           ) t ORDER BY bang;
+
