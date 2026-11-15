@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="The_Royal:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>The_Royal</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="The_Royal-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="The_Royal:war exploded" />
+    </root>
+  </artifact>
+</component>
