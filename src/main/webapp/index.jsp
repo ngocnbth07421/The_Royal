@@ -192,46 +192,6 @@
             position: relative;
         }
 
-        /* Demo role chips */
-        .demo-roles {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px dashed #e2d2ba;
-        }
-        .demo-roles-title {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: #6b7a70;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .role-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .role-chip {
-            background: #f7faf8;
-            border: 1px solid #d8e4dc;
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 11.5px;
-            color: #2b3a33;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-        }
-        .role-chip:hover {
-            background: #557c56;
-            color: #ffffff;
-            border-color: #557c56;
-        }
-        .role-chip i { font-size: 14px; }
     </style>
 </head>
 
@@ -306,29 +266,6 @@
             </div>
         </form>
 
-        <!-- CHỌN NHANH VAI TRÒ ĐĂNG NHẬP (DEMO DỮ LIỆU CÓ SẴN CẢ EMAIL & SỐ ĐIỆN THOẠI) -->
-        <div class="demo-roles">
-            <div class="demo-roles-title">Chọn nhanh tài khoản kiểm thử:</div>
-            <div class="role-grid">
-                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('lananh.tran@theroyal.com', '123456')">
-                    <i class='bx bx-shield-quarter'></i> Quản lý (Lan Anh)
-                </a>
-                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('0901111004', '123456')">
-                    <i class='bx bx-phone'></i> SĐT Lễ tân (0901...)
-                </a>
-                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('thu.bui@theroyal.com', '123456')">
-                    <i class='bx bx-brush'></i> Dọn phòng (Thu Bùi)
-                </a>
-                <a class="role-chip" href="javascript:void(0)" onclick="quickFill('bich.ho@theroyal.com', '123456')">
-                    <i class='bx bx-calculator'></i> Kế toán (Hồ Bích)
-                </a>
-            </div>
-            <div style="margin-top: 8px;">
-                <a class="role-chip" style="justify-content: center; font-weight: 700;" href="javascript:void(0)" onclick="quickFill('ngocnbth07421@gmail.com', '123456')">
-                    <i class='bx bx-crown'></i> Quản trị viên Admin (Bảo Ngọc)
-                </a>
-            </div>
-        </div>
     </div>
 
     <!-- ===================================================================== -->
@@ -344,9 +281,7 @@
                 <span onclick="closeModal('registerCustomerModal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
             </div>
 
-            <div style="background: #f0f7f2; border: 1px solid #d4e8d8; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #3b6041; margin-bottom: 16px; line-height: 1.4;">
-                <i class='bx bx-info-circle'></i> <b>Lưu ý:</b> Cổng đăng ký tài khoản tự do <b>chỉ dành cho Khách hàng</b> (đặt phòng & thành viên tích điểm). Tài khoản cán bộ nhân viên do <b>Quản lý hoặc Admin</b> trực tiếp cấp trong phân hệ Quản lý nhân viên.
-            </div>
+
 
             <form action="${pageContext.request.contextPath}/dang-ky" method="post">
                 <div style="margin-bottom: 12px;">
@@ -527,11 +462,6 @@
                 event.target.style.display = 'none';
             }
         };
-
-        function quickFill(user, pwd) {
-            document.getElementById('taiKhoan').value = user;
-            document.getElementById('password').value = pwd;
-        }
 
         // Tự động mở đúng modal khi có tham số bước Quên Mật Khẩu từ URL
         window.onload = function() {
