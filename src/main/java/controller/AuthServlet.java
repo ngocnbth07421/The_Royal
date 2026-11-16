@@ -1,6 +1,6 @@
 package controller;
 
-import entity.KhachHang;
+///import entity.KhachHang;
 import entity.NguoiDung;
 import entity.NhanVien;
 import entity.VaiTro;
@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import repository.KhachHangRepository;
+///import repository.KhachHangRepository;
 import repository.NguoiDungRepository;
 import repository.NhanVienRepository;
 import repository.VaiTroRepository;
@@ -20,7 +20,7 @@ import java.io.IOException;
 @WebServlet(name = "controller.AuthServlet", value = {
         "/login",
         "/logout",
-        "/dang-ky",
+        ///"/dang-ky",
         "/doi-mat-khau",
         "/doi-email",
         "/sua-thong-tin",
@@ -32,7 +32,7 @@ public class AuthServlet extends HttpServlet {
     private final NguoiDungRepository nguoiDungRepository = new NguoiDungRepository();
     private final NhanVienRepository nhanVienRepository = new NhanVienRepository();
     private final VaiTroRepository vaiTroRepository = new VaiTroRepository();
-    private final KhachHangRepository khachHangRepository = new KhachHangRepository();
+    ///private final KhachHangRepository khachHangRepository = new KhachHangRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -56,8 +56,8 @@ public class AuthServlet extends HttpServlet {
         String uri = req.getRequestURI();
         if (uri.contains("login")) {
             xuLyDangNhap(req, resp);
-        } else if (uri.contains("dang-ky")) {
-            xuLyDangKy(req, resp);
+        ///} else if (uri.contains("dang-ky")) {
+        ///    xuLyDangKy(req, resp);
         } else if (uri.contains("doi-mat-khau")) {
             xuLyDoiMatKhau(req, resp);
         } else if (uri.contains("doi-email")) {
@@ -106,16 +106,17 @@ public class AuthServlet extends HttpServlet {
 
             if (nv != null) {
                 nd = nguoiDungRepository.findByNhanVien(nv.getIdNhanVien());
-            } else {
-                // Thử tìm trong bảng khách hàng theo số điện thoại
-                KhachHang kh = khachHangRepository.findBySoDienThoai(taiKhoan);
-                if (kh == null && !taiKhoan.equals(sdtChuan)) {
-                    kh = khachHangRepository.findBySoDienThoai(sdtChuan);
-                }
-                if (kh != null && kh.getEmail() != null) {
-                    nd = nguoiDungRepository.findByEmail(kh.getEmail());
-                }
             }
+            ///else {
+            ///    // Thử tìm trong bảng khách hàng theo số điện thoại (Tạm đóng vì chưa có luồng khách hàng)
+            ///    KhachHang kh = khachHangRepository.findBySoDienThoai(taiKhoan);
+            ///    if (kh == null && !taiKhoan.equals(sdtChuan)) {
+            ///        kh = khachHangRepository.findBySoDienThoai(sdtChuan);
+            ///    }
+            ///    if (kh != null && kh.getEmail() != null) {
+            ///        nd = nguoiDungRepository.findByEmail(kh.getEmail());
+            ///    }
+            ///}
         } else {
             // 3. Đăng nhập bằng Mã nhân viên (VD: NV001, NV002, ...)
             nv = nhanVienRepository.findByMaNhanVien(taiKhoan.toUpperCase());
@@ -157,53 +158,53 @@ public class AuthServlet extends HttpServlet {
     }
 
     /**
-     * Đăng ký tài khoản: Chỉ dành cho Khách hàng (có số điện thoại, làm sau)
+     * Đăng ký tài khoản: Chỉ dành cho Khách hàng (Tạm đóng vì hiện tại chưa có luồng khách hàng)
      */
-    private void xuLyDangKy(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String hoTen = req.getParameter("hoTen");
-        String soDienThoai = req.getParameter("soDienThoai");
-        String email = req.getParameter("email");
-        String matKhau = req.getParameter("matKhau");
-
-        if (email == null || email.trim().isEmpty() || matKhau == null || matKhau.trim().isEmpty()
-                || soDienThoai == null || soDienThoai.trim().isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/index.jsp?error=empty_fields&modal=register");
-            return;
-        }
-
-        email = email.trim().toLowerCase();
-        soDienThoai = soDienThoai.trim();
-
-        // Kiểm tra email trùng
-        if (nguoiDungRepository.findByEmail(email) != null) {
-            resp.sendRedirect(req.getContextPath() + "/index.jsp?error=email_exists&modal=register");
-            return;
-        }
-
-        // Kiểm tra số điện thoại trùng trong khách hàng
-        if (khachHangRepository.findBySoDienThoai(soDienThoai) != null) {
-            resp.sendRedirect(req.getContextPath() + "/index.jsp?error=phone_exists&modal=register");
-            return;
-        }
-
-        // 1. Tạo bản ghi Khách hàng
-        KhachHang kh = new KhachHang();
-        kh.setHoTen(hoTen != null && !hoTen.trim().isEmpty() ? hoTen.trim() : "Khách Hàng Mới");
-        kh.setSoDienThoai(soDienThoai);
-        kh.setEmail(email);
-        kh.setTrangThai("Hoạt động");
-        khachHangRepository.add(kh);
-
-        // 2. Tạo tài khoản người dùng tương ứng (Vai trò = 1: KHACH_HANG)
-        NguoiDung nd = new NguoiDung();
-        nd.setEmail(email);
-        nd.setMatKhau(matKhau.trim());
-        nd.setIdVaiTro(1L); // 1 = KHACH_HANG
-        nd.setTrangThai("Hoạt động");
-        nguoiDungRepository.add(nd);
-
-        resp.sendRedirect(req.getContextPath() + "/index.jsp?msg=register_customer_success");
-    }
+    ///private void xuLyDangKy(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    ///    String hoTen = req.getParameter("hoTen");
+    ///    String soDienThoai = req.getParameter("soDienThoai");
+    ///    String email = req.getParameter("email");
+    ///    String matKhau = req.getParameter("matKhau");
+    ///
+    ///    if (email == null || email.trim().isEmpty() || matKhau == null || matKhau.trim().isEmpty()
+    ///            || soDienThoai == null || soDienThoai.trim().isEmpty()) {
+    ///        resp.sendRedirect(req.getContextPath() + "/index.jsp?error=empty_fields&modal=register");
+    ///        return;
+    ///    }
+    ///
+    ///    email = email.trim().toLowerCase();
+    ///    soDienThoai = soDienThoai.trim();
+    ///
+    ///    // Kiểm tra email trùng
+    ///    if (nguoiDungRepository.findByEmail(email) != null) {
+    ///        resp.sendRedirect(req.getContextPath() + "/index.jsp?error=email_exists&modal=register");
+    ///        return;
+    ///    }
+    ///
+    ///    // Kiểm tra số điện thoại trùng trong khách hàng
+    ///    if (khachHangRepository.findBySoDienThoai(soDienThoai) != null) {
+    ///        resp.sendRedirect(req.getContextPath() + "/index.jsp?error=phone_exists&modal=register");
+    ///        return;
+    ///    }
+    ///
+    ///    // 1. Tạo bản ghi Khách hàng
+    ///    KhachHang kh = new KhachHang();
+    ///    kh.setHoTen(hoTen != null && !hoTen.trim().isEmpty() ? hoTen.trim() : "Khách Hàng Mới");
+    ///    kh.setSoDienThoai(soDienThoai);
+    ///    kh.setEmail(email);
+    ///    kh.setTrangThai("Hoạt động");
+    ///    khachHangRepository.add(kh);
+    ///
+    ///    // 2. Tạo tài khoản người dùng tương ứng (Vai trò = 1: KHACH_HANG)
+    ///    NguoiDung nd = new NguoiDung();
+    ///    nd.setEmail(email);
+    ///    nd.setMatKhau(matKhau.trim());
+    ///    nd.setIdVaiTro(1L); // 1 = KHACH_HANG
+    ///    nd.setTrangThai("Hoạt động");
+    ///    nguoiDungRepository.add(nd);
+    ///
+    ///    resp.sendRedirect(req.getContextPath() + "/index.jsp?msg=register_customer_success");
+    ///}
 
     /**
      * Đổi mật khẩu cá nhân khi đã đăng nhập
