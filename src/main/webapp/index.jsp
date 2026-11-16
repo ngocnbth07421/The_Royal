@@ -259,22 +259,19 @@
                 <i class='bx bx-log-in'></i> Đăng Nhập Vào Hệ Thống
             </button>
 
-            <!-- ĐĂNG KÝ TÀI KHOẢN CHỈ CHO KHÁCH HÀNG (TẠM ĐÓNG VÌ CHƯA CÓ LUỒNG KHÁCH HÀNG) -->
-            <%--
+            <!-- ĐĂNG KÝ TÀI KHOẢN CHỈ CHO KHÁCH HÀNG (CÓ SỐ ĐIỆN THOẠI) -->
             <div style="text-align: center; margin-top: 18px; font-size: 13px; color: #6b7a70;">
                 Chưa có tài khoản khách hàng?
                 <a href="javascript:void(0)" onclick="openModal('registerCustomerModal')" style="color: #557c56; font-weight: 700; text-decoration: none;">Đăng ký ngay</a>
             </div>
-            --%>
         </form>
 
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL ĐĂNG KÝ TÀI KHOẢN: CHỈ DÀNH CHO KHÁCH HÀNG (LÀM SAU)             -->
+    <!-- MODAL ĐĂNG KÝ TÀI KHOẢN: CHỈ DÀNH CHO KHÁCH HÀNG (CÓ SỐ ĐIỆN THOẠI)   -->
     <!-- (Tài khoản nhân viên do Quản lý và Admin thêm trong hệ thống)          -->
     <!-- ===================================================================== -->
-    <%--
     <div class="modal-wrap" id="registerCustomerModal">
         <div class="modal-body-custom">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
@@ -305,7 +302,6 @@
             </form>
         </div>
     </div>
-    --%>
 
     <!-- ===================================================================== -->
     <!-- QUY TRÌNH QUÊN MẬT KHẨU THEO CHUẨN SƠ ĐỒ HOẠT ĐỘNG (HÌNH 3)           -->

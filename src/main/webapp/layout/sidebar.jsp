@@ -70,8 +70,8 @@
 
         <div style="padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
             <div style="white-space: nowrap; overflow: hidden; max-width: 170px;">
-                <small style="color: #87938e; font-size: 10px; display: block;">Nhân viên trực ca:</small>
-                <b style="font-size: 12px; color: #eeeeee; text-overflow: ellipsis; overflow: hidden; display: block;">${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : 'Quản trị viên'}</b>
+                <small style="color: #87938e; font-size: 10px; display: block;">${not empty sessionScope.currentUser ? 'Nhân viên trực ca:' : 'Đang đăng nhập:'}</small>
+                <b style="font-size: 12px; color: #eeeeee; text-overflow: ellipsis; overflow: hidden; display: block;">${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : (not empty sessionScope.currentKhachHang.hoTen ? sessionScope.currentKhachHang.hoTen : 'Quản trị viên')}</b>
             </div>
             <a href="${pageContext.request.contextPath}/logout" class="icon-btn" style="width: 30px; height: 30px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); color: #ff8a80; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; text-decoration: none;" title="Đăng xuất khỏi hệ thống">
                 <i class='bx bx-log-out' style="font-size: 16px;"></i>
