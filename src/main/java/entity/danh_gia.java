@@ -1,7 +1,6 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +8,26 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Entity
-@Table(name = "danh_gia")
 @NoArgsConstructor
+@Table(name = "danh_gia")
 
-public class DanhGia {
+public class danh_gia {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_danh_gia")
+    private Integer idDanhGia;
+    @Column(name = "id_dat_phong")
+    private Integer idDatPhong;
+    @Column(name = "id_khach_hang")
+    private Integer idKhachHang;
+    @Column(name = "diem_danh_gia")
+    private Integer diemDanhGia;
+    @Column(name = "binh_luan")
+    private String binhLuan;
+    @Column(name = "bi_an")
+    private Boolean biAn;
+    @Column(name = "ly_do_an")
+    private String lyDoAn;
+
 }
