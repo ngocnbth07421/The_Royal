@@ -1,0 +1,103 @@
+/* ==========================================================================
+   THE ROYAL HOTEL — HỆ THỐNG QUẢN LÝ KHÁCH SẠN HOÀNG GIA
+   01. THIẾT LẬP CHUNG, FONT CHỮ VÀ BẢNG MÀU (BASE & VARIABLES)
+   Tham khảo quy chuẩn trình bày code từ bài assm (Rõ ràng, thụt lề chuẩn, chú thích đầy đủ)
+   ========================================================================== */
+
+/* Nhúng font chữ Google Fonts: DM Sans (nội dung) và Playfair Display (tiêu đề sang trọng) */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+
+/* ==================== BIẾN MÀU TOÀN CỤC (CSS VARIABLES) ==================== */
+:root {
+    /* Bảng màu nhận diện The Royal Hotel & Nền Gradient từ photogradient (#222831 & #EEEEEE) */
+    --color-dark: #222831;           /* Màu đen than hoàng gia sang trọng */
+    --color-dark-sub: #393e46;       /* Đen phụ cho chữ và viền phụ */
+    --color-light: #eeeeee;          /* Xám sáng ngọc trai */
+    --bg-gradient: linear-gradient(135deg, #222831 0%, #2f3640 22%, #636e7a 50%, #c4cbd0 76%, #eeeeee 92%, #eeeeee 100%);
+    --bg-body: var(--bg-gradient);   /* Nền gradient chuẩn nhận diện từ photogradient */
+    --surface: #ffffff;              /* Nền thẻ, panel trắng sáng */
+    --surface-glass: rgba(255, 255, 255, 0.88); /* Hiệu ứng kính mờ */
+    --color-primary: #6d9886;        /* Xanh xô thơm quý phái (Sage Green) */
+    --color-primary-dark: #527b6b;   /* Xanh đậm khi hover */
+    --color-primary-light: #e8f1ec;  /* Nền xanh nhạt cho huy hiệu và tag */
+    --color-accent: #f2e7d5;         /* Màu kem hoàng gia (Royal Cream) */
+    --color-gold: #c59b27;           /* Vàng ánh kim cao cấp */
+    --color-gold-light: #fef7e0;     /* Nền vàng nhạt */
+    
+    /* Màu trạng thái */
+    --color-success: #2e7d32;
+    --color-success-bg: #e8f5e9;
+    --color-warning: #b78103;
+    --color-warning-bg: #fff8e1;
+    --color-danger: #c62828;
+    --color-danger-bg: #ffebee;
+    --color-info: #1565c0;
+    --color-info-bg: #e3f2fd;
+    
+    /* Màu chữ và đường kẻ */
+    --text-main: #222831;
+    --text-muted: #7c8389;
+    --text-light: #9ea5ab;
+    --border-color: #dedfdd;
+    --border-light: #f0f0ee;
+    
+    /* Hiệu ứng bóng đổ (Box Shadow) */
+    --shadow-sm: 0 2px 6px rgba(34, 40, 49, 0.04);
+    --shadow-md: 0 8px 24px rgba(34, 40, 49, 0.08);
+    --shadow-lg: 0 16px 40px rgba(34, 40, 49, 0.12);
+    
+    /* Bo góc */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-full: 9999px;
+    
+    /* Chuyển động */
+    --transition: all 0.25s ease;
+}
+
+/* ==================== RESET MẶC ĐỊNH ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg-body) fixed;
+    background-size: cover;
+    color: var(--text-main);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Liên kết và hình ảnh */
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Tiêu đề font Playfair Display sang trọng */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--color-dark);
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
