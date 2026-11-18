@@ -10,21 +10,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cd56af3-4ea0-4d97-8d41-1a282377dc2f" name="Changes" comment="test 1">
-      <change afterPath="$PROJECT_DIR$/src/main/java/controller/DichVuServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/controller/KhachHangServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/controller/danh_giaServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/danh_gia.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/dat_phong.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/dichvu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/khach_hang.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/khachhang.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/entity/sudungdichvu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/repository/danh_giaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/web/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/DanhGiaServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/DanhGia.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/DatPhong.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/repository/DanhGiaRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/danh-gia/add.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/danh-gia/detail.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/danh-gia/update.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/danh-gia/view.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/dich-vu/view.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/khach-hang/view.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/DichVuServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/DichVuServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/KhachHangServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/KhachHangServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/danh_giaServlet.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/entity/KhachHang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/KhachHang.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/danh_gia.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/dat_phong.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/dichvu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/DichVu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/khach_hang.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/khachhang.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/sudungdichvu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/SuDungDichVu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/Dichvurepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/repository/DichVuRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/KhachHangRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/repository/KhachHangRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/Khachhangrepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/Sudungdichvurepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/repository/SuDungDichVuRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/repository/danh_giaRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/util/HibernateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/HibernateConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/the_royal_sqlserver.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/the_royal_sqlserver.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,61 +99,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.3772905600774856" />
-      <entry key="MS500" value="2.9554499338308533" />
-      <entry key="S2" value="6.473984107698993" />
-      <entry key="S5" value="10.926477253321137" />
-      <entry key="S10" value="14.339391042793252" />
-      <entry key="S30" value="17.778524926942666" />
-      <entry key="S60" value="18.955521029612935" />
-      <entry key="M2" value="20.48166083954331" />
-      <entry key="M5" value="23.855349254788255" />
-      <entry key="M10" value="26.278617148296558" />
-      <entry key="M15" value="27.34531567017685" />
-      <entry key="M30" value="28.576949152091462" />
-      <entry key="H1" value="29.262733445113756" />
-      <entry key="H2" value="29.624689628873945" />
-      <entry key="H4" value="29.810644319523142" />
-      <entry key="D1" value="29.968201842482088" />
-      <entry key="W1" value="29.995451520507668" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.000008797347355" />
+      <entry key="S5" value="1.009504941858791" />
+      <entry key="S10" value="1.0996071535735348" />
+      <entry key="S30" value="1.5890566688394832" />
+      <entry key="S60" value="2.044007507349966" />
+      <entry key="M2" value="2.5827438678198718" />
+      <entry key="M5" value="4.470188700280671" />
+      <entry key="M10" value="7.396308446057564" />
+      <entry key="M15" value="10.186415993403712" />
+      <entry key="M30" value="17.645745894926595" />
+      <entry key="H1" value="26.35514323047254" />
+      <entry key="H2" value="33.313383074682896" />
+      <entry key="H4" value="37.7534119159402" />
+      <entry key="D1" value="42.0633243125029" />
+      <entry key="W1" value="42.86457621264669" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="7.22389845410028E-17" />
-      <entry key="MS500" value="5.912270917727313E-4" />
-      <entry key="S2" value="0.15593319648925572" />
-      <entry key="S5" value="0.4755272757305487" />
-      <entry key="S10" value="0.6895848575270113" />
-      <entry key="S30" value="0.8834783378618609" />
-      <entry key="S60" value="0.9399352838689804" />
-      <entry key="M2" value="0.969502596112553" />
-      <entry key="M5" value="0.9876875752673278" />
-      <entry key="M10" value="0.993824720595804" />
-      <entry key="M15" value="0.9958788982732155" />
-      <entry key="M30" value="0.9979373218159627" />
-      <entry key="H1" value="0.9989681285286142" />
-      <entry key="H2" value="0.9994839311007528" />
-      <entry key="H4" value="0.9997419322508948" />
-      <entry key="D1" value="0.9999569840828252" />
-      <entry key="W1" value="0.9999938547556841" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="1.8212133329352564E-210" />
+      <entry key="S2" value="3.673585949047952E-53" />
+      <entry key="S5" value="1.0617837687844682E-21" />
+      <entry key="S10" value="3.2585023688566936E-11" />
+      <entry key="S30" value="3.194032618767284E-4" />
+      <entry key="S60" value="0.017871856699199676" />
+      <entry key="M2" value="0.13368566498478035" />
+      <entry key="M5" value="0.4474011198912296" />
+      <entry key="M10" value="0.6851397048036845" />
+      <entry key="M15" value="0.8293889444552484" />
+      <entry key="M30" value="1.1288436641955242" />
+      <entry key="H1" value="1.439491156524437" />
+      <entry key="H2" value="1.677206093260768" />
+      <entry key="H4" value="1.8260972807464995" />
+      <entry key="D1" value="1.9690930794708454" />
+      <entry key="W1" value="1.995534989670637" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3145760152254733" />
-      <entry key="MS500" value="2.9118011155578425" />
-      <entry key="S2" value="6.566697467987061" />
-      <entry key="S5" value="11.33214399341303" />
-      <entry key="S10" value="14.975819783790506" />
-      <entry key="S30" value="18.638051146459084" />
-      <entry key="S60" value="19.88119189381596" />
-      <entry key="M2" value="21.437956499297613" />
-      <entry key="M5" value="24.830148303130287" />
-      <entry key="M10" value="27.263072536215187" />
-      <entry key="M15" value="28.33407590297654" />
-      <entry key="M30" value="29.57081979036895" />
-      <entry key="H1" value="30.259526275667174" />
-      <entry key="H2" value="30.623048359289143" />
-      <entry key="H4" value="30.809813994087936" />
-      <entry key="D1" value="30.968062085560007" />
-      <entry key="W1" value="30.995431521388667" />
+      <entry key="MS100" value="0.3035487210987617" />
+      <entry key="MS500" value="0.7878538860493461" />
+      <entry key="S2" value="0.9421332629396812" />
+      <entry key="S5" value="0.981680384864494" />
+      <entry key="S10" value="1.061597188714715" />
+      <entry key="S30" value="1.5147911188912144" />
+      <entry key="S60" value="1.986278460185916" />
+      <entry key="M2" value="2.658057863491812" />
+      <entry key="M5" value="4.8852011906154775" />
+      <entry key="M10" value="8.062834001375807" />
+      <entry key="M15" value="11.002441109169945" />
+      <entry key="M30" value="18.766775912858275" />
+      <entry key="H1" value="27.790059922813874" />
+      <entry key="H2" value="34.98802880783392" />
+      <entry key="H4" value="39.57814059682748" />
+      <entry key="D1" value="44.0321748491848" />
+      <entry key="W1" value="44.860076167795405" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -149,49 +165,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Tomcat Server.Tomcat 10.1.611.executor": "Run",
-    "git-widget-placeholder": "temp",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/ACER/Downloads/The_Royal/src/main/java/org/example/Main.java",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Tomcat Server.Tomcat 10.1.611.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;temp&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/ACER/Downloads/The_Royal/src/main/java/org/example/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlserver"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlserver&quot;
     ]
   }
-}]]></component>
-  <component name="RunDashboard">
-    <option name="configurationStatuses">
-      <map>
-        <entry key="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
-          <value>
-            <map>
-              <entry key="Tomcat 10.1.611" value="FAILED" />
-            </map>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
+}</component>
   <component name="RunManager">
     <configuration name="Tomcat 10.1.611" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.611" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />

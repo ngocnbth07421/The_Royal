@@ -33,8 +33,17 @@
         <a href="${pageContext.request.contextPath}/quan-ly-nhan-vien/view" class="nav-item ${param.activeMenu == 'nhan-vien' ? 'active' : ''}">
             <i class='bx bx-id-card'></i> <span>Quản lý nhân viên</span>
         </a>
+        <a href="${pageContext.request.contextPath}/khach-hang/view" class="nav-item ${param.activeMenu == 'khach-hang' ? 'active' : ''}">
+            <i class='bx bx-user-pin'></i> <span>Quản lý khách hàng</span>
+        </a>
 
         <div class="nav-label" style="white-space: nowrap;">DỊCH VỤ &amp; TÀI CHÍNH</div>
+        <a href="${pageContext.request.contextPath}/dich-vu/view" class="nav-item ${param.activeMenu == 'dich-vu' ? 'active' : ''}">
+            <i class='bx bx-dish'></i> <span>Quản lý dịch vụ</span>
+        </a>
+        <a href="${pageContext.request.contextPath}/danh-gia/view" class="nav-item ${param.activeMenu == 'danh-gia' ? 'active' : ''}">
+            <i class='bx bx-star'></i> <span>Đánh giá khách hàng</span>
+        </a>
         <a href="${pageContext.request.contextPath}/quan-ly-phong/view" class="nav-item">
             <i class='bx bx-spa'></i> <span>Tiện nghi phòng</span>
         </a>

@@ -42,6 +42,10 @@ public class HibernateConfig {
         conf.addAnnotatedClass(TienNghi.class);
         conf.addAnnotatedClass(NguoiDung.class);
         conf.addAnnotatedClass(KhachHang.class);
+        conf.addAnnotatedClass(DichVu.class);
+        conf.addAnnotatedClass(SuDungDichVu.class);
+        conf.addAnnotatedClass(DatPhong.class);
+        conf.addAnnotatedClass(DanhGia.class);
 
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
@@ -57,3 +61,4 @@ public class HibernateConfig {
         System.out.println(getFACTORY());
     }
 }
+

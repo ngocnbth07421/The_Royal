@@ -1,15 +1,15 @@
 
 package controller;
 
-import entity.dichvu;
-import entity.sudungdichvu;
+import entity.DichVu;
+import entity.SuDungDichVu;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import repository.Dichvurepository;
-import repository.Sudungdichvurepository;
+import repository.DichVuRepository;
+import repository.SuDungDichVuRepository;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -31,11 +31,11 @@ import java.time.LocalDateTime;
 })
 public class DichVuServlet extends HttpServlet {
 
-    private final Dichvurepository dichVuRepository =
-            new Dichvurepository();
+    private final DichVuRepository dichVuRepository =
+            new DichVuRepository();
 
-    private final Sudungdichvurepository suDungDichVuRepository =
-            new Sudungdichvurepository();
+    private final SuDungDichVuRepository suDungDichVuRepository =
+            new SuDungDichVuRepository();
 
     // =========================
     // LOAD DU LIEU CUA CA 2 BANG
@@ -99,7 +99,7 @@ public class DichVuServlet extends HttpServlet {
 
                 Long idDichVu = Long.valueOf(req.getParameter("id"));
 
-                dichvu dv = dichVuRepository.getOne(idDichVu);
+                DichVu dv = dichVuRepository.getOne(idDichVu);
 
                 if (dv == null) {
                     showError(req, resp, "Không tìm thấy dịch vụ!");
@@ -134,7 +134,7 @@ public class DichVuServlet extends HttpServlet {
 
                 Long idSuDung = Long.valueOf(req.getParameter("id"));
 
-                sudungdichvu sddv =
+                SuDungDichVu sddv =
                         suDungDichVuRepository.getOne(idSuDung);
 
                 if (sddv == null) {
@@ -194,7 +194,7 @@ public class DichVuServlet extends HttpServlet {
 
                 case "/dich-vu/add":
 
-                    dichvu dv = new dichvu();
+                    DichVu dv = new DichVu();
 
                     dv.setMa_dich_vu(
                             req.getParameter("ma_dich_vu"));
@@ -228,7 +228,7 @@ public class DichVuServlet extends HttpServlet {
                     Long id = Long.valueOf(
                             req.getParameter("id"));
 
-                    dichvu dvUpdate = new dichvu();
+                    DichVu dvUpdate = new DichVu();
 
                     dvUpdate.setId_dich_vu(id);
 
@@ -261,7 +261,7 @@ public class DichVuServlet extends HttpServlet {
 
                 case "/dich-vu/sddv-add":
 
-                    sudungdichvu sddv = new sudungdichvu();
+                    SuDungDichVu sddv = new SuDungDichVu();
 
                     sddv.setId_dat_phong(
                             Long.valueOf(req.getParameter("id_dat_phong")));
@@ -302,7 +302,7 @@ public class DichVuServlet extends HttpServlet {
                     Long idSddv = Long.valueOf(
                             req.getParameter("id"));
 
-                    sudungdichvu sddvUpdate = new sudungdichvu();
+                    SuDungDichVu sddvUpdate = new SuDungDichVu();
 
                     sddvUpdate.setId_su_dung_dich_vu(idSddv);
 
@@ -325,7 +325,7 @@ public class DichVuServlet extends HttpServlet {
                             req.getParameter("thoi_gian_su_dung");
 
                     if (thoiGianSua == null || thoiGianSua.isEmpty()) {
-                        sudungdichvu old =
+                        SuDungDichVu old =
                                 suDungDichVuRepository.getOne(idSddv);
 
                         sddvUpdate.setThoi_gian_su_dung(
