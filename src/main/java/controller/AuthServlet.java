@@ -146,18 +146,24 @@ public class AuthServlet extends HttpServlet {
             nv = nhanVienRepository.getOne(nd.getIdNhanVien());
         }
 
+        KhachHang currentKh = null;
+        if (nv == null && nd.getEmail() != null) {
+            currentKh = khachHangRepository.findByEmail(nd.getEmail());
+        }
+
         VaiTro vaiTro = vaiTroRepository.getOne(nd.getIdVaiTro());
 
         HttpSession session = req.getSession(true);
         session.setAttribute("currentNguoiDung", nd);
         session.setAttribute("currentUser", nv);
+        session.setAttribute("currentKhachHang", currentKh);
         session.setAttribute("currentRole", vaiTro);
 
         resp.sendRedirect(req.getContextPath() + "/trang-chu");
     }
 
     /**
-     * Đăng ký tài khoản: Chỉ dành cho Khách hàng (có số điện thoại, làm sau)
+     * Đăng ký tài khoản: Dành cho Khách hàng
      */
     private void xuLyDangKy(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String hoTen = req.getParameter("hoTen");
@@ -297,6 +303,21 @@ public class AuthServlet extends HttpServlet {
             }
             nhanVienRepository.update(nv);
             session.setAttribute("currentUser", nv);
+        } else {
+            KhachHang kh = (KhachHang) session.getAttribute("currentKhachHang");
+            if (kh == null && nd != null && nd.getEmail() != null) {
+                kh = khachHangRepository.findByEmail(nd.getEmail());
+            }
+            if (kh != null) {
+                if (hoTen != null && !hoTen.trim().isEmpty()) {
+                    kh.setHoTen(hoTen.trim());
+                }
+                if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
+                    kh.setSoDienThoai(soDienThoai.trim());
+                }
+                khachHangRepository.update(kh);
+                session.setAttribute("currentKhachHang", kh);
+            }
         }
 
         if (email != null && !email.trim().isEmpty() && email.contains("@")) {

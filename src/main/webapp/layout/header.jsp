@@ -131,10 +131,10 @@
             <div class="avatar"><i class='bx bxs-user'></i></div>
             <div class="profile-info">
                 <b>
-                    ${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : sessionScope.currentNguoiDung.email}
+                    ${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : (not empty sessionScope.currentKhachHang.hoTen ? sessionScope.currentKhachHang.hoTen : sessionScope.currentNguoiDung.email)}
                 </b>
                 <small>
-                    ${not empty sessionScope.currentUser.maNhanVien ? sessionScope.currentUser.maNhanVien : 'HỆ THỐNG'}
+                    ${not empty sessionScope.currentUser.maNhanVien ? sessionScope.currentUser.maNhanVien : (not empty sessionScope.currentKhachHang ? 'KHÁCH HÀNG' : 'HỆ THỐNG')}
                 </small>
             </div>
             <i class='bx bx-chevron-down profile-arrow' id="profileArrow"></i>
@@ -143,9 +143,9 @@
         <!-- DROPDOWN MENU HỒ SƠ TÀI KHOẢN -->
         <div id="profileDropdown" class="profile-dropdown-menu" style="display: none;">
             <div class="p-dropdown-header">
-                <div class="pdh-name">${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : 'Quản trị viên'}</div>
+                <div class="pdh-name">${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : (not empty sessionScope.currentKhachHang.hoTen ? sessionScope.currentKhachHang.hoTen : 'Người Dùng')}</div>
                 <div class="pdh-email">${sessionScope.currentNguoiDung.email}</div>
-                <div class="pdh-role">${sessionScope.currentRole.tenVaiTro} · ${not empty sessionScope.currentUser.maNhanVien ? sessionScope.currentUser.maNhanVien : 'ADMIN'}</div>
+                <div class="pdh-role">${sessionScope.currentRole.tenVaiTro} · ${not empty sessionScope.currentUser.maNhanVien ? sessionScope.currentUser.maNhanVien : (not empty sessionScope.currentKhachHang ? 'KHÁCH HÀNG' : 'USER')}</div>
             </div>
             <div class="p-dropdown-divider"></div>
             <a href="javascript:void(0)" onclick="openEditProfileModal()" class="p-dropdown-item">
@@ -208,7 +208,7 @@
                     Họ và tên <span style="color: red;">*</span>
                 </label>
                 <input type="text" name="hoTen" style="width: 100%; padding: 10px 12px; border: 1px solid #d4ddd7; border-radius: 8px; font-size: 13px; box-sizing: border-box;" 
-                       value="${sessionScope.currentUser.hoTen}" required>
+                       value="${not empty sessionScope.currentUser.hoTen ? sessionScope.currentUser.hoTen : sessionScope.currentKhachHang.hoTen}" required>
             </div>
 
             <div style="margin-bottom: 12px;">
@@ -216,7 +216,7 @@
                     Số điện thoại liên hệ <span style="color: red;">*</span>
                 </label>
                 <input type="tel" name="soDienThoai" style="width: 100%; padding: 10px 12px; border: 1px solid #d4ddd7; border-radius: 8px; font-size: 13px; box-sizing: border-box;" 
-                       value="${sessionScope.currentUser.soDienThoai}" required>
+                       value="${not empty sessionScope.currentUser.soDienThoai ? sessionScope.currentUser.soDienThoai : sessionScope.currentKhachHang.soDienThoai}" required>
             </div>
 
             <div style="margin-bottom: 18px;">

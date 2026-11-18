@@ -259,7 +259,7 @@
                 <i class='bx bx-log-in'></i> Đăng Nhập Vào Hệ Thống
             </button>
 
-            <!-- ĐĂNG KÝ TÀI KHOẢN CHỈ CHO KHÁCH HÀNG (LÀM SAU) CÓ SỐ ĐIỆN THOẠI -->
+            <!-- ĐĂNG KÝ TÀI KHOẢN CHỈ CHO KHÁCH HÀNG (CÓ SỐ ĐIỆN THOẠI) -->
             <div style="text-align: center; margin-top: 18px; font-size: 13px; color: #6b7a70;">
                 Chưa có tài khoản khách hàng?
                 <a href="javascript:void(0)" onclick="openModal('registerCustomerModal')" style="color: #557c56; font-weight: 700; text-decoration: none;">Đăng ký ngay</a>
@@ -280,8 +280,6 @@
                 </h3>
                 <span onclick="closeModal('registerCustomerModal')" style="cursor: pointer; font-size: 22px; color: #888;">&times;</span>
             </div>
-
-
 
             <form action="${pageContext.request.contextPath}/dang-ky" method="post">
                 <div style="margin-bottom: 12px;">
