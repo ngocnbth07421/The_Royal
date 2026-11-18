@@ -91,7 +91,7 @@ CREATE TABLE khach_hang (
                             so_dien_thoai VARCHAR(20),
                             email         VARCHAR(150),
                             trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa'))
+                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
 );
 
 
