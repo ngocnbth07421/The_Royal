@@ -1,5 +1,4 @@
-<%@ page pageEncoding="UTF-8" %>
-<%-- Dùng: <c:set var="tt" value="${...trangThai}"/> rồi include file này --%>
+<%@ page pageEncoding="UTF-8" %><%-- Dùng: <c:set var="tt" value="${...trangThai}"/> rồi include file này --%>
 <c:choose>
   <c:when test="${tt eq 'CHO_COC'}"><c:set var="stCls" value="status-warning"/><c:set var="stTxt" value="Chờ cọc"/></c:when>
   <c:when test="${tt eq 'DA_XAC_NHAN'}"><c:set var="stCls" value="status-success"/><c:set var="stTxt" value="Đã xác nhận"/></c:when>

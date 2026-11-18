@@ -3,6 +3,7 @@ package controller;
 import dto.PhongYeuCau;
 import dto.YeuCauDatPhong;
 import entity.DatPhong;
+import entity.DatPhongChiTiet;
 import entity.Phong;
 import exception.NghiepVuException;
 import jakarta.servlet.ServletException;
@@ -24,6 +25,8 @@ import java.util.List;
 /**
  * URL: /dat-phong
  *   GET  ?action=danhSach (mặc định) [maDatPhong, tuKhoaKhach, trangThai, tuNgay, denNgay]  -> dat-phong/danh-sach.jsp   (TRA CỨU ĐẶT PHÒNG)
+ *   GET  ?action=lich                                                                       -> dat-phong/lich.jsp         (LỊCH kiểu Google Calendar)
+ *   GET  ?action=lichDuLieu&start=&end=[&maPhong=&trangThai=&goiHuy=1]                      -> JSON các lượt ở cho lịch
  *   GET  ?action=chiTiet&id=                                                                -> dat-phong/chi-tiet.jsp
  *   GET  ?action=timPhong [nhanPhong, traPhong, idHangPhong, idLoaiGiuong, soNguoi]         -> dat-phong/tim-phong.jsp   (TRA CỨU PHÒNG)
  *   GET  ?action=formDat&idPhong=..&idPhong=..&nhanPhong=..&traPhong=..                     -> dat-phong/form-dat.jsp
@@ -38,9 +41,11 @@ public class DatPhongServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        FlashMessage.nap(req);
         String action = req.getParameter("action") == null ? "danhSach" : req.getParameter("action");
+        if ("lichDuLieu".equals(action)) { traLichJson(req, resp); return; }   // JSON: không được "ăn" thông báo flash
+        FlashMessage.nap(req);
         switch (action) {
+            case "lich" -> hienLich(req, resp);
             case "chiTiet" -> hienChiTiet(req, resp);
             case "timPhong" -> hienTimPhong(req, resp);
             case "formDat" -> hienFormDat(req, resp);
@@ -57,6 +62,104 @@ public class DatPhongServlet extends HttpServlet {
             case "huy" -> huy(req, resp);
             default -> resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "action không hợp lệ");
         }
+    }
+
+
+    // ================================================================= LỊCH
+    private void hienLich(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher(VIEW + "lich.jsp").forward(req, resp);
+    }
+
+    /** Trả JSON theo định dạng sự kiện của FullCalendar: mỗi lượt ở = 1 thanh kéo từ ngày nhận đến ngày trả. */
+    private void traLichJson(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        try {
+            LocalDate tu = layNgayDauChuoi(req.getParameter("start"));
+            LocalDate den = layNgayDauChuoi(req.getParameter("end"));
+            List<DatPhongChiTiet> ds = service.layLich(tu, den, req.getParameter("maPhong"),
+                    req.getParameter("trangThai"), "1".equals(req.getParameter("goiHuy")));
+
+            StringBuilder sb = new StringBuilder("[");
+            boolean dau = true;
+            for (DatPhongChiTiet c : ds) {
+                DatPhong d = c.getDatPhong();
+                String[] mau = mauTheoTrangThai(d.getTrangThai());   // {nền, viền, chữ}
+                if (!dau) sb.append(',');
+                dau = false;
+                sb.append("{\"id\":\"").append(c.getId()).append("\"")
+                  .append(",\"title\":\"").append(json(c.getPhong().getMaPhong() + " · " + d.getKhachHang().getHoTen())).append("\"")
+                  .append(",\"start\":\"").append(c.getNgayNhan()).append("\"")
+                  .append(",\"end\":\"").append(c.getNgayTra()).append("\"")      // FullCalendar: end là ngày loại trừ = ngày trả phòng
+                  .append(",\"allDay\":true")
+                  .append(",\"backgroundColor\":\"").append(mau[0]).append("\"")
+                  .append(",\"borderColor\":\"").append(mau[1]).append("\"")
+                  .append(",\"textColor\":\"").append(mau[2]).append("\"")
+                  .append(",\"extendedProps\":{")
+                  .append("\"idDatPhong\":").append(d.getId())
+                  .append(",\"maDatPhong\":\"").append(json(d.getMaDatPhong())).append("\"")
+                  .append(",\"phong\":\"").append(json(c.getPhong().getMaPhong())).append("\"")
+                  .append(",\"khach\":\"").append(json(d.getKhachHang().getHoTen())).append("\"")
+                  .append(",\"sdt\":\"").append(json(d.getKhachHang().getSoDienThoai() == null ? "" : d.getKhachHang().getSoDienThoai())).append("\"")
+                  .append(",\"trangThai\":\"").append(json(nhanTrangThai(d.getTrangThai()))).append("\"")
+                  .append(",\"nhan\":\"").append(d.getThoiGianNhanPhong().toLocalDate()).append(" ").append(d.getThoiGianNhanPhong().toLocalTime()).append("\"")
+                  .append(",\"tra\":\"").append(d.getThoiGianTraPhong().toLocalDate()).append(" ").append(d.getThoiGianTraPhong().toLocalTime()).append("\"")
+                  .append(",\"nguoiLon\":").append(c.getSoNguoiLon())
+                  .append(",\"treEm\":").append(c.getSoTreEmDuoi6() + c.getSoTreEmTu6Tuoi())
+                  .append("}}");
+            }
+            resp.getWriter().write(sb.append(']').toString());
+        } catch (NghiepVuException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"loi\":\"" + json(e.getMessage()) + "\"}");
+        }
+    }
+
+    /** FullCalendar gửi dạng 2026-11-01T00:00:00+07:00 -> chỉ lấy 10 ký tự ngày đầu. */
+    private LocalDate layNgayDauChuoi(String v) {
+        if (v == null || v.length() < 10) throw new NghiepVuException("Thiếu khoảng ngày của lịch.");
+        try { return LocalDate.parse(v.substring(0, 10)); }
+        catch (java.time.format.DateTimeParseException e) { throw new NghiepVuException("Ngày của lịch không hợp lệ."); }
+    }
+
+    private static String[] mauTheoTrangThai(String tt) {
+        return switch (tt) {
+            case DatPhong.CHO_COC       -> new String[]{"#fff8e1", "#b78103", "#7a5600"};
+            case DatPhong.DA_XAC_NHAN   -> new String[]{"#e8f5e9", "#2e7d32", "#1b5e20"};
+            case DatPhong.DANG_LUU_TRU  -> new String[]{"#e3f2fd", "#1565c0", "#0d47a1"};
+            case DatPhong.DA_TRA_PHONG  -> new String[]{"#eceff1", "#546e7a", "#37474f"};
+            default                     -> new String[]{"#ffebee", "#c62828", "#8e0000"};   // các loại hủy
+        };
+    }
+
+    private static String nhanTrangThai(String tt) {
+        return switch (tt) {
+            case DatPhong.CHO_COC       -> "Chờ cọc";
+            case DatPhong.DA_XAC_NHAN   -> "Đã xác nhận";
+            case DatPhong.DANG_LUU_TRU  -> "Đang lưu trú";
+            case DatPhong.DA_TRA_PHONG  -> "Đã trả phòng";
+            case DatPhong.KHACH_HUY     -> "Khách hủy";
+            case DatPhong.KHACH_SAN_HUY -> "Khách sạn hủy";
+            case DatPhong.TU_HUY        -> "Tự hủy";
+            default -> tt;
+        };
+    }
+
+    /** Escape chuỗi để nhúng vào JSON. */
+    private static String json(String v) {
+        if (v == null) return "";
+        StringBuilder sb = new StringBuilder();
+        for (char ch : v.toCharArray()) {
+            switch (ch) {
+                case '"'  -> sb.append("\\\"");
+                case '\\' -> sb.append("\\\\");
+                case '\n' -> sb.append("\\n");
+                case '\r' -> sb.append("\\r");
+                case '\t' -> sb.append("\\t");
+                case '<'  -> sb.append("\\u003c");
+                default   -> { if (ch < 0x20) sb.append(String.format("\\u%04x", (int) ch)); else sb.append(ch); }
+            }
+        }
+        return sb.toString();
     }
 
     // ================================================================= TRA CỨU ĐẶT PHÒNG

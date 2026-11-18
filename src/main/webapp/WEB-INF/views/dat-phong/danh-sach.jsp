@@ -13,7 +13,10 @@
         <p>Theo dõi, tra cứu và hủy các đơn đặt phòng của khách sạn.</p>
     </div>
     <div class="heading-actions">
-        <span class="date-chip" data-today></span>
+        <div class="seg">
+            <a class="active" href="${ctx}/dat-phong"><i class='bx bx-list-ul'></i> Danh sách</a>
+            <a href="${ctx}/dat-phong?action=lich"><i class='bx bx-calendar'></i> Lịch</a>
+        </div>
         <a class="btn btn-primary" href="${ctx}/dat-phong?action=timPhong"><i class='bx bx-plus'></i> Tạo đặt phòng mới</a>
     </div>
 </div>

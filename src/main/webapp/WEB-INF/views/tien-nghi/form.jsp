@@ -10,7 +10,7 @@
     <div>
         <div class="eyebrow">DỊCH VỤ &amp; TÀI CHÍNH</div>
         <h1><c:out value="${tieuDe}"/></h1>
-        <p>Tên tiện nghi không được trùng với tiện nghi đã có.</p>
+        <p>Tên tiện nghi không được trùng với tiện nghi đã có.<c:if test="${dangSua}"> Mã tiện nghi: <span class="code-tag"><c:out value="${tienNghi.maTienNghi}"/></span></c:if></p>
     </div>
     <div class="heading-actions">
         <a class="btn btn-ghost" href="${ctx}/tien-nghi"><i class='bx bx-arrow-back'></i> Quay lại</a>
@@ -27,7 +27,7 @@
             <input id="tenTienNghi" type="text" name="tenTienNghi" maxlength="100" required autofocus value="<c:out value='${tienNghi.tenTienNghi}'/>">
         </div>
         <div class="form-group">
-            <label for="soLuong">Số lượng</label>
+            <label for="soLuong">Số lượng trong kho <span class="field-hint">(không nhỏ hơn số phòng đang có)</span></label>
             <input id="soLuong" type="number" name="soLuong" min="0" required
                    value="${not empty soLuongNhap ? soLuongNhap : (empty tienNghi ? 1 : tienNghi.soLuong)}">
         </div>

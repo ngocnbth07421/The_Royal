@@ -21,6 +21,9 @@ public class TienNghi {
     public TienNghi() {}
     public TienNghi(String tenTienNghi, Integer soLuong) { this.tenTienNghi = tenTienNghi; this.soLuong = soLuong; }
 
+    /** Mã riêng của tiện nghi, sinh từ id (TN001, TN002, ...). Không cần thêm cột trong DB. */
+    public String getMaTienNghi() { return id == null ? "" : String.format("TN%03d", id); }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTenTienNghi() { return tenTienNghi; }

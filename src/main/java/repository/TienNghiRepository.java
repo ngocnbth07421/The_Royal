@@ -1,9 +1,12 @@
 package repository;
 
+import entity.Phong;
 import entity.TienNghi;
 import org.hibernate.Session;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** Chỉ truy vấn DB (HQL). Không mở transaction ở đây - Service lo việc đó. */
 public class TienNghiRepository {
@@ -44,6 +47,45 @@ public class TienNghiRepository {
     public List<TienNghi> timTheoDanhSachId(Session s, List<Long> ids) {
         if (ids.isEmpty()) return List.of();
         return s.createQuery("from TienNghi t where t.id in :ids", TienNghi.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
+
+    // ------------------------------------------------------------ KHO / PHÒNG (kiểm tra 2 chiều)
+
+    /** id tiện nghi -> số phòng đang có tiện nghi đó. Tiện nghi chưa gán phòng nào sẽ không có trong map. */
+    public Map<Long, Long> demPhongTheoTienNghi(Session s) {
+        List<Object[]> rs = s.createQuery(
+                "select t.id, count(p) from Phong p join p.tienNghis t group by t.id", Object[].class).getResultList();
+        Map<Long, Long> kq = new HashMap<>();
+        for (Object[] r : rs) kq.put(((Number) r[0]).longValue(), ((Number) r[1]).longValue());
+        return kq;
+    }
+
+    public long demTongPhong(Session s) {
+        return s.createQuery("select count(p) from Phong p", Long.class).getSingleResult();
+    }
+
+    public List<Phong> timPhongCoTienNghi(Session s, Long idTienNghi) {
+        return s.createQuery("select p from Phong p join p.tienNghis t where t.id = :id order by p.maPhong", Phong.class)
+                .setParameter("id", idTienNghi)
+                .getResultList();
+    }
+
+    public List<Phong> timPhongChuaCoTienNghi(Session s, Long idTienNghi, String tuKhoa, int gioiHan) {
+        boolean coLoc = tuKhoa != null && !tuKhoa.isBlank();
+        String hql = "select p from Phong p where p.id not in "
+                + "(select p2.id from Phong p2 join p2.tienNghis t where t.id = :id)"
+                + (coLoc ? " and lower(p.maPhong) like :q" : "")
+                + " order by p.maPhong";
+        var q = s.createQuery(hql, Phong.class).setParameter("id", idTienNghi);
+        if (coLoc) q.setParameter("q", "%" + tuKhoa.trim().toLowerCase() + "%");
+        return q.setMaxResults(gioiHan).getResultList();
+    }
+
+    public List<Phong> timPhongTheoDanhSachId(Session s, List<Long> ids) {
+        if (ids.isEmpty()) return List.of();
+        return s.createQuery("select p from Phong p where p.id in (:ids)", Phong.class)
                 .setParameter("ids", ids)
                 .getResultList();
     }

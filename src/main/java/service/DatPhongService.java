@@ -202,6 +202,17 @@ public class DatPhongService {
         return TransactionHelper.chay(s -> repo.timLichSuHuy(s, idDatPhong));
     }
 
+    // ================================================================ 5. LỊCH ĐẶT PHÒNG
+    /** Lượt ở giao với [tu, den) để vẽ lịch. Giới hạn 130 ngày/lần để không tải quá nhiều dữ liệu. */
+    public List<DatPhongChiTiet> layLich(LocalDate tu, LocalDate den, String maPhong,
+                                         String trangThaiDon, boolean goiHuy) {
+        if (tu == null || den == null || !den.isAfter(tu)) throw new NghiepVuException("Khoảng ngày của lịch không hợp lệ.");
+        if (tu.plusDays(130).isBefore(den)) throw new NghiepVuException("Khoảng ngày của lịch quá dài.");
+        String ma = (maPhong == null || maPhong.isBlank()) ? null : maPhong.trim();
+        String tt = (trangThaiDon == null || trangThaiDon.isBlank()) ? null : trangThaiDon.trim();
+        return TransactionHelper.chay(s -> repo.timLichTheoKhoang(s, tu, den, ma, tt, goiHuy));
+    }
+
     // ================================================================ HÀM PHỤ
     private void kiemTraKhoangNgay(LocalDate nhan, LocalDate tra) {
         if (nhan == null || tra == null) throw new NghiepVuException("Vui lòng chọn ngày nhận và ngày trả phòng.");

@@ -14,6 +14,7 @@
     </div>
     <div class="heading-actions">
         <span class="date-chip" data-today></span>
+        <a class="btn btn-ghost" href="${ctx}/dat-phong?action=lich"><i class='bx bx-calendar'></i> Xem lịch</a>
         <a class="btn btn-ghost" href="${ctx}/dat-phong"><i class='bx bx-list-ul'></i> Đơn đặt phòng</a>
     </div>
 </div>
