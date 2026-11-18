@@ -1,14 +1,14 @@
 package controller;
 
-import dto.TienNghiThongKe;
+import entity.TienNghiThongKe;
 import entity.TienNghi;
-import exception.NghiepVuException;
+import util.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.TienNghiService;
+import repository.TienNghiService;
 import util.FlashMessage;
 import util.RequestUtil;
 

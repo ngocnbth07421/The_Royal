@@ -1,12 +1,11 @@
-package service;
+package repository;
 
-import dto.TienNghiChiTiet;
-import dto.TienNghiThongKe;
+import entity.TienNghiChiTiet;
+import entity.TienNghiThongKe;
 import entity.Phong;
 import entity.TienNghi;
-import exception.NghiepVuException;
+import util.NghiepVuException;
 import jakarta.persistence.LockModeType;
-import repository.TienNghiRepository;
 import util.TransactionHelper;
 
 import java.util.*;

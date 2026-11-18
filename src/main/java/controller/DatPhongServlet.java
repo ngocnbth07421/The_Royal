@@ -1,17 +1,17 @@
 package controller;
 
-import dto.PhongYeuCau;
-import dto.YeuCauDatPhong;
+import entity.PhongYeuCau;
+import entity.YeuCauDatPhong;
 import entity.DatPhong;
 import entity.DatPhongChiTiet;
 import entity.Phong;
-import exception.NghiepVuException;
+import util.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.DatPhongService;
+import repository.DatPhongService;
 import util.FlashMessage;
 import util.RequestUtil;
 

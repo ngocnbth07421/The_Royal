@@ -1,6 +1,4 @@
-package dto;
-
-import entity.TienNghi;
+package entity;
 
 /** 1 tiện nghi kèm số liệu kho: tổng trong kho, đã gán cho bao nhiêu phòng, còn lại bao nhiêu. */
 public class TienNghiThongKe {

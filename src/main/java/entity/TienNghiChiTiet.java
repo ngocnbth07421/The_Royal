@@ -1,6 +1,4 @@
-package dto;
-
-import entity.Phong;
+package entity;
 
 import java.util.List;
 
