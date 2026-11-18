@@ -1,31 +1,31 @@
 
 package repository;
 
-import entity.khachhang;
+import entity.KhachHang;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
 
 import java.util.List;
 
-public class Khachhangrepository {
+public class KhachHangRepository {
 
     // Lấy danh sách khách hàng
-    public List<khachhang> getAll() {
+    public List<KhachHang> getAll() {
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
-            return session.createQuery("from khachhang", khachhang.class).list();
+            return session.createQuery("from khachhang", KhachHang.class).list();
         }
     }
 
     // Lấy khách hàng theo ID
-    public khachhang getOne(Long id) {
+    public KhachHang getOne(Long id) {
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
-            return session.find(khachhang.class, id);
+            return session.find(KhachHang.class, id);
         }
     }
 
     // Thêm khách hàng
-    public void add(khachhang kh) {
+    public void add(KhachHang kh) {
         Transaction transaction = null;
 
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
@@ -45,14 +45,14 @@ public class Khachhangrepository {
     }
 
     // Sửa khách hàng
-    public void update(khachhang kh) {
+    public void update(KhachHang kh) {
         Transaction transaction = null;
 
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
             transaction = session.beginTransaction();
 
-            khachhang khCu = session.find(
-                    khachhang.class,
+            KhachHang khCu = session.find(
+                    KhachHang.class,
                     kh.getId_khach_hang()
             );
 
@@ -84,7 +84,7 @@ public class Khachhangrepository {
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
             transaction = session.beginTransaction();
 
-            khachhang kh = session.find(khachhang.class, id);
+            KhachHang kh = session.find(KhachHang.class, id);
 
             if (kh != null) {
                 session.remove(kh);

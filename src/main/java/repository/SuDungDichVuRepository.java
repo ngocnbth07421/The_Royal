@@ -1,40 +1,40 @@
 
 package repository;
 
-import entity.dichvu;
+import entity.SuDungDichVu;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
 
 import java.util.List;
 
-public class Dichvurepository {
+public class SuDungDichVuRepository {
 
-    // LAY TAT CA DICH VU
-    public List<dichvu> getAll() {
+    // LAY TAT CA SU DUNG DICH VU
+    public List<SuDungDichVu> getAll() {
 
         try (Session session =
                      HibernateConfig.getFACTORY().openSession()) {
 
             return session.createQuery(
-                    "FROM dichvu",
-                    dichvu.class
+                    "FROM sudungdichvu",
+                    SuDungDichVu.class
             ).getResultList();
         }
     }
 
-    // LAY DICH VU THEO ID
-    public dichvu getOne(Long id) {
+    // LAY SU DUNG DICH VU THEO ID
+    public SuDungDichVu getOne(Long id) {
 
         try (Session session =
                      HibernateConfig.getFACTORY().openSession()) {
 
-            return session.find(dichvu.class, id);
+            return session.find(SuDungDichVu.class, id);
         }
     }
 
-    // THEM DICH VU
-    public void add(dichvu dv) {
+    // THEM SU DUNG DICH VU
+    public void add(SuDungDichVu sddv) {
 
         Transaction transaction = null;
 
@@ -43,7 +43,7 @@ public class Dichvurepository {
 
             transaction = session.beginTransaction();
 
-            session.persist(dv);
+            session.persist(sddv);
 
             transaction.commit();
 
@@ -57,8 +57,8 @@ public class Dichvurepository {
         }
     }
 
-    // CAP NHAT DICH VU
-    public void update(dichvu dv) {
+    // CAP NHAT SU DUNG DICH VU
+    public void update(SuDungDichVu sddv) {
 
         Transaction transaction = null;
 
@@ -67,7 +67,7 @@ public class Dichvurepository {
 
             transaction = session.beginTransaction();
 
-            session.merge(dv);
+            session.merge(sddv);
 
             transaction.commit();
 
@@ -81,7 +81,7 @@ public class Dichvurepository {
         }
     }
 
-    // XOA DICH VU
+    // XOA SU DUNG DICH VU
     public void delete(Long id) {
 
         Transaction transaction = null;
@@ -91,10 +91,11 @@ public class Dichvurepository {
 
             transaction = session.beginTransaction();
 
-            dichvu dv = session.find(dichvu.class, id);
+            SuDungDichVu sddv =
+                    session.find(SuDungDichVu.class, id);
 
-            if (dv != null) {
-                session.remove(dv);
+            if (sddv != null) {
+                session.remove(sddv);
             }
 
             transaction.commit();

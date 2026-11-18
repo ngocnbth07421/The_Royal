@@ -5,8 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import repository.Khachhangrepository; // Đảm bảo tên package repository của em khớp nhé
-import entity.khachhang;
+import repository.KhachHangRepository; // Đảm bảo tên package repository của em khớp nhé
+import entity.KhachHang;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
 })
 public class KhachHangServlet extends HttpServlet {
 
-    Khachhangrepository khachHangRepository = new Khachhangrepository();
+    KhachHangRepository khachHangRepository = new KhachHangRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,7 +47,7 @@ public class KhachHangServlet extends HttpServlet {
         // Vì id_khach_hang trong SQL là bigint nên dùng Long.valueOf()
         Long id = Long.valueOf(req.getParameter("id"));
 
-        khachhang kh = khachHangRepository.getOne(id);
+        KhachHang kh = khachHangRepository.getOne(id);
 
         req.setAttribute("kh", kh);
 
@@ -73,7 +73,7 @@ public class KhachHangServlet extends HttpServlet {
 
         Long id = Long.valueOf(req.getParameter("id"));
 
-        khachhang kh = khachHangRepository.getOne(id);
+        KhachHang kh = khachHangRepository.getOne(id);
 
         req.setAttribute("kh", kh);
 
@@ -102,7 +102,7 @@ public class KhachHangServlet extends HttpServlet {
             String email = req.getParameter("email");
             String trangThai = req.getParameter("trang_thai");
 
-            khachhang kh = new khachhang();
+            KhachHang kh = new KhachHang();
             kh.setHo_ten(hoTen);
             kh.setSo_dien_thoai(soDienThoai);
             kh.setEmail(email);
@@ -123,7 +123,7 @@ public class KhachHangServlet extends HttpServlet {
 
             Long id = Long.valueOf(idParam);
 
-            khachhang kh = khachHangRepository.getOne(id);
+            KhachHang kh = khachHangRepository.getOne(id);
 
             if (kh == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy khách hàng");

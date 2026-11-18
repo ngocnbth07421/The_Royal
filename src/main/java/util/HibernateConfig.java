@@ -1,12 +1,12 @@
 package util;
-import entity.khachhang;
+import entity.KhachHang;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
-import entity.sudungdichvu;
-import entity.dichvu;
+import entity.SuDungDichVu;
+import entity.DichVu;
 
 import java.util.Properties;
 
@@ -34,9 +34,9 @@ public class HibernateConfig {
             - Khai báo cho Hibernate biết các Class nào trong Java sẽ được ánh xạ xuống database
             - Khi ứng dụng chạy, Hibernate sẽ quét các class xxx1 và xxx2 (thường có annotation @Entity) để quản lý chúng.
         */
-        conf.addAnnotatedClass(khachhang.class); // khi xảy ra lỗi sản phẩm í not mapped
-        conf.addAnnotatedClass(sudungdichvu.class);
-        conf.addAnnotatedClass(dichvu.class);
+        conf.addAnnotatedClass(KhachHang.class); // khi xảy ra lỗi sản phẩm í not mapped
+        conf.addAnnotatedClass(SuDungDichVu.class);
+        conf.addAnnotatedClass(DichVu.class);
 //      conf.addAnnotatedClass(Sanphamchitiet.class);
 //        conf.addAnnotatedClass(xxx2.class);
 
