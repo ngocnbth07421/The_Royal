@@ -33,10 +33,10 @@
 
             <c:choose>
             <c:when test="${kh != null}">
-            <form action="${pageContext.request.contextPath}/khach-hang/update?id=${kh.id_khach_hang}" method="POST">
+            <form action="${pageContext.request.contextPath}/quan-ly-khach-hang/update?id=${kh.id_khach_hang}" method="POST">
                 </c:when>
                 <c:otherwise>
-                <form action="${pageContext.request.contextPath}/khach-hang/add" method="POST">
+                <form action="${pageContext.request.contextPath}/quan-ly-khach-hang/add" method="POST">
                     </c:otherwise>
                     </c:choose>
 
@@ -89,7 +89,7 @@
 
                     <div class="text-end">
                         <c:if test="${kh != null}">
-                            <a href="${pageContext.request.contextPath}/khach-hang/view"
+                            <a href="${pageContext.request.contextPath}/quan-ly-khach-hang/view"
                                class="btn btn-secondary me-2">
                                 Hủy
                             </a>
@@ -151,19 +151,19 @@
                             </td>
 
                             <td>
-                                <a href="${pageContext.request.contextPath}/khach-hang/view-update?id=${item.id_khach_hang}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-khach-hang/view-update?id=${item.id_khach_hang}"
                                    class="btn btn-warning btn-sm"
                                    title="Sửa">
                                     <i class="fa-solid fa-pen"></i>
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/khach-hang/detail?id=${item.id_khach_hang}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-khach-hang/detail?id=${item.id_khach_hang}"
                                    class="btn btn-info btn-sm text-white"
                                    title="Chi tiết">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/khach-hang/delete?id=${item.id_khach_hang}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-khach-hang/delete?id=${item.id_khach_hang}"
                                    class="btn btn-danger btn-sm"
                                    onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này?');"
                                    title="Xóa">

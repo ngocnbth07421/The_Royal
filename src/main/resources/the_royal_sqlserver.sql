@@ -255,7 +255,7 @@ CREATE TABLE khach_luu_tru_chi_tiet (
 CREATE TABLE nhiem_vu_don_phong (
                                     id_nhiem_vu           BIGINT IDENTITY(1,1) PRIMARY KEY,
                                     id_phong              BIGINT NOT NULL REFERENCES phong(id_phong),
-                                    id_dat_phong_chi_tiet BIGINT REFERENCES dat_phong_chi_tiet(id_dat_phong_chi_tiet),
+                                    id_dat_phong_chi_tiet BIGINT NOT NULL REFERENCES dat_phong_chi_tiet(id_dat_phong_chi_tiet),
                                     id_nhan_vien          BIGINT REFERENCES nhan_vien(id_nhan_vien),
                                     trang_thai            NVARCHAR(25) NOT NULL DEFAULT N'Chờ xử lý'
                                         CHECK (trang_thai IN (N'Chờ xử lý', N'Đang làm', N'Hoàn thành'))

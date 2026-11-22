@@ -21,7 +21,8 @@ public class SuDungDichVu {
     @Column(name = "id_su_dung_dich_vu")
     private Long id_su_dung_dich_vu;
 
-    @Column(name = "id_dat_phong")
+    // The DB column is id_dat_phong_chi_tiet (FK to dat_phong_chi_tiet)
+    @Column(name = "id_dat_phong_chi_tiet")
     private Long id_dat_phong;
 
     @Column(name = "id_dich_vu")

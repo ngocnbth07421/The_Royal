@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Danh Sách đánh giá</h2>
-<a href="${pageContext.request.contextPath}/danh-gia/add">+ Thêm đánh giá</a>
+<a href="${pageContext.request.contextPath}/quan-ly-danh-gia/add">+ Thêm đánh giá</a>
 
 <table border="1" cellpadding="6" cellspacing="0">
     <tr>
@@ -37,9 +37,9 @@
         <td align="center">${dg.biAn ? 'Đang ẩn' : 'Hiển thị'}</td>
         <td>${dg.lyDoAn}</td>
         <td>
-            <a href="${pageContext.request.contextPath}/danh-gia/detail?id=${dg.idDanhGia}">Xem</a> |
-            <a href="${pageContext.request.contextPath}/danh-gia/update?id=${dg.idDanhGia}">Sửa</a> |
-            <a href="${pageContext.request.contextPath}/danh-gia/delete?id=${dg.idDanhGia}"
+            <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/detail?id=${dg.idDanhGia}">Xem</a> |
+            <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/update?id=${dg.idDanhGia}">Sửa</a> |
+            <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/delete?id=${dg.idDanhGia}"
                onclick="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?');">Xóa</a>
         </td>
     </tr>

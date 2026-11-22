@@ -71,11 +71,11 @@
         <div class="card-body">
 
             <c:set var="serviceAction"
-                   value="${pageContext.request.contextPath}/dich-vu/add"/>
+                   value="${pageContext.request.contextPath}/quan-ly-dich-vu/add"/>
 
             <c:if test="${not empty dv}">
                 <c:set var="serviceAction"
-                       value="${pageContext.request.contextPath}/dich-vu/update"/>
+                       value="${pageContext.request.contextPath}/quan-ly-dich-vu/update"/>
             </c:if>
 
             <!-- FORM DICH VU -->
@@ -207,7 +207,7 @@
 
                     <c:if test="${not empty dv}">
 
-                        <a href="${pageContext.request.contextPath}/dich-vu/view"
+                        <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/view"
                            class="btn btn-secondary me-2">
 
                             <i class="fa-solid fa-xmark"></i>
@@ -325,7 +325,7 @@
 
                             <td>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/view-update?id=${item.id_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/view-update?id=${item.id_dich_vu}"
                                    class="btn btn-warning btn-sm"
                                    title="Sửa">
 
@@ -333,7 +333,7 @@
 
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/detail?id=${item.id_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/detail?id=${item.id_dich_vu}"
                                    class="btn btn-info btn-sm text-white"
                                    title="Chi tiết">
 
@@ -341,7 +341,7 @@
 
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/delete?id=${item.id_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/delete?id=${item.id_dich_vu}"
                                    class="btn btn-danger btn-sm"
                                    onclick="return confirm('Bạn có chắc muốn xóa dịch vụ này?')"
                                    title="Xóa">
@@ -397,11 +397,11 @@
         <div class="card-body">
 
             <c:set var="usageAction"
-                   value="${pageContext.request.contextPath}/dich-vu/sddv-add"/>
+                   value="${pageContext.request.contextPath}/quan-ly-dich-vu/sddv-add"/>
 
             <c:if test="${not empty sddv}">
                 <c:set var="usageAction"
-                       value="${pageContext.request.contextPath}/dich-vu/sddv-update"/>
+                       value="${pageContext.request.contextPath}/quan-ly-dich-vu/sddv-update"/>
             </c:if>
 
             <!-- FORM SU DUNG DICH VU -->
@@ -544,7 +544,7 @@
 
                     <c:if test="${not empty sddv}">
 
-                        <a href="${pageContext.request.contextPath}/dich-vu/view"
+                        <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/view"
                            class="btn btn-secondary me-2">
 
                             <i class="fa-solid fa-xmark"></i>
@@ -675,7 +675,7 @@
 
                             <td>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/sddv-view-update?id=${item.id_su_dung_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/sddv-view-update?id=${item.id_su_dung_dich_vu}"
                                    class="btn btn-warning btn-sm"
                                    title="Sửa">
 
@@ -683,7 +683,7 @@
 
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/sddv-detail?id=${item.id_su_dung_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/sddv-detail?id=${item.id_su_dung_dich_vu}"
                                    class="btn btn-info btn-sm text-white"
                                    title="Chi tiết">
 
@@ -691,7 +691,7 @@
 
                                 </a>
 
-                                <a href="${pageContext.request.contextPath}/dich-vu/sddv-delete?id=${item.id_su_dung_dich_vu}"
+                                <a href="${pageContext.request.contextPath}/quan-ly-dich-vu/sddv-delete?id=${item.id_su_dung_dich_vu}"
                                    class="btn btn-danger btn-sm"
                                    onclick="return confirm('Bạn có chắc muốn xóa lượt sử dụng này?')"
                                    title="Xóa">

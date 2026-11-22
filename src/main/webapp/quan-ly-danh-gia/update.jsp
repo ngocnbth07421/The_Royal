@@ -14,7 +14,7 @@
 <body>
 <h2>Cập nhật  đánh giá #${dg.idDanhGia}</h2>
 
-<form action="${pageContext.request.contextPath}/danh-gia/update?id=${dg.idDanhGia}" method="post">
+<form action="${pageContext.request.contextPath}/quan-ly-danh-gia/update?id=${dg.idDanhGia}" method="post">
     ID đặt phòng:
     <select name="idDatPhong" required>
         <c:forEach var="dp" items="${listdat_phong}">
@@ -38,7 +38,7 @@
     Lý do ẩn: <input type="text" name="lyDoAn" value="${dg.lyDoAn}"><br><br>
 
     <button type="submit">Cập nhật</button>
-    <a href="${pageContext.request.contextPath}/danh-gia/view">Hủy</a>
+    <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/view">Hủy</a>
 </form>
 </body>
 </html>

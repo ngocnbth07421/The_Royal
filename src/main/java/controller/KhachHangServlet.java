@@ -11,12 +11,12 @@ import entity.KhachHang;
 import java.io.IOException;
 
 @WebServlet(name = "KhachHangServlet", value = {
-        "/khach-hang/view",
-        "/khach-hang/detail",
-        "/khach-hang/delete",
-        "/khach-hang/view-update",
-        "/khach-hang/update",
-        "/khach-hang/add"
+        "/quan-ly-khach-hang/view",
+        "/quan-ly-khach-hang/detail",
+        "/quan-ly-khach-hang/delete",
+        "/quan-ly-khach-hang/view-update",
+        "/quan-ly-khach-hang/update",
+        "/quan-ly-khach-hang/add"
 })
 public class KhachHangServlet extends HttpServlet {
 
@@ -51,7 +51,7 @@ public class KhachHangServlet extends HttpServlet {
 
         req.setAttribute("kh", kh);
 
-        req.getRequestDispatcher("/khach-hang/view.jsp")
+        req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp")
                 .forward(req, resp);
     }
 
@@ -64,7 +64,7 @@ public class KhachHangServlet extends HttpServlet {
         khachHangRepository.delete(id);
 
         // Chú ý sửa lại đường dẫn redirect đúng với URL view của khách hàng
-        resp.sendRedirect(req.getContextPath() + "/khach-hang/view");
+        resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
     }
 
     // Xem chi tiết khách hàng
@@ -77,14 +77,14 @@ public class KhachHangServlet extends HttpServlet {
 
         req.setAttribute("kh", kh);
 
-        req.getRequestDispatcher("/khach-hang/view.jsp")
+        req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp")
                 .forward(req, resp);
     }
 
     // Hiển thị danh sách khách hàng
     private void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("listKhachHang", khachHangRepository.getAll());
-        req.getRequestDispatcher("/khach-hang/view.jsp").forward(req, resp);
+        req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp").forward(req, resp);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class KhachHangServlet extends HttpServlet {
 
             khachHangRepository.add(kh);
 
-            resp.sendRedirect(req.getContextPath() + "/khach-hang/view");
+            resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
 
         }else if (url.contains("update")) {
 
@@ -142,7 +142,7 @@ public class KhachHangServlet extends HttpServlet {
 
             khachHangRepository.update(kh);
 
-            resp.sendRedirect(req.getContextPath() + "/khach-hang/view");
+            resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
         }
 
     }

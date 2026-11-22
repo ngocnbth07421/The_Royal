@@ -9,7 +9,29 @@
     min-height: 100vh;
     display: flex;
 }
-
+/* ------------------------------------------------------------------ */
+/* Fixed topbar header – stays visible while the page scrolls           */
+/* ------------------------------------------------------------------ */
+header.topbar {
+    position: sticky;          /* sticks when scrolling */
+    top: 0;                    /* attach to top of viewport */
+    z-index: 1100;             /* above sidebar & content */
+    background: var(--color-light, #ffffff);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);   /* subtle separation */
+}
+header.topbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1100;
+    background: var(--color-light, #ffffff);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+}
+/* Main content wrapper – ensure it starts below the header */
+.app-shell > .content {
+    padding-top: 68px;   /* same height as the header (adjust if needed) */
+}
 /* ==================== THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR) ==================== */
 .sidebar {
     position: fixed;

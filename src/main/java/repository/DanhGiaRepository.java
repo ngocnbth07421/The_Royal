@@ -18,7 +18,7 @@ public class DanhGiaRepository {
     }
 
     public List<DanhGia> getAll(){
-        return session.createQuery("FROM danh_gia").list();
+        return session.createQuery("FROM DanhGia", DanhGia.class).list();
     }
 
     public DanhGia getOne(Integer id){

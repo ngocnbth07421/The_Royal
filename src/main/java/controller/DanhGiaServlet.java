@@ -12,11 +12,11 @@ import repository.DanhGiaRepository;
 import java.io.IOException;
 
 @WebServlet(name = "danh_giaServlet",value = {
-        "/danh-gia/view",
-        "/danh-gia/add",
-        "/danh-gia/update",
-        "/danh-gia/delete",
-        "/danh-gia/detail"
+        "/quan-ly-danh-gia/view",
+        "/quan-ly-danh-gia/add",
+        "/quan-ly-danh-gia/update",
+        "/quan-ly-danh-gia/delete",
+        "/quan-ly-danh-gia/detail"
 })
 public class DanhGiaServlet extends HttpServlet {
     DanhGiaRepository DanhGiaRepository = new DanhGiaRepository();
@@ -40,7 +40,7 @@ public class DanhGiaServlet extends HttpServlet {
         req.setAttribute("listdanh_gia",DanhGiaRepository.getAll());
         req.setAttribute("listdat_phong", DanhGiaRepository.getAllDatPhong());
         req.setAttribute("listkhach_hang", DanhGiaRepository.getAllKhachHang());
-        req.getRequestDispatcher("/danh-gia/view.jsp").forward(req,resp);
+        req.getRequestDispatcher("/quan-ly-danh-gia/view.jsp").forward(req,resp);
     }
 
 
@@ -50,13 +50,13 @@ public class DanhGiaServlet extends HttpServlet {
         req.setAttribute("dg",dg);
         req.setAttribute("listdat_phong", DanhGiaRepository.getAllDatPhong());
         req.setAttribute("listkhach_hang", DanhGiaRepository.getAllKhachHang());
-        req.getRequestDispatcher("/danh-gia/detail.jsp").forward(req,resp);
+        req.getRequestDispatcher("/quan-ly-danh-gia/detail.jsp").forward(req,resp);
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Integer id = Integer.parseInt(req.getParameter("id"));
         DanhGiaRepository.delete(id);
-        resp.sendRedirect(req.getContextPath()+ "/danh-gia/view");
+        resp.sendRedirect(req.getContextPath()+ "/quan-ly-danh-gia/view");
     }
     private void viewUpadate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer id = Integer.parseInt(req.getParameter("id"));
@@ -64,7 +64,7 @@ public class DanhGiaServlet extends HttpServlet {
         req.setAttribute("dg",dg);
         req.setAttribute("listdat_phong", DanhGiaRepository.getAllDatPhong());
         req.setAttribute("listkhach_hang", DanhGiaRepository.getAllKhachHang());
-        req.getRequestDispatcher("/danh-gia/update.jsp").forward(req,resp);
+        req.getRequestDispatcher("/quan-ly-danh-gia/update.jsp").forward(req,resp);
     }
     private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Integer id = Integer.parseInt(req.getParameter("id"));
@@ -85,7 +85,7 @@ public class DanhGiaServlet extends HttpServlet {
         dg.setLyDoAn(lyDoAn);
 
         DanhGiaRepository.update(dg);
-        resp.sendRedirect(req.getContextPath() + "/danh-gia/view");
+        resp.sendRedirect(req.getContextPath() + "/quan-ly-danh-gia/view");
     }
 
     private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -105,13 +105,13 @@ public class DanhGiaServlet extends HttpServlet {
         dg.setLyDoAn(lyDoAn);
 
         DanhGiaRepository.add(dg);
-        resp.sendRedirect(req.getContextPath() + "/danh-gia/view");
+        resp.sendRedirect(req.getContextPath() + "/quan-ly-danh-gia/view");
     }
 
     private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("listdat_phong", DanhGiaRepository.getAllDatPhong());
         req.setAttribute("listkhach_hang", DanhGiaRepository.getAllKhachHang());
-        req.getRequestDispatcher("/danh-gia/add.jsp").forward(req, resp);
+        req.getRequestDispatcher("/quan-ly-danh-gia/add.jsp").forward(req, resp);
     }
 
 

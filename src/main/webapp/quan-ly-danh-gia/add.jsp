@@ -14,7 +14,7 @@
 <body>
 <h2>Thêm đánh giá mới</h2>
 
-<form action="${pageContext.request.contextPath}/danh-gia/add" method="post">
+<form action="${pageContext.request.contextPath}/quan-ly-danh-gia/add" method="post">
     ID đặt phòng:
     <select name="idDatPhong" required>
         <option value="">-- Chọn mã đặt phòng --</option>
@@ -36,7 +36,7 @@
     Lý do ẩn: <input type="text" name="lyDoAn"><br><br>
 
     <button type="submit">Lưu</button>
-    <a href="${pageContext.request.contextPath}/danh-gia/view">Hủy</a>
+    <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/view">Hủy</a>
 </form>
 </body>
 </html>

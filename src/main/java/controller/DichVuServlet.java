@@ -16,18 +16,18 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @WebServlet(name = "DichVuServlet", value = {
-        "/dich-vu/view",
-        "/dich-vu/detail",
-        "/dich-vu/delete",
-        "/dich-vu/view-update",
-        "/dich-vu/update",
-        "/dich-vu/add",
+        "/quan-ly-dich-vu/view",
+        "/quan-ly-dich-vu/detail",
+        "/quan-ly-dich-vu/delete",
+        "/quan-ly-dich-vu/view-update",
+        "/quan-ly-dich-vu/update",
+        "/quan-ly-dich-vu/add",
 
-        "/dich-vu/sddv-detail",
-        "/dich-vu/sddv-delete",
-        "/dich-vu/sddv-view-update",
-        "/dich-vu/sddv-update",
-        "/dich-vu/sddv-add"
+        "/quan-ly-dich-vu/sddv-detail",
+        "/quan-ly-dich-vu/sddv-delete",
+        "/quan-ly-dich-vu/sddv-view-update",
+        "/quan-ly-dich-vu/sddv-update",
+        "/quan-ly-dich-vu/sddv-add"
 })
 public class DichVuServlet extends HttpServlet {
 
@@ -56,7 +56,7 @@ public class DichVuServlet extends HttpServlet {
 
         loadData(req);
 
-        req.getRequestDispatcher("/dich-vu/view.jsp")
+        req.getRequestDispatcher("/quan-ly-dich-vu/view.jsp")
                 .forward(req, resp);
     }
 
@@ -64,7 +64,7 @@ public class DichVuServlet extends HttpServlet {
                               HttpServletResponse resp)
             throws IOException {
 
-        resp.sendRedirect(req.getContextPath() + "/dich-vu/view");
+        resp.sendRedirect(req.getContextPath() + "/quan-ly-dich-vu/view");
     }
 
     private void showError(HttpServletRequest req,
@@ -89,13 +89,13 @@ public class DichVuServlet extends HttpServlet {
 
         switch (url) {
 
-            case "/dich-vu/view":
+            case "/quan-ly-dich-vu/view":
                 showPage(req, resp);
                 break;
 
             // SUA DICH VU
-            case "/dich-vu/view-update":
-            case "/dich-vu/detail":
+            case "/quan-ly-dich-vu/view-update":
+            case "/quan-ly-dich-vu/detail":
 
                 Long idDichVu = Long.valueOf(req.getParameter("id"));
 
@@ -111,7 +111,7 @@ public class DichVuServlet extends HttpServlet {
                 break;
 
             // XOA DICH VU
-            case "/dich-vu/delete":
+            case "/quan-ly-dich-vu/delete":
 
                 try {
                     Long id = Long.valueOf(req.getParameter("id"));
@@ -129,8 +129,8 @@ public class DichVuServlet extends HttpServlet {
                 break;
 
             // SUA SU DUNG DICH VU
-            case "/dich-vu/sddv-view-update":
-            case "/dich-vu/sddv-detail":
+            case "/quan-ly-dich-vu/sddv-view-update":
+            case "/quan-ly-dich-vu/sddv-detail":
 
                 Long idSuDung = Long.valueOf(req.getParameter("id"));
 
@@ -148,7 +148,7 @@ public class DichVuServlet extends HttpServlet {
                 break;
 
             // XOA SU DUNG DICH VU
-            case "/dich-vu/sddv-delete":
+            case "/quan-ly-dich-vu/sddv-delete":
 
                 try {
                     Long id = Long.valueOf(req.getParameter("id"));
@@ -192,7 +192,7 @@ public class DichVuServlet extends HttpServlet {
                 // THEM DICH VU
                 // =====================
 
-                case "/dich-vu/add":
+                case "/quan-ly-dich-vu/add":
 
                     DichVu dv = new DichVu();
 
@@ -223,7 +223,7 @@ public class DichVuServlet extends HttpServlet {
                 // CAP NHAT DICH VU
                 // =====================
 
-                case "/dich-vu/update":
+                case "/quan-ly-dich-vu/update":
 
                     Long id = Long.valueOf(
                             req.getParameter("id"));
@@ -259,7 +259,7 @@ public class DichVuServlet extends HttpServlet {
                 // THEM SU DUNG DICH VU
                 // =====================
 
-                case "/dich-vu/sddv-add":
+                case "/quan-ly-dich-vu/sddv-add":
 
                     SuDungDichVu sddv = new SuDungDichVu();
 
@@ -297,7 +297,7 @@ public class DichVuServlet extends HttpServlet {
                 // CAP NHAT SU DUNG DICH VU
                 // =====================
 
-                case "/dich-vu/sddv-update":
+                case "/quan-ly-dich-vu/sddv-update":
 
                     Long idSddv = Long.valueOf(
                             req.getParameter("id"));

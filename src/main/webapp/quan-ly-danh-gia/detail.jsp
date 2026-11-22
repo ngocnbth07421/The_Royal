@@ -45,7 +45,7 @@
     </tr>
 </table>
 <br>
-<a href="${pageContext.request.contextPath}/danh-gia/update?id=${dg.idDanhGia}">Sửa đánh giá này</a> |
-<a href="${pageContext.request.contextPath}/danh-gia/view">Quay lại danh sách</a>
+<a href="${pageContext.request.contextPath}/quan-ly-danh-gia/update?id=${dg.idDanhGia}">Sửa đánh giá này</a> |
+<a href="${pageContext.request.contextPath}/quan-ly-danh-gia/view">Quay lại danh sách</a>
 </body>
 </html>
