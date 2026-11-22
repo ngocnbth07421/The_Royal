@@ -1,0 +1,163 @@
+/* ==========================================================================
+   THE ROYAL HOTEL — HỆ THỐNG QUẢN LÝ KHÁCH SẠN HOÀNG GIA
+   05. THIẾT KẾ ĐÁP ỨNG ĐA THIẾT BỊ (RESPONSIVE: TABLET & MOBILE)
+   Tham khảo phong cách trình bày từ bài assm (Rõ ràng, thụt lề 4 dấu cách)
+   ========================================================================== */
+
+/* ==================== 1. MÀN HÌNH MÁY TÍNH BẢNG (TABLET <= 1100PX) ==================== */
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid,
+    .bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content {
+        padding: 24px 28px;
+    }
+
+    .topbar {
+        padding: 0 28px;
+    }
+
+    .room-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* ==================== 2. MÀN HÌNH ĐIỆN THOẠI DI ĐỘNG (MOBILE <= 768PX) ==================== */
+@media (max-width: 768px) {
+    /* Thanh Sidebar chuyển thành Drawer ẩn hiện */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 270px;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-area {
+        margin-left: 0;
+    }
+
+    /* Hiển thị nút menu hamburger */
+    .mobile-menu {
+        display: block;
+    }
+
+    .topbar {
+        height: 64px;
+        padding: 0 16px;
+    }
+
+    .profile-info,
+    .profile-arrow,
+    .date-chip {
+        display: none;
+    }
+
+    .content {
+        padding: 20px 14px;
+    }
+
+    .page-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .heading-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    /* Sơ đồ phòng trên di động */
+    .room-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .floor-list {
+        max-height: 180px;
+    }
+
+    .floor-scroll-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .room-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .room-tile {
+        padding: 10px 4px;
+    }
+
+    .room-tile-code {
+        font-size: 13px;
+    }
+
+    .room-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .room-detail-price {
+        text-align: left;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .amenities-setup-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    footer {
+        padding: 14px 16px;
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+
+    footer span {
+        float: none;
+        display: block;
+    }
+}

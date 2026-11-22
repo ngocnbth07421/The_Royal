@@ -1,0 +1,25 @@
+<%@ page pageEncoding="UTF-8" %>
+        </section>
+
+        <footer>
+            <div>© 2026 THE ROYAL HOTEL MANAGEMENT SYSTEM. Bảo lưu mọi quyền.</div>
+            <span>Thiết kế theo chuẩn kiến trúc sang trọng hoàng gia &amp; hiện đại.</span>
+        </footer>
+    </main>
+</div>
+
+<div class="toast ${not empty thongBao ? 'show' : ''}" id="toast" role="status"><c:if test="${not empty thongBao}"><i class='bx bx-check-circle'></i> <c:out value="${thongBao}"/></c:if></div>
+
+<script>
+    (function () {
+        var menu = document.getElementById('mobileMenu'), side = document.getElementById('sidebar');
+        if (menu) menu.addEventListener('click', function () { side.classList.toggle('open'); });
+        document.querySelectorAll('[data-today]').forEach(function (e) {
+            e.textContent = new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+        });
+        var t = document.getElementById('toast');
+        if (t && t.classList.contains('show')) setTimeout(function () { t.classList.remove('show'); }, 5000);
+    })();
+</script>
+</body>
+</html>

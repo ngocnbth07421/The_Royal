@@ -1,0 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %><%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="tieuDe" value="Thông tin mã giảm giá"/><c:set var="menu" value="ma-giam-gia"/><%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<div class="page-heading"><div><div class="eyebrow">KHUYẾN MÃI &amp; ƯU ĐÃI</div><h1>${empty maGiamGia ? 'Tạo mã giảm giá' : 'Cập nhật mã giảm giá'}</h1><p>Mã phần trăm không được vượt quá 100%; thời điểm kết thúc phải sau thời điểm bắt đầu.</p></div><a class="btn btn-ghost" href="${ctx}/ma-giam-gia">Quay lại</a></div>
+<div class="panel"><form method="post" action="${ctx}/ma-giam-gia" class="form-grid"><input type="hidden" name="action" value="luu"><c:if test="${not empty maGiamGia}"><input type="hidden" name="id" value="${maGiamGia[0]}"></c:if>
+<div class="field"><label>Mã giảm giá *</label><input name="maGiamGia" required maxlength="30" pattern="[A-Za-z0-9_-]{3,30}" value="<c:out value='${maGiamGia[1]}'/>" placeholder="ROYAL20"></div>
+<div class="field"><label>Loại giảm giá *</label><select name="loaiGiamGia" id="loaiGiamGia"><option value="PHAN_TRAM" ${maGiamGia[2] eq 'PHAN_TRAM' ? 'selected' : ''}>Phần trăm (%)</option><option value="SO_TIEN" ${maGiamGia[2] eq 'SO_TIEN' ? 'selected' : ''}>Số tiền (VNĐ)</option></select></div>
+<div class="field"><label>Giá trị giảm *</label><input type="number" name="giaTri" min="0.01" step="0.01" max="100" required value="${maGiamGia[3]}" id="giaTri"></div>
+<div class="field"><label>Bắt đầu lúc *</label><input type="datetime-local" name="batDauLuc" required value="${maGiamGia[4]}"></div>
+<div class="field"><label>Kết thúc lúc *</label><input type="datetime-local" name="ketThucLuc" required value="${maGiamGia[5]}"></div>
+<div class="field"><label>Trạng thái *</label><select name="trangThai"><option value="HOAT_DONG" ${empty maGiamGia || maGiamGia[6] eq 'HOAT_DONG' ? 'selected' : ''}>Hoạt động</option><option value="NGUNG" ${maGiamGia[6] eq 'NGUNG' ? 'selected' : ''}>Ngừng</option></select></div>
+<div class="form-actions"><button class="btn btn-primary"><i class='bx bx-save'></i> Lưu mã</button><a class="btn btn-ghost" href="${ctx}/ma-giam-gia">Hủy</a></div></form></div>
+<script>const loai=document.getElementById('loaiGiamGia'),gia=document.getElementById('giaTri');function gioiHan(){gia.max=loai.value==='PHAN_TRAM'?'100':'';}loai.addEventListener('change',gioiHan);gioiHan();</script><%@ include file="/WEB-INF/views/layout/footer.jspf" %>

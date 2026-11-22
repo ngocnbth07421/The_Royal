@@ -1,0 +1,10 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %><%@ taglib prefix="c" uri="jakarta.tags.core" %><%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<c:set var="tieuDe" value="Tạo giao dịch thanh toán"/><c:set var="menu" value="thanh-toan"/><%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<div class="page-heading"><div><div class="eyebrow">DỊCH VỤ &amp; TÀI CHÍNH</div><h1>Tạo giao dịch</h1><p>Giao dịch mới mặc định ở trạng thái CHO_XU_LY.</p></div><a class="btn btn-ghost" href="${ctx}/thanh-toan">Quay lại</a></div>
+<div class="panel"><form method="post" action="${ctx}/thanh-toan" class="form-grid"><input type="hidden" name="action" value="tao">
+<div class="field full"><label>Đơn đặt phòng *</label><select name="idDatPhong" required><option value="">-- Chọn đơn đặt phòng --</option><c:forEach var="d" items="${dsDatPhong}"><option value="${d[0]}">${d[1]} — ${d[2]} — Còn phải trả <fmt:formatNumber value="${d[3]-d[4]}" type="number" maxFractionDigits="0"/> ₫ (${d[5]})</option></c:forEach></select></div>
+<div class="field"><label>Phương thức *</label><select name="phuongThuc" id="phuongThuc"><option value="TIEN_MAT">Tiền mặt</option><option value="VNPAY">VNPay (ghi nhận thủ công)</option><option value="THE">Thẻ thành viên</option></select></div>
+<div class="field" id="theField" hidden><label>ID thẻ thành viên *</label><input type="number" min="1" name="idTheThanhVien" placeholder="Nhập ID thẻ"></div>
+<div class="field"><label>Số tiền thanh toán (VNĐ) *</label><input type="number" min="1" step="1" name="tienThanhToan" required placeholder="Ví dụ: 500000"></div>
+<div class="form-actions"><button class="btn btn-primary"><i class='bx bx-check-circle'></i> Tạo giao dịch</button><a class="btn btn-ghost" href="${ctx}/thanh-toan">Hủy</a></div></form></div>
+<script>const pt=document.getElementById('phuongThuc'),tf=document.getElementById('theField'),ti=tf.querySelector('input');function doiPt(){tf.hidden=pt.value!=='THE';ti.required=pt.value==='THE';}pt.addEventListener('change',doiPt);doiPt();</script><%@ include file="/WEB-INF/views/layout/footer.jspf" %>

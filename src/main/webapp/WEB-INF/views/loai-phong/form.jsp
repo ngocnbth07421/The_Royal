@@ -1,0 +1,10 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %><%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="tieuDe" value="Thông tin loại phòng"/><c:set var="menu" value="loai-phong"/><%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<div class="page-heading"><div><div class="eyebrow">DANH MỤC PHÒNG</div><h1>${empty loaiPhong ? 'Thêm loại phòng' : 'Cập nhật loại phòng'}</h1><p>Mỗi cặp hạng phòng và loại giường chỉ được khai báo một lần.</p></div><a class="btn btn-ghost" href="${ctx}/loai-phong"><i class='bx bx-arrow-back'></i> Quay lại</a></div>
+<div class="panel"><form method="post" action="${ctx}/loai-phong" class="form-grid"><input type="hidden" name="action" value="luu"><c:if test="${not empty loaiPhong}"><input type="hidden" name="id" value="${loaiPhong[0]}"></c:if>
+<div class="field"><label>Tên loại phòng *</label><input name="ten" maxlength="150" required value="<c:out value='${loaiPhong[3]}'/>" placeholder="Ví dụ: Deluxe Double"></div>
+<div class="field"><label>Hạng phòng *</label><select name="idHangPhong" required><option value="">-- Chọn hạng --</option><c:forEach var="h" items="${dsHangPhong}"><option value="${h[0]}" ${loaiPhong[1] == h[0] ? 'selected' : ''}>${h[1]}</option></c:forEach></select></div>
+<div class="field"><label>Loại giường *</label><select name="idLoaiGiuong" required><option value="">-- Chọn loại giường --</option><c:forEach var="g" items="${dsLoaiGiuong}"><option value="${g[0]}" ${loaiPhong[2] == g[0] ? 'selected' : ''}>${g[1]} (sức chứa ${g[2]})</option></c:forEach></select></div>
+<div class="field"><label>Giá mỗi đêm (VNĐ) *</label><input type="number" name="giaMoiDem" min="1" step="1000" required value="${loaiPhong[4]}" placeholder="Ví dụ: 850000"></div>
+<div class="field full"><label>Mô tả</label><textarea name="moTa" rows="4" maxlength="4000"><c:out value="${loaiPhong[5]}"/></textarea></div>
+<div class="form-actions"><button class="btn btn-primary" type="submit"><i class='bx bx-save'></i> Lưu loại phòng</button><a class="btn btn-ghost" href="${ctx}/loai-phong">Hủy</a></div></form></div><%@ include file="/WEB-INF/views/layout/footer.jspf" %>
