@@ -1326,7 +1326,18 @@ function bookThisRoom(code) {
 // =============================================================================
 // 12. ĐIỀU HƯỚNG TRANG CHÍNH (PAGE ROUTING)
 // =============================================================================
+// Các trang do Java (JSP) phụ trách: bấm menu sẽ chuyển sang trang JSP tương ứng (cùng giao diện)
+const JSP_PAGES = {
+    dat_phong: '/dat-phong', bookings: '/dat-phong',
+    tien_nghi: '/tien-nghi', amenities: '/tien-nghi'
+};
+function jspUrl(path) {
+    // Lấy context path từ địa chỉ hiện tại, ví dụ /The_Royal/index.html -> /The_Royal
+    return location.pathname.replace(/\/[^\/]*$/, '') + path;
+}
+
 function navigate(key) {
+    if (JSP_PAGES[key]) { location.href = jspUrl(JSP_PAGES[key]); return; }
     if (!pages[key]) return;
     currentPage = key;
     pageNum = 1;
@@ -1344,8 +1355,7 @@ function navigate(key) {
     $('#headingAction').onclick = () => {
         if (isRoomPage) openRoomSetupModal(selectedRoomCode);
         else {
-            navigate('dat_phong');
-            openModal('dat_phong');
+            location.href = jspUrl('/dat-phong?action=timPhong');
         }
     };
 
@@ -1417,4 +1427,5 @@ $('#today').textContent = new Intl.DateTimeFormat('vi-VN', {
 syncWithJavaBackend();
 
 // Khởi động trang mặc định Tổng quan
-navigate('tong_quan');
+const startKey = location.hash.slice(1);
+navigate(pages[startKey] && !JSP_PAGES[startKey] ? startKey : 'tong_quan');

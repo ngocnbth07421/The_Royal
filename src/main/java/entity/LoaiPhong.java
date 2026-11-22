@@ -1,55 +1,47 @@
 package entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "loai_phong")
 public class LoaiPhong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_loai_phong")
-    private Long idLoaiPhong;
+    private Long id;
 
-    @Column(name = "id_hang_phong", nullable = false)
-    private Long idHangPhong;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_hang_phong", nullable = false)
+    private HangPhong hangPhong;
 
-    @Column(name = "id_loai_giuong", nullable = false)
-    private Long idLoaiGiuong;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_loai_giuong", nullable = false)
+    private LoaiGiuong loaiGiuong;
 
-    @Column(name = "ten", length = 150, nullable = false)
+    @Nationalized
+    @Column(name = "ten", nullable = false, length = 150)
     private String ten;
 
-    @Column(name = "gia_moi_dem", nullable = false)
+    @Column(name = "gia_moi_dem", nullable = false, precision = 14, scale = 0)
     private BigDecimal giaMoiDem;
 
-    @Column(name = "mo_ta")
+    @Nationalized
+    @Column(name = "mo_ta", length = 4000)
     private String moTa;
 
-    public Long getIdLoaiPhong() { return idLoaiPhong; }
-    public void setIdLoaiPhong(Long idLoaiPhong) { this.idLoaiPhong = idLoaiPhong; }
-
-    public Long getIdHangPhong() { return idHangPhong; }
-    public void setIdHangPhong(Long idHangPhong) { this.idHangPhong = idHangPhong; }
-
-    public Long getIdLoaiGiuong() { return idLoaiGiuong; }
-    public void setIdLoaiGiuong(Long idLoaiGiuong) { this.idLoaiGiuong = idLoaiGiuong; }
-
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public HangPhong getHangPhong() { return hangPhong; }
+    public void setHangPhong(HangPhong hangPhong) { this.hangPhong = hangPhong; }
+    public LoaiGiuong getLoaiGiuong() { return loaiGiuong; }
+    public void setLoaiGiuong(LoaiGiuong loaiGiuong) { this.loaiGiuong = loaiGiuong; }
     public String getTen() { return ten; }
     public void setTen(String ten) { this.ten = ten; }
-
     public BigDecimal getGiaMoiDem() { return giaMoiDem; }
     public void setGiaMoiDem(BigDecimal giaMoiDem) { this.giaMoiDem = giaMoiDem; }
-
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
 }
