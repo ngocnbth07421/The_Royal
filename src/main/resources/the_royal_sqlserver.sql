@@ -22,7 +22,6 @@ USE THE_ROYAL;
 GO
 
 -- Xoa cac bang theo thu tu nguoc neu da ton tai (an toan tuyet doi cho connection SSMS)
-DROP TABLE IF EXISTS nguoi_dung;
 DROP TABLE IF EXISTS bang_thu_chi;
 DROP TABLE IF EXISTS bang_luong;
 DROP TABLE IF EXISTS danh_gia;
@@ -49,10 +48,11 @@ DROP TABLE IF EXISTS ma_giam_gia;
 DROP TABLE IF EXISTS hang_thanh_vien;
 DROP TABLE IF EXISTS khach_hang;
 DROP TABLE IF EXISTS nhan_vien;
+DROP TABLE IF EXISTS nguoi_dung;
 DROP TABLE IF EXISTS vai_tro;
 GO
 -- ---------------------------------------------------------------------
--- NHOM TAI KHOAN: vai_tro, nhan_vien, khach_hang
+-- NHOM TAI KHOAN: vai_tro, nguoi_dung, nhan_vien, khach_hang
 -- ---------------------------------------------------------------------
 CREATE TABLE vai_tro (
                          id_vai_tro  BIGINT        IDENTITY(1,1) PRIMARY KEY,
@@ -60,8 +60,18 @@ CREATE TABLE vai_tro (
                          ten_vai_tro NVARCHAR(100) NOT NULL
 );
 
+CREATE TABLE nguoi_dung (
+                         id_nguoi_dung BIGINT        IDENTITY(1,1) PRIMARY KEY,
+                         email         VARCHAR(150)  NOT NULL UNIQUE,
+                         mat_khau      VARCHAR(255)  NOT NULL,
+                         id_vai_tro    BIGINT        NOT NULL REFERENCES vai_tro(id_vai_tro),
+                         trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
+                             CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
+);
+
 CREATE TABLE nhan_vien (
                            id_nhan_vien  BIGINT        IDENTITY(1,1) PRIMARY KEY,
+                           id_nguoi_dung BIGINT        NULL UNIQUE REFERENCES nguoi_dung(id_nguoi_dung),
                            id_vai_tro    BIGINT        NOT NULL REFERENCES vai_tro(id_vai_tro),
                            ma_nhan_vien  VARCHAR(20)   NOT NULL UNIQUE,
                            ho_ten        NVARCHAR(150) NOT NULL,
@@ -69,29 +79,15 @@ CREATE TABLE nhan_vien (
                            ngay_vao_lam  DATE,
                            luong_co_ban  NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (luong_co_ban >= 0),
                            phu_cap       NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (phu_cap >= 0),
-                           khau_tru      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (khau_tru >= 0),
-                           trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
-);
-
-
-CREATE TABLE nguoi_dung (
-    id_nguoi_dung BIGINT        IDENTITY(1,1) PRIMARY KEY,
-    id_nhan_vien  BIGINT        NULL REFERENCES nhan_vien(id_nhan_vien),
-    email         VARCHAR(150)  NOT NULL UNIQUE,
-    mat_khau      VARCHAR(255)  NOT NULL,
-    id_vai_tro    BIGINT        NOT NULL REFERENCES vai_tro(id_vai_tro),
-    trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
+                           khau_tru      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (khau_tru >= 0)
 );
 
 CREATE TABLE khach_hang (
                             id_khach_hang BIGINT        IDENTITY(1,1) PRIMARY KEY,
+                            id_nguoi_dung BIGINT        NULL UNIQUE REFERENCES nguoi_dung(id_nguoi_dung),
                             ho_ten        NVARCHAR(150) NOT NULL,
                             so_dien_thoai VARCHAR(20),
-                            email         VARCHAR(150),
-                            trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
+                            email         VARCHAR(150)
 );
 
 
@@ -167,7 +163,7 @@ CREATE TABLE ma_giam_gia (
                              gia_tri         NUMERIC(14,2) NOT NULL CHECK (gia_tri > 0),
                              bat_dau_luc     DATETIME2     NOT NULL,
                              ket_thuc_luc    DATETIME2     NOT NULL,
-                             so_luot_da_dung INT           NOT NULL DEFAULT 0 CHECK (so_luot_da_dung >= 0),
+                             so_luot_con_dung INT          NOT NULL DEFAULT 0 CHECK (so_luot_con_dung >= 0),
                              trang_thai      NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
                                  CHECK (trang_thai IN (N'Hoạt động', N'Ngưng', 'HOAT_DONG', 'NGUNG')),
                              CHECK (ket_thuc_luc > bat_dau_luc)
@@ -189,7 +185,7 @@ CREATE TABLE the_thanh_vien (
                                 id_hang_thanh_vien BIGINT        NOT NULL REFERENCES hang_thanh_vien(id_hang_thanh_vien),
                                 ma_qr              VARCHAR(64)   NOT NULL UNIQUE,
                                 trang_thai         NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                    CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', N'Đã đóng', 'HOAT_DONG', 'BI_KHOA', 'DA_DONG')),
+                                    CHECK (trang_thai IN (N'Hoạt động', N'Ngừng hoạt động', 'HOAT_DONG', 'NGUNG_HOAT_DONG')),
                                 so_du              NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (so_du >= 0),
                                 kich_hoat_luc      DATETIME2     NOT NULL DEFAULT GETDATE(),
                                 dong_the_luc       DATETIME2
@@ -204,11 +200,6 @@ CREATE TABLE dat_phong (
                            id_nguoi_tao         BIGINT        REFERENCES nhan_vien(id_nhan_vien),
                            id_ma_giam_gia       BIGINT        REFERENCES ma_giam_gia(id_ma_giam_gia),
                            ma_dat_phong         VARCHAR(20)   NOT NULL UNIQUE,
-                           trang_thai           NVARCHAR(30)  NOT NULL DEFAULT N'Chờ cọc'
-                               CHECK (trang_thai IN (N'Chờ cọc', N'Đã xác nhận', N'Đang lưu trú',
-                                                     N'Đã trả phòng', N'Khách hủy', N'Khách sạn hủy', N'Tự hủy',
-                                                     'CHO_COC', 'DA_XAC_NHAN', 'DANG_LUU_TRU',
-                                                     'DA_TRA_PHONG', 'KHACH_HUY', 'KHACH_SAN_HUY', 'TU_HUY')),
                            thoi_gian_nhan_phong DATETIME2     NOT NULL,
                            thoi_gian_tra_phong  DATETIME2     NOT NULL,
                            so_dem               INT           NOT NULL CHECK (so_dem >= 1),
@@ -231,9 +222,11 @@ CREATE TABLE dat_phong_chi_tiet (
                                     so_nguoi_lon          INT      NOT NULL DEFAULT 1 CHECK (so_nguoi_lon >= 1),
                                     so_tre_em_duoi_6      INT      NOT NULL DEFAULT 0 CHECK (so_tre_em_duoi_6 BETWEEN 0 AND 2),
                                     so_tre_em_tu_6_tuoi   INT      NOT NULL DEFAULT 0 CHECK (so_tre_em_tu_6_tuoi >= 0),
-                                    trang_thai            NVARCHAR(25) NOT NULL DEFAULT N'Hiệu lực'
-                                        CHECK (trang_thai IN (N'Hiệu lực', N'Đang lưu trú', N'Đã trả phòng', N'Đã hủy',
-                                                              'HIEU_LUC', 'DANG_LUU_TRU', 'DA_TRA_PHONG', 'DA_HUY')),
+                                    trang_thai            NVARCHAR(30) NOT NULL DEFAULT N'Tạm giữ'
+                                        CHECK (trang_thai IN (N'Tạm giữ', N'Đã xác nhận', N'Khách đang ở', N'Đã trả phòng',
+                                                              N'Đã hủy', N'Không đến', N'Không thành công',
+                                                              'TAM_GIU', 'DA_XAC_NHAN', 'KHACH_DANG_O', 'DA_TRA_PHONG',
+                                                              'DA_HUY', 'KHONG_DEN', 'KHONG_THANH_CONG')),
                                     ngay_nhan             DATE     NOT NULL,  -- thay cho lower bound cua DATERANGE
                                     ngay_tra              DATE     NOT NULL,  -- thay cho upper bound cua DATERANGE
                                     CHECK (ngay_tra > ngay_nhan)
@@ -344,8 +337,8 @@ CREATE TABLE bang_luong (
                             phu_cap        NUMERIC(14,0) NOT NULL DEFAULT 0,
                             khau_tru       NUMERIC(14,0) NOT NULL DEFAULT 0,
                             luong_tong     NUMERIC(14,0) NOT NULL,
-                            trang_thai     NVARCHAR(20)   NOT NULL DEFAULT N'Nháp'
-                                CHECK (trang_thai IN (N'Nháp', N'Đã chốt', 'NHAP', 'DA_CHOT')),
+                            trang_thai     NVARCHAR(25)   NOT NULL DEFAULT N'Chờ cập nhật'
+                                CHECK (trang_thai IN (N'Chờ cập nhật', N'Đã xác nhận', 'CHO_CAP_NHAT', 'DA_XAC_NHAN')),
                             CHECK (luong_tong = luong_co_ban + phu_cap - khau_tru)
 );
 
@@ -353,8 +346,9 @@ CREATE TABLE danh_muc_chi (
                               id_danh_muc  BIGINT        IDENTITY(1,1) PRIMARY KEY,
                               ten_danh_muc NVARCHAR(100) NOT NULL UNIQUE,
                               loai_chi_phi NVARCHAR(25)   NOT NULL
-                                  CHECK (loai_chi_phi IN (N'Lương', N'Tiền ích', N'Bảo trì', N'Vật tư', N'Khác', 'LUONG', 'TIEN_ICH', 'BAO_TRI', 'VAT_TU', 'KHAC')),
-                              so_tien      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (so_tien >= 0)
+                                  CHECK (loai_chi_phi IN (N'Nhân sự', N'Vật tư', N'Khác', N'Vận hành', 'NHAN_SU', 'VAT_TU', 'KHAC', 'VAN_HANH')),
+                              so_tien      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (so_tien >= 0),
+                              ghi_chu      NVARCHAR(255)
 );
 
 CREATE TABLE bang_thu_chi (
@@ -413,8 +407,8 @@ BEGIN
         JOIN dat_phong_chi_tiet d
             ON  d.id_phong              = i.id_phong
             AND d.id_dat_phong_chi_tiet <> i.id_dat_phong_chi_tiet
-            AND d.trang_thai IN (N'Hiệu lực', N'Đang lưu trú', 'HIEU_LUC', 'DANG_LUU_TRU')
-            AND i.trang_thai IN (N'Hiệu lực', N'Đang lưu trú', 'HIEU_LUC', 'DANG_LUU_TRU')
+            AND d.trang_thai IN (N'Tạm giữ', N'Đã xác nhận', N'Khách đang ở', 'TAM_GIU', 'DA_XAC_NHAN', 'KHACH_DANG_O')
+            AND i.trang_thai IN (N'Tạm giữ', N'Đã xác nhận', N'Khách đang ở', 'TAM_GIU', 'DA_XAC_NHAN', 'KHACH_DANG_O')
             AND d.ngay_nhan < i.ngay_tra   -- khoang [nhan, tra) giao nhau
             AND d.ngay_tra  > i.ngay_nhan
     )
@@ -432,8 +426,9 @@ GO
 CREATE INDEX ix_phong_loai_trang_thai  ON phong(id_loai_phong, trang_thai);
 CREATE INDEX ix_nguoi_dung_email       ON nguoi_dung(email);
 CREATE INDEX ix_dat_phong_khach_hang   ON dat_phong(id_khach_hang);
-CREATE INDEX ix_dat_phong_trang_thai   ON dat_phong(trang_thai, thoi_gian_nhan_phong);
+CREATE INDEX ix_dat_phong_thoi_gian    ON dat_phong(thoi_gian_nhan_phong);
 CREATE INDEX ix_dat_phong_chi_tiet_dat ON dat_phong_chi_tiet(id_dat_phong);
+CREATE INDEX ix_dat_phong_chi_tiet_trang_thai ON dat_phong_chi_tiet(trang_thai);
 CREATE INDEX ix_thanh_toan_dat_phong   ON thanh_toan(id_dat_phong);
 CREATE INDEX ix_su_dung_dich_vu_dat    ON su_dung_dich_vu(id_dat_phong_chi_tiet);
 CREATE INDEX ix_khach_luu_tru          ON khach_luu_tru_chi_tiet(id_dat_phong_chi_tiet);
@@ -592,94 +587,116 @@ INSERT INTO dich_vu(ma_dich_vu, ten_dich_vu, danh_muc, don_vi_tinh, don_gia, tra
                                                                                  ('DV_TOUR_DAO',   N'Tour du thuyền ngắm đảo',N'Tham quan',N'vé',   1200000, N'Hoạt động'),
                                                                                  ('DV_HO_BOI_VIP', N'Vé hồ bơi vô cực VIP',N'Thư giãn',   N'vé',    250000, N'Hoạt động');
 
-INSERT INTO danh_muc_chi(ten_danh_muc, loai_chi_phi) VALUES
-                                                         (N'Lương nhân viên',       N'Lương'),
-                                                         (N'Tiền điện',             N'Tiền ích'),
-                                                         (N'Tiền nước',             N'Tiền ích'),
-                                                         (N'Bảo trì, sửa chữa',     N'Bảo trì'),
-                                                         (N'Vật tư, đồ dùng phòng', N'Vật tư'),
-                                                         (N'Chi phí khác',          N'Khác');
+INSERT INTO danh_muc_chi(ten_danh_muc, loai_chi_phi, ghi_chu) VALUES
+                                                         (N'Lương nhân viên',       N'Nhân sự',   N'Chi trả lương cơ bản, phụ cấp và các chế độ đãi ngộ cho nhân sự'),
+                                                         (N'Tiền điện',             N'Vận hành',  N'Chi phí tiền điện sinh hoạt và vận hành toàn hệ thống khách sạn'),
+                                                         (N'Tiền nước',             N'Vận hành',  N'Chi phí nước sạch sử dụng cho buồng phòng, hồ bơi và khu ẩm thực'),
+                                                         (N'Bảo trì, sửa chữa',     N'Vận hành',  N'Chi phí bảo trì thang máy, hệ thống điều hòa không khí và thiết bị'),
+                                                         (N'Vật tư, đồ dùng phòng', N'Vật tư',    N'Chi phí mua sắm đồ dùng tiêu hao (amenities), chăn ga gối nệm buồng phòng'),
+                                                         (N'Chi phí khác',          N'Khác',      N'Các khoản chi phí linh hoạt khác phục vụ hoạt động khách sạn');
 
 -- ---------------------------------------------------------------------
--- LOP 1: nhan_vien (10), khach_hang (10), ma_giam_gia (10)
--- vai_tro: 1=KHACH_HANG 2=LE_TAN 3=BUONG_PHONG 4=KE_TOAN 5=QUAN_LY 6=ADMIN
--- ---------------------------------------------------------------------
-INSERT INTO nhan_vien(id_vai_tro, ma_nhan_vien, ho_ten, so_dien_thoai,
-                      ngay_vao_lam, luong_co_ban, phu_cap, khau_tru, trang_thai) VALUES
-                                                                                     (6, 'NV001', N'Nguyễn Minh Đức',  '0901111001', '2021-03-01', 25000000, 3000000, 500000, N'Hoạt động'),
-                                                                                     (5, 'NV002', N'Trần Thị Lan Anh', '0901111002', '2021-05-15', 20000000, 2500000, 400000, N'Hoạt động'),
-                                                                                     (5, 'NV003', N'Lê Văn Thành',     '0901111003', '2022-01-10', 20000000, 2500000, 400000, N'Hoạt động'),
-                                                                                     (2, 'NV004', N'Phạm Thị Hương',   '0901111004', '2022-04-01', 12000000, 1500000, 200000, N'Hoạt động'),
-                                                                                     (2, 'NV005', N'Võ Thị Mai',       '0901111005', '2022-07-20', 12000000, 1500000, 200000, N'Hoạt động'),
-                                                                                     (2, 'NV006', N'Nguyễn Đức Huy',   '0901111006', '2023-02-01', 12000000, 1500000, 200000, N'Hoạt động'),
-                                                                                     (3, 'NV007', N'Bùi Thị Thu',      '0901111007', '2022-09-01', 10000000, 1000000, 150000, N'Hoạt động'),
-                                                                                     (3, 'NV008', N'Đặng Văn Long',    '0901111008', '2023-01-15', 10000000, 1000000, 150000, N'Hoạt động'),
-                                                                                     (4, 'NV009', N'Hồ Thị Bích',      '0901111009', '2021-11-01', 15000000, 2000000, 300000, N'Hoạt động'),
-                                                                                     (5, 'NV010', N'Trương Văn Khánh', '0901111010', '2024-03-01', 20000000, 2500000, 400000, N'Bị khóa'),
-                                                                                     (6, 'NV011', N'Nguyễn Bảo Ngọc',  '0912345678', '2024-01-01', 25000000, 3000000, 500000, N'Hoạt động');
-
--- ---------------------------------------------------------------------
--- TAI KHOAN NGUOI DUNG HE THONG (nguoi_dung) - 11 TAI KHOAN THEO NHAN VIEN
+-- LOP 1: TAI KHOAN NGUOI DUNG HE THONG (nguoi_dung) - 21 TAI KHOAN
+-- (11 cho nhan vien, 10 cho khach hang)
 -- Mat khau khoi tao mac dinh: 123456
 -- ---------------------------------------------------------------------
-INSERT INTO nguoi_dung(id_nhan_vien, email, mat_khau, id_vai_tro, trang_thai)
-SELECT nv.id_nhan_vien, d.email, d.mat_khau, nv.id_vai_tro, d.trang_thai
+INSERT INTO nguoi_dung(email, mat_khau, id_vai_tro, trang_thai)
+SELECT d.email, d.mat_khau, vt.id_vai_tro, d.trang_thai
 FROM (VALUES
-          ('NV001', 'duc.nguyen@theroyal.com', '123456', N'Hoạt động'),
-          ('NV002', 'lananh.tran@theroyal.com', '123456', N'Hoạt động'),
-          ('NV003', 'thanh.le@theroyal.com', '123456', N'Hoạt động'),
-          ('NV004', 'huong.pham@theroyal.com', '123456', N'Hoạt động'),
-          ('NV005', 'mai.vo@theroyal.com', '123456', N'Hoạt động'),
-          ('NV006', 'huy.nguyen@theroyal.com', '123456', N'Hoạt động'),
-          ('NV007', 'thu.bui@theroyal.com', '123456', N'Hoạt động'),
-          ('NV008', 'long.dang@theroyal.com', '123456', N'Hoạt động'),
-          ('NV009', 'bich.ho@theroyal.com', '123456', N'Hoạt động'),
-          ('NV010', 'khanh.truong@theroyal.com', '123456', N'Hoạt động'),
-          ('NV011', 'ngocnbth07421@gmail.com', '123456', N'Hoạt động')
-     ) AS d(ma_nv, email, mat_khau, trang_thai)
-JOIN nhan_vien nv ON nv.ma_nhan_vien = d.ma_nv;
-
-INSERT INTO khach_hang(ho_ten, so_dien_thoai, email, trang_thai) VALUES
-                                                                     (N'Nguyễn Văn An',      '0912001001', 'an.nguyen@gmail.com',   N'Hoạt động'),
-                                                                     (N'Trần Thị Bích Ngọc', '0912001002', 'ngoc.tran@gmail.com',   N'Hoạt động'),
-                                                                     (N'Lê Minh Hoàng',      '0912001003', 'hoang.le@gmail.com',    N'Hoạt động'),
-                                                                     (N'Phạm Thị Cẩm',       '0912001004', 'cam.pham@gmail.com',    N'Hoạt động'),
-                                                                     (N'Võ Đức Khoa',        '0912001005', 'khoa.vo@gmail.com',     N'Hoạt động'),
-                                                                     (N'Đặng Thị Linh',      '0912001006', 'linh.dang@gmail.com',   N'Hoạt động'),
-                                                                     (N'Bùi Văn Mạnh',       '0912001007', 'manh.bui@gmail.com',    N'Hoạt động'),
-                                                                     (N'Hồ Thị Như',         '0912001008', 'nhu.ho@gmail.com',      N'Hoạt động'),
-                                                                     (N'Trương Minh Quân',   '0912001009', 'quan.truong@gmail.com', N'Hoạt động'),
-                                                                     (N'Lý Thị Sương',       '0912001010', 'suong.ly@gmail.com',    N'Bị khóa');
-
-INSERT INTO ma_giam_gia(ma_giam_gia, loai_giam_gia, gia_tri,
-                        bat_dau_luc, ket_thuc_luc, so_luot_da_dung, trang_thai) VALUES
-                                                                                    ('WELCOME10', N'Phần trăm',      10, '2026-01-01 00:00:00', '2026-12-31 23:59:59',  5, N'Hoạt động'),
-                                                                                    ('SUMMER20',  N'Phần trăm',      20, '2026-06-01 00:00:00', '2026-08-31 23:59:59',  3, N'Hoạt động'),
-                                                                                    ('LOYAL500K', N'Số tiền',    500000, '2026-01-01 00:00:00', '2026-12-31 23:59:59',  8, N'Hoạt động'),
-                                                                                    ('NEWYR25',   N'Phần trăm',      25, '2026-01-01 00:00:00', '2026-01-07 23:59:59', 10, N'Ngưng'),
-                                                                                    ('FLASH15',   N'Phần trăm',      15, '2026-11-11 00:00:00', '2026-11-15 23:59:59',  0, N'Hoạt động'),
-                                                                                    ('VIP1M',     N'Số tiền',   1000000, '2026-01-01 00:00:00', '2026-12-31 23:59:59',  2, N'Hoạt động'),
-                                                                                    ('BDAY30',    N'Phần trăm',      30, '2026-01-01 00:00:00', '2026-12-31 23:59:59',  1, N'Hoạt động'),
-                                                                                    ('CORP10',    N'Phần trăm',      10, '2026-04-01 00:00:00', '2026-09-30 23:59:59',  6, N'Ngưng'),
-                                                                                    ('EARLYBIRD', N'Số tiền',    200000, '2026-09-01 00:00:00', '2026-12-31 23:59:59',  4, N'Hoạt động'),
-                                                                                    ('WEEKEND12', N'Phần trăm',      12, '2026-01-01 00:00:00', '2026-12-31 23:59:59',  7, N'Hoạt động');
+          ('duc.nguyen@theroyal.com',   '123456', 'ADMIN',       N'Hoạt động'),
+          ('lananh.tran@theroyal.com',  '123456', 'QUAN_LY',     N'Hoạt động'),
+          ('thanh.le@theroyal.com',     '123456', 'QUAN_LY',     N'Hoạt động'),
+          ('huong.pham@theroyal.com',   '123456', 'LE_TAN',      N'Hoạt động'),
+          ('mai.vo@theroyal.com',       '123456', 'LE_TAN',      N'Hoạt động'),
+          ('huy.nguyen@theroyal.com',   '123456', 'LE_TAN',      N'Hoạt động'),
+          ('thu.bui@theroyal.com',      '123456', 'BUONG_PHONG', N'Hoạt động'),
+          ('long.dang@theroyal.com',    '123456', 'BUONG_PHONG', N'Hoạt động'),
+          ('bich.ho@theroyal.com',      '123456', 'KE_TOAN',     N'Hoạt động'),
+          ('khanh.truong@theroyal.com', '123456', 'QUAN_LY',     N'Bị khóa'),
+          ('ngocnbth07421@gmail.com',   '123456', 'ADMIN',       N'Hoạt động'),
+          ('an.nguyen@gmail.com',       '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('ngoc.tran@gmail.com',       '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('hoang.le@gmail.com',        '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('cam.pham@gmail.com',        '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('khoa.vo@gmail.com',         '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('linh.dang@gmail.com',       '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('manh.bui@gmail.com',        '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('nhu.ho@gmail.com',          '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('quan.truong@gmail.com',     '123456', 'KHACH_HANG',  N'Hoạt động'),
+          ('suong.ly@gmail.com',        '123456', 'KHACH_HANG',  N'Bị khóa')
+     ) AS d(email, mat_khau, ma_vt, trang_thai)
+JOIN vai_tro vt ON vt.ma_vai_tro = d.ma_vt;
 
 -- ---------------------------------------------------------------------
--- LOP 2: the_thanh_vien (6), tien_nghi_phong (10)
+-- nhan_vien (11) — lien ket 1-1 voi nguoi_dung qua id_nguoi_dung
+-- ---------------------------------------------------------------------
+INSERT INTO nhan_vien(id_nguoi_dung, id_vai_tro, ma_nhan_vien, ho_ten, so_dien_thoai,
+                      ngay_vao_lam, luong_co_ban, phu_cap, khau_tru)
+SELECT nd.id_nguoi_dung, nd.id_vai_tro, d.ma_nv, d.ho_ten, d.sdt,
+       CAST(d.ngay_vl AS DATE), d.luong_cb, d.phu_cap, d.khau_tru
+FROM (VALUES
+          ('duc.nguyen@theroyal.com',   'NV001', N'Nguyễn Minh Đức',  '0901111001', '2021-03-01', 25000000, 3000000, 500000),
+          ('lananh.tran@theroyal.com',  'NV002', N'Trần Thị Lan Anh', '0901111002', '2021-05-15', 20000000, 2500000, 400000),
+          ('thanh.le@theroyal.com',     'NV003', N'Lê Văn Thành',     '0901111003', '2022-01-10', 20000000, 2500000, 400000),
+          ('huong.pham@theroyal.com',   'NV004', N'Phạm Thị Hương',   '0901111004', '2022-04-01', 12000000, 1500000, 200000),
+          ('mai.vo@theroyal.com',       'NV005', N'Võ Thị Mai',       '0901111005', '2022-07-20', 12000000, 1500000, 200000),
+          ('huy.nguyen@theroyal.com',   'NV006', N'Nguyễn Đức Huy',   '0901111006', '2023-02-01', 12000000, 1500000, 200000),
+          ('thu.bui@theroyal.com',      'NV007', N'Bùi Thị Thu',      '0901111007', '2022-09-01', 10000000, 1000000, 150000),
+          ('long.dang@theroyal.com',    'NV008', N'Đặng Văn Long',    '0901111008', '2023-01-15', 10000000, 1000000, 150000),
+          ('bich.ho@theroyal.com',      'NV009', N'Hồ Thị Bích',      '0901111009', '2021-11-01', 15000000, 2000000, 300000),
+          ('khanh.truong@theroyal.com', 'NV010', N'Trương Văn Khánh', '0901111010', '2024-03-01', 20000000, 2500000, 400000),
+          ('ngocnbth07421@gmail.com',   'NV011', N'Nguyễn Bảo Ngọc',  '0912345678', '2024-01-01', 25000000, 3000000, 500000)
+     ) AS d(email, ma_nv, ho_ten, sdt, ngay_vl, luong_cb, phu_cap, khau_tru)
+JOIN nguoi_dung nd ON nd.email = d.email;
+
+-- ---------------------------------------------------------------------
+-- khach_hang (10) — lien ket 1-1 voi nguoi_dung qua id_nguoi_dung
+-- ---------------------------------------------------------------------
+INSERT INTO khach_hang(id_nguoi_dung, ho_ten, so_dien_thoai, email)
+SELECT nd.id_nguoi_dung, d.ho_ten, d.sdt, d.email
+FROM (VALUES
+          (N'Nguyễn Văn An',      '0912001001', 'an.nguyen@gmail.com'),
+          (N'Trần Thị Bích Ngọc', '0912001002', 'ngoc.tran@gmail.com'),
+          (N'Lê Minh Hoàng',      '0912001003', 'hoang.le@gmail.com'),
+          (N'Phạm Thị Cẩm',       '0912001004', 'cam.pham@gmail.com'),
+          (N'Võ Đức Khoa',        '0912001005', 'khoa.vo@gmail.com'),
+          (N'Đặng Thị Linh',      '0912001006', 'linh.dang@gmail.com'),
+          (N'Bùi Văn Mạnh',       '0912001007', 'manh.bui@gmail.com'),
+          (N'Hồ Thị Như',         '0912001008', 'nhu.ho@gmail.com'),
+          (N'Trương Minh Quân',   '0912001009', 'quan.truong@gmail.com'),
+          (N'Lý Thị Sương',       '0912001010', 'suong.ly@gmail.com')
+     ) AS d(ho_ten, sdt, email)
+JOIN nguoi_dung nd ON nd.email = d.email;
+
+INSERT INTO ma_giam_gia(ma_giam_gia, loai_giam_gia, gia_tri,
+                        bat_dau_luc, ket_thuc_luc, so_luot_con_dung, trang_thai) VALUES
+                                                                                    ('WELCOME10', N'Phần trăm',      10, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 95, N'Hoạt động'),
+                                                                                    ('SUMMER20',  N'Phần trăm',      20, '2026-06-01 00:00:00', '2026-08-31 23:59:59', 50, N'Hoạt động'),
+                                                                                    ('LOYAL500K', N'Số tiền',    500000, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 20, N'Hoạt động'),
+                                                                                    ('NEWYR25',   N'Phần trăm',      25, '2026-01-01 00:00:00', '2026-01-07 23:59:59',  0, N'Ngưng'),
+                                                                                    ('FLASH15',   N'Phần trăm',      15, '2026-11-11 00:00:00', '2026-11-15 23:59:59',100, N'Hoạt động'),
+                                                                                    ('VIP1M',     N'Số tiền',   1000000, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 10, N'Hoạt động'),
+                                                                                    ('BDAY30',    N'Phần trăm',      30, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 30, N'Hoạt động'),
+                                                                                    ('CORP10',    N'Phần trăm',      10, '2026-04-01 00:00:00', '2026-09-30 23:59:59',  0, N'Ngưng'),
+                                                                                    ('EARLYBIRD', N'Số tiền',    200000, '2026-09-01 00:00:00', '2026-12-31 23:59:59', 40, N'Hoạt động'),
+                                                                                    ('WEEKEND12', N'Phần trăm',      12, '2026-01-01 00:00:00', '2026-12-31 23:59:59', 25, N'Hoạt động');
+
+-- ---------------------------------------------------------------------
+-- LOP 2: the_thanh_vien (10), tien_nghi_phong (10)
 -- id_hang_thanh_vien: 1=HOI_VIEN 2=BAC 3=VANG 4=KIM_CUONG
 -- ---------------------------------------------------------------------
 INSERT INTO the_thanh_vien(id_khach_hang, id_hang_thanh_vien,
                            ma_qr, trang_thai, so_du, kich_hoat_luc) VALUES
-                                                                        (1, 2, 'QR-KH001-BAC-2024',  N'Hoạt động',  85000000, '2024-03-15 09:00:00'),
-                                                                        (2, 3, 'QR-KH002-VANG-2023', N'Hoạt động', 160000000, '2023-08-20 10:00:00'),
-                                                                        (3, 1, 'QR-KH003-HOI-2025',  N'Hoạt động',  12000000, '2025-01-10 08:30:00'),
-                                                                        (4, 4, 'QR-KH004-KIM-2022',  N'Hoạt động', 450000000, '2022-05-01 11:00:00'),
-                                                                        (5, 2, 'QR-KH005-BAC-2024',  N'Hoạt động',  70000000, '2024-07-22 09:00:00'),
-                                                                        (6, 1, 'QR-KH006-HOI-2026',  N'Hoạt động',  15000000, '2026-02-14 14:00:00'),
-                                                                        (7, 3, 'QR-KH007-VANG-2024', N'Hoạt động', 145000000, '2024-09-01 10:30:00'),
-                                                                        (8, 2, 'QR-KH008-BAC-2025',  N'Hoạt động',  65000000, '2025-04-12 11:15:00'),
-                                                                        (9, 1, 'QR-KH009-HOI-2026',  N'Hoạt động',  10000000, '2026-03-05 15:45:00'),
-                                                                        (10, 1, 'QR-KH010-HOI-2026', N'Bị khóa',    5000000,  '2026-06-18 09:20:00');
+                                                                        (1, 2, 'QR-KH001-BAC-2024',  N'Hoạt động',        85000000, '2024-03-15 09:00:00'),
+                                                                        (2, 3, 'QR-KH002-VANG-2023', N'Hoạt động',       160000000, '2023-08-20 10:00:00'),
+                                                                        (3, 1, 'QR-KH003-HOI-2025',  N'Hoạt động',        12000000, '2025-01-10 08:30:00'),
+                                                                        (4, 4, 'QR-KH004-KIM-2022',  N'Hoạt động',       450000000, '2022-05-01 11:00:00'),
+                                                                        (5, 2, 'QR-KH005-BAC-2024',  N'Hoạt động',        70000000, '2024-07-22 09:00:00'),
+                                                                        (6, 1, 'QR-KH006-HOI-2026',  N'Hoạt động',        15000000, '2026-02-14 14:00:00'),
+                                                                        (7, 3, 'QR-KH007-VANG-2024', N'Hoạt động',       145000000, '2024-09-01 10:30:00'),
+                                                                        (8, 2, 'QR-KH008-BAC-2025',  N'Hoạt động',        65000000, '2025-04-12 11:15:00'),
+                                                                        (9, 1, 'QR-KH009-HOI-2026',  N'Hoạt động',        10000000, '2026-03-05 15:45:00'),
+                                                                        (10, 1, 'QR-KH010-HOI-2026', N'Ngừng hoạt động',   5000000, '2026-06-18 09:20:00');
 
 INSERT INTO tien_nghi_phong(id_phong, id_tien_nghi)
 SELECT p.id_phong, t.id_tien_nghi
@@ -698,47 +715,47 @@ FROM (VALUES
 -- id_ma_giam_gia (1-10, NULL=khong dung ma)
 -- ---------------------------------------------------------------------
 INSERT INTO dat_phong(id_khach_hang, id_nguoi_tao, id_ma_giam_gia, ma_dat_phong,
-                      trang_thai, thoi_gian_nhan_phong, thoi_gian_tra_phong, so_dem,
+                      thoi_gian_nhan_phong, thoi_gian_tra_phong, so_dem,
                       tien_phong, giam_gia, phi_dich_vu, thue_vat, tong_tien, tien_coc, tien_thanh_toan)
 VALUES
 -- DP001: Khach 1, 2 dem, Standard Double, WELCOME10 (-10%)
-(1, 4, 1, 'DP2026001', N'Đã trả phòng',
+(1, 4, 1, 'DP2026001',
  '2026-10-01 14:00:00','2026-10-03 12:00:00',2,
  2400000,240000,180000,233600,2573600,500000,2573600),
 -- DP002: Khach 2 (the VANG -20% phong), 3 dem, Deluxe Twin
-(2, 5, NULL,'DP2026002', N'Đang lưu trú',
+(2, 5, NULL,'DP2026002',
  '2026-11-10 14:00:00','2026-11-13 12:00:00',3,
  4800000,960000,650000,429600,4919600,1000000,0),
 -- DP003: Khach 3, 1 dem, Suite Family, FLASH15 (-15%)
-(3, 4, 5,'DP2026003', N'Đã xác nhận',
+(3, 4, 5,'DP2026003',
  '2026-11-15 14:00:00','2026-11-16 12:00:00',1,
  5250000,787500,0,444600,4907100,1000000,0),
 -- DP004: Khach 4 (the KIM_CUONG -45% phong), 5 dem, Presidential Double
-(4, NULL, NULL,'DP2026004', N'Đã trả phòng',
+(4, NULL, NULL,'DP2026004',
  '2026-09-15 14:00:00','2026-09-20 12:00:00',5,
  60000000,27000000,2250000,3145000,38395000,10000000,38395000),
 -- DP005: Khach 5, 2 dem, Deluxe Single, cho coc
-(5, 6, NULL,'DP2026005', N'Chờ cọc',
+(5, 6, NULL,'DP2026005',
  '2026-11-20 14:00:00','2026-11-22 12:00:00',2,
  2240000,0,0,201600,2441600,500000,0),
 -- DP006: Khach 6, 2 dem, Standard Twin, LOYAL500K (-500k)
-(6, 5, 3,'DP2026006', N'Đã trả phòng',
+(6, 5, 3,'DP2026006',
  '2026-10-20 14:00:00','2026-10-22 12:00:00',2,
  2400000,500000,60000,175600,2135600,500000,2135600),
 -- DP007: Khach 7, 4 dem, Deluxe Triple, dang luu tru
-(7, 4, NULL,'DP2026007', N'Đang lưu trú',
+(7, 4, NULL,'DP2026007',
  '2026-11-08 14:00:00','2026-11-12 12:00:00',4,
  10000000,0,450000,940500,11390500,2000000,0),
 -- DP008: Khach 8, 1 dem, Standard Single, khach huy
-(8, 5, NULL,'DP2026008', N'Khách hủy',
+(8, 5, NULL,'DP2026008',
  '2026-11-05 14:00:00','2026-11-06 12:00:00',1,
  960000,0,0,86400,1046400,200000,0),
 -- DP009: Khach 9, 3 dem, Suite Triple, EARLYBIRD (-200k)
-(9, 6, 9,'DP2026009', N'Đã xác nhận',
+(9, 6, 9,'DP2026009',
  '2026-12-24 14:00:00','2026-12-27 12:00:00',3,
  13125000,200000,0,1157700,14082700,3000000,0),
 -- DP010: Khach 1, 2 dem, Deluxe Double, WEEKEND12 (-12%)
-(1, 4, 10,'DP2026010', N'Đã trả phòng',
+(1, 4, 10,'DP2026010',
  '2026-11-01 14:00:00','2026-11-03 12:00:00',2,
  4000000,480000,180000,322000,4022000,1000000,4022000);
 
@@ -753,16 +770,16 @@ SELECT dp.id_dat_phong, p.id_phong,
        d.sl, d.te_duoi6, d.te_tu6,
        d.tt, CAST(d.ngay_nhan AS DATE), CAST(d.ngay_tra AS DATE)
 FROM (VALUES
-          ('DP2026001','C0301',1,0,0, N'Đã trả phòng','2026-10-01','2026-10-03'),
-          ('DP2026002','W1302',2,0,0, N'Đang lưu trú','2026-11-10','2026-11-13'),
-          ('DP2026003','C2501',2,1,0, N'Hiệu lực',    '2026-11-15','2026-11-16'),
-          ('DP2026004','C3001',2,0,0, N'Đã trả phòng','2026-09-15','2026-09-20'),
-          ('DP2026005','W1301',1,0,0, N'Hiệu lực',    '2026-11-20','2026-11-22'),
-          ('DP2026006','C0204',2,0,0, N'Đã trả phòng','2026-10-20','2026-10-22'),
-          ('DP2026007','W1401',3,0,0, N'Đang lưu trú','2026-11-08','2026-11-12'),
-          ('DP2026008','C0103',1,0,0, N'Đã hủy',      '2026-11-05','2026-11-06'),
-          ('DP2026009','W2503',2,0,1, N'Hiệu lực',    '2026-12-24','2026-12-27'),
-          ('DP2026010','C1301',2,0,0, N'Đã trả phòng','2026-11-01','2026-11-03')
+          ('DP2026001','C0301',1,0,0, N'Đã trả phòng',     '2026-10-01','2026-10-03'),
+          ('DP2026002','W1302',2,0,0, N'Khách đang ở',     '2026-11-10','2026-11-13'),
+          ('DP2026003','C2501',2,1,0, N'Đã xác nhận',     '2026-11-15','2026-11-16'),
+          ('DP2026004','C3001',2,0,0, N'Đã trả phòng',     '2026-09-15','2026-09-20'),
+          ('DP2026005','W1301',1,0,0, N'Tạm giữ',          '2026-11-20','2026-11-22'),
+          ('DP2026006','C0204',2,0,0, N'Đã trả phòng',     '2026-10-20','2026-10-22'),
+          ('DP2026007','W1401',3,0,0, N'Khách đang ở',     '2026-11-08','2026-11-12'),
+          ('DP2026008','C0103',1,0,0, N'Đã hủy',           '2026-11-05','2026-11-06'),
+          ('DP2026009','W2503',2,0,1, N'Không đến',        '2026-12-24','2026-12-27'),
+          ('DP2026010','C1301',2,0,0, N'Đã trả phòng',     '2026-11-01','2026-11-03')
      ) AS d(ma_dp, ma_phong, sl, te_duoi6, te_tu6, tt, ngay_nhan, ngay_tra)
          JOIN dat_phong dp ON dp.ma_dat_phong = d.ma_dp
          JOIN phong     p  ON p.ma_phong      = d.ma_phong;
@@ -952,7 +969,7 @@ SELECT nv.id_nhan_vien,
        CAST('2026-10-25' AS DATE),
        nv.luong_co_ban, nv.phu_cap, nv.khau_tru,
        nv.luong_co_ban + nv.phu_cap - nv.khau_tru,
-       N'Đã chốt'
+       N'Đã xác nhận'
 FROM nhan_vien nv
 ORDER BY nv.id_nhan_vien;
 
