@@ -1,7 +1,10 @@
 package repository;
 
+import entity.HangPhong;
+import entity.LoaiGiuong;
 import entity.LoaiPhong;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import util.HibernateConfig;
 
 import java.util.List;
@@ -11,48 +14,68 @@ public class LoaiPhongRepository {
         return HibernateConfig.getFACTORY().openSession();
     }
 
-    public List<LoaiPhong> getAll() {
+    public List<LoaiPhong> findAll() {
         try (Session session = getSession()) {
             return session.createQuery("FROM LoaiPhong ORDER BY giaMoiDem ASC", LoaiPhong.class).list();
         }
     }
 
-    public LoaiPhong getOne(Long id) {
+    public LoaiPhong findById(Long id) {
         try (Session session = getSession()) {
             return session.find(LoaiPhong.class, id);
         }
     }
 
-    public void add(LoaiPhong loaiPhong) {
+    public List<HangPhong> findAllHangPhong() {
         try (Session session = getSession()) {
-            session.getTransaction().begin();
-            session.save(loaiPhong);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
+            return session.createQuery("FROM HangPhong ORDER BY id", HangPhong.class).list();
         }
     }
 
-    public void update(LoaiPhong loaiPhong) {
+    public List<LoaiGiuong> findAllLoaiGiuong() {
         try (Session session = getSession()) {
-            session.getTransaction().begin();
-            session.merge(loaiPhong);
-            session.getTransaction().commit();
+            return session.createQuery("FROM LoaiGiuong ORDER BY id", LoaiGiuong.class).list();
+        }
+    }
+
+    public LoaiPhong findByHangVaGiuong(Long idHangPhong, Long idLoaiGiuong) {
+        try (Session session = getSession()) {
+            return session.createQuery(
+                            "FROM LoaiPhong WHERE hangPhong.id = :hp AND loaiGiuong.id = :lg", LoaiPhong.class)
+                    .setParameter("hp", idHangPhong)
+                    .setParameter("lg", idLoaiGiuong)
+                    .uniqueResult();
+        }
+    }
+
+    public void saveOrUpdate(LoaiPhong lp) {
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            if (lp.getId() == null) {
+                session.persist(lp);
+            } else {
+                session.merge(lp);
+            }
+            transaction.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi lưu loại phòng", e);
         }
     }
 
     public void delete(Long id) {
+        Transaction transaction = null;
         try (Session session = getSession()) {
-            session.getTransaction().begin();
+            transaction = session.beginTransaction();
             LoaiPhong lp = session.find(LoaiPhong.class, id);
             if (lp != null) {
-                session.delete(lp);
+                session.remove(lp);
             }
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi xóa loại phòng", e);
         }
     }
 }
