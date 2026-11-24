@@ -1,12 +1,12 @@
 ﻿-- =====================================================================
 -- THE ROYAL HOTEL MANAGEMENT SYSTEM
--- Microsoft SQL Server 2016+ | T-SQL | ERD 27 bang
+-- Microsoft SQL Server 2016+ | T-SQL | ERD 28 bang
 -- Full Script: DDL + Trigger + Index + Seed Data
 -- Chay mot lan duy nhat tren database trong
 -- =====================================================================
 
 -- =====================================================================
--- PHAN 1: DDL — TAO 27 BANG
+-- PHAN 1: DDL — TAO 28 BANG
 -- =====================================================================
 
 USE master;
@@ -71,7 +71,7 @@ CREATE TABLE nhan_vien (
                            phu_cap       NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (phu_cap >= 0),
                            khau_tru      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (khau_tru >= 0),
                            trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa'))
+                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
 );
 
 
@@ -82,7 +82,7 @@ CREATE TABLE nguoi_dung (
     mat_khau      VARCHAR(255)  NOT NULL,
     id_vai_tro    BIGINT        NOT NULL REFERENCES vai_tro(id_vai_tro),
     trang_thai    NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa'))
+                                CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', 'HOAT_DONG', 'BI_KHOA'))
 );
 
 CREATE TABLE khach_hang (
@@ -163,13 +163,13 @@ CREATE TABLE tien_nghi_phong (
 CREATE TABLE ma_giam_gia (
                              id_ma_giam_gia  BIGINT        IDENTITY(1,1) PRIMARY KEY,
                              ma_giam_gia     VARCHAR(30)   NOT NULL UNIQUE,
-                             loai_giam_gia   NVARCHAR(20)  NOT NULL CHECK (loai_giam_gia IN (N'Phần trăm', N'Số tiền')),
+                             loai_giam_gia   NVARCHAR(20)  NOT NULL CHECK (loai_giam_gia IN (N'Phần trăm', N'Số tiền', 'PHAN_TRAM', 'SO_TIEN')),
                              gia_tri         NUMERIC(14,2) NOT NULL CHECK (gia_tri > 0),
                              bat_dau_luc     DATETIME2     NOT NULL,
                              ket_thuc_luc    DATETIME2     NOT NULL,
                              so_luot_da_dung INT           NOT NULL DEFAULT 0 CHECK (so_luot_da_dung >= 0),
                              trang_thai      NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                 CHECK (trang_thai IN (N'Hoạt động', N'Ngưng')),
+                                 CHECK (trang_thai IN (N'Hoạt động', N'Ngưng', 'HOAT_DONG', 'NGUNG')),
                              CHECK (ket_thuc_luc > bat_dau_luc)
 );
 
@@ -189,7 +189,7 @@ CREATE TABLE the_thanh_vien (
                                 id_hang_thanh_vien BIGINT        NOT NULL REFERENCES hang_thanh_vien(id_hang_thanh_vien),
                                 ma_qr              VARCHAR(64)   NOT NULL UNIQUE,
                                 trang_thai         NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                    CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', N'Đã đóng')),
+                                    CHECK (trang_thai IN (N'Hoạt động', N'Bị khóa', N'Đã đóng', 'HOAT_DONG', 'BI_KHOA', 'DA_DONG')),
                                 so_du              NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (so_du >= 0),
                                 kich_hoat_luc      DATETIME2     NOT NULL DEFAULT GETDATE(),
                                 dong_the_luc       DATETIME2
@@ -206,7 +206,9 @@ CREATE TABLE dat_phong (
                            ma_dat_phong         VARCHAR(20)   NOT NULL UNIQUE,
                            trang_thai           NVARCHAR(30)  NOT NULL DEFAULT N'Chờ cọc'
                                CHECK (trang_thai IN (N'Chờ cọc', N'Đã xác nhận', N'Đang lưu trú',
-                                                     N'Đã trả phòng', N'Khách hủy', N'Khách sạn hủy', N'Tự hủy')),
+                                                     N'Đã trả phòng', N'Khách hủy', N'Khách sạn hủy', N'Tự hủy',
+                                                     'CHO_COC', 'DA_XAC_NHAN', 'DANG_LUU_TRU',
+                                                     'DA_TRA_PHONG', 'KHACH_HUY', 'KHACH_SAN_HUY', 'TU_HUY')),
                            thoi_gian_nhan_phong DATETIME2     NOT NULL,
                            thoi_gian_tra_phong  DATETIME2     NOT NULL,
                            so_dem               INT           NOT NULL CHECK (so_dem >= 1),
@@ -230,7 +232,8 @@ CREATE TABLE dat_phong_chi_tiet (
                                     so_tre_em_duoi_6      INT      NOT NULL DEFAULT 0 CHECK (so_tre_em_duoi_6 BETWEEN 0 AND 2),
                                     so_tre_em_tu_6_tuoi   INT      NOT NULL DEFAULT 0 CHECK (so_tre_em_tu_6_tuoi >= 0),
                                     trang_thai            NVARCHAR(25) NOT NULL DEFAULT N'Hiệu lực'
-                                        CHECK (trang_thai IN (N'Hiệu lực', N'Đang lưu trú', N'Đã trả phòng', N'Đã hủy')),
+                                        CHECK (trang_thai IN (N'Hiệu lực', N'Đang lưu trú', N'Đã trả phòng', N'Đã hủy',
+                                                              'HIEU_LUC', 'DANG_LUU_TRU', 'DA_TRA_PHONG', 'DA_HUY')),
                                     ngay_nhan             DATE     NOT NULL,  -- thay cho lower bound cua DATERANGE
                                     ngay_tra              DATE     NOT NULL,  -- thay cho upper bound cua DATERANGE
                                     CHECK (ngay_tra > ngay_nhan)
@@ -244,7 +247,7 @@ CREATE TABLE khach_luu_tru_chi_tiet (
                                         ngay_sinh             DATE,
                                         quoc_tich             NVARCHAR(60),
                                         loai_giay_to          NVARCHAR(20)  NOT NULL DEFAULT N'CCCD'
-                                            CHECK (loai_giay_to IN (N'CCCD', N'Hộ chiếu', N'Khác', N'Không có')),
+                                            CHECK (loai_giay_to IN (N'CCCD', N'Hộ chiếu', N'Khác', N'Không có', 'CCCD', 'HO_CHIEU', 'KHAC', 'KHONG_CO')),
                                         so_giay_to            NVARCHAR(MAX),
                                         la_tre_em             BIT           NOT NULL DEFAULT 0
 );
@@ -258,7 +261,7 @@ CREATE TABLE nhiem_vu_don_phong (
                                     id_dat_phong_chi_tiet BIGINT NOT NULL REFERENCES dat_phong_chi_tiet(id_dat_phong_chi_tiet),
                                     id_nhan_vien          BIGINT REFERENCES nhan_vien(id_nhan_vien),
                                     trang_thai            NVARCHAR(25) NOT NULL DEFAULT N'Chờ xử lý'
-                                        CHECK (trang_thai IN (N'Chờ xử lý', N'Đang làm', N'Hoàn thành'))
+                                        CHECK (trang_thai IN (N'Chờ xử lý', N'Đang làm', N'Hoàn thành', 'CHO_XU_LY', 'DANG_LAM', 'HOAN_THANH'))
 );
 
 CREATE TABLE lich_su_doi_phong (
@@ -281,8 +284,8 @@ CREATE TABLE dich_vu (
                          danh_muc    NVARCHAR(50),
                          don_vi_tinh NVARCHAR(30)  NOT NULL DEFAULT N'lần',
                          don_gia     NUMERIC(14,0) NOT NULL CHECK (don_gia >= 0),
-                         trang_thai      NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
-                                 CHECK (trang_thai IN (N'Hoạt động', N'Ngưng'))
+                         trang_thai  NVARCHAR(20)  NOT NULL DEFAULT N'Hoạt động'
+                             CHECK (trang_thai IN (N'Hoạt động', N'Ngưng', 'HOAT_DONG', 'NGUNG'))
 );
 
 CREATE TABLE su_dung_dich_vu (
@@ -312,12 +315,12 @@ CREATE TABLE thanh_toan (
                             id_dat_phong           BIGINT        NOT NULL REFERENCES dat_phong(id_dat_phong),
                             id_the_thanh_vien      BIGINT        REFERENCES the_thanh_vien(id_the_thanh_vien),
                             phuong_thuc_thanh_toan NVARCHAR(20)   NOT NULL
-                                CHECK (phuong_thuc_thanh_toan IN (N'Tiền mặt', N'VNPay', N'Thẻ')),
+                                CHECK (phuong_thuc_thanh_toan IN (N'Tiền mặt', N'VNPay', N'Thẻ', 'TIEN_MAT', 'VNPAY', 'THE')),
                             tien_thanh_toan        NUMERIC(14,0) NOT NULL CHECK (tien_thanh_toan > 0),
                             trang_thai             NVARCHAR(25)   NOT NULL DEFAULT N'Chờ xử lý'
-                                CHECK (trang_thai IN (N'Chờ xử lý', N'Thành công', N'Thất bại', N'Đã hoàn')),
+                                CHECK (trang_thai IN (N'Chờ xử lý', N'Thành công', N'Thất bại', N'Đã hoàn', 'CHO_XU_LY', 'THANH_CONG', 'THAT_BAI', 'DA_HOAN')),
     -- Neu phuong_thuc = 'THE' thi bat buoc phai co id_the_thanh_vien
-                            CHECK (phuong_thuc_thanh_toan <> N'Thẻ' OR id_the_thanh_vien IS NOT NULL)
+                            CHECK (phuong_thuc_thanh_toan NOT IN (N'Thẻ', 'THE') OR id_the_thanh_vien IS NOT NULL)
 );
 
 CREATE TABLE danh_gia (
@@ -342,7 +345,7 @@ CREATE TABLE bang_luong (
                             khau_tru       NUMERIC(14,0) NOT NULL DEFAULT 0,
                             luong_tong     NUMERIC(14,0) NOT NULL,
                             trang_thai     NVARCHAR(20)   NOT NULL DEFAULT N'Nháp'
-                                CHECK (trang_thai IN (N'Nháp', N'Đã chốt')),
+                                CHECK (trang_thai IN (N'Nháp', N'Đã chốt', 'NHAP', 'DA_CHOT')),
                             CHECK (luong_tong = luong_co_ban + phu_cap - khau_tru)
 );
 
@@ -350,7 +353,7 @@ CREATE TABLE danh_muc_chi (
                               id_danh_muc  BIGINT        IDENTITY(1,1) PRIMARY KEY,
                               ten_danh_muc NVARCHAR(100) NOT NULL UNIQUE,
                               loai_chi_phi NVARCHAR(25)   NOT NULL
-                                  CHECK (loai_chi_phi IN (N'Lương', N'Tiền ích', N'Bảo trì', N'Vật tư', N'Khác')),
+                                  CHECK (loai_chi_phi IN (N'Lương', N'Tiền ích', N'Bảo trì', N'Vật tư', N'Khác', 'LUONG', 'TIEN_ICH', 'BAO_TRI', 'VAT_TU', 'KHAC')),
                               so_tien      NUMERIC(14,0) NOT NULL DEFAULT 0 CHECK (so_tien >= 0)
 );
 
@@ -410,8 +413,8 @@ BEGIN
         JOIN dat_phong_chi_tiet d
             ON  d.id_phong              = i.id_phong
             AND d.id_dat_phong_chi_tiet <> i.id_dat_phong_chi_tiet
-            AND d.trang_thai IN (N'Hiệu lực', N'Đang lưu trú')
-            AND i.trang_thai IN (N'Hiệu lực', N'Đang lưu trú')
+            AND d.trang_thai IN (N'Hiệu lực', N'Đang lưu trú', 'HIEU_LUC', 'DANG_LUU_TRU')
+            AND i.trang_thai IN (N'Hiệu lực', N'Đang lưu trú', 'HIEU_LUC', 'DANG_LUU_TRU')
             AND d.ngay_nhan < i.ngay_tra   -- khoang [nhan, tra) giao nhau
             AND d.ngay_tra  > i.ngay_nhan
     )
