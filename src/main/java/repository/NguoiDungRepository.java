@@ -33,8 +33,8 @@ public class NguoiDungRepository {
 
     public NguoiDung findByNhanVien(Long idNhanVien) {
         try (Session session = getSession()) {
-            return session.createQuery("FROM NguoiDung WHERE idNhanVien = :idNhanVien", NguoiDung.class)
-                    .setParameter("idNhanVien", idNhanVien)
+            return session.createQuery("FROM NguoiDung nd WHERE nd.nhanVien.idNhanVien = :id", NguoiDung.class)
+                    .setParameter("id", idNhanVien)
                     .uniqueResult();
         }
     }

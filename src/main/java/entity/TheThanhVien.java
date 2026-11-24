@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "the_thanh_vien")
 public class TheThanhVien {
+    public static final String HOAT_DONG       = "Hoạt động";
+    public static final String NGUNG_HOAT_DONG = "Ngừng hoạt động";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_the_thanh_vien")

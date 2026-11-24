@@ -7,10 +7,18 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dat_phong_chi_tiet")
 public class DatPhongChiTiet {
-    public static final String HIEU_LUC     = "HIEU_LUC";
-    public static final String DANG_LUU_TRU = "DANG_LUU_TRU";
-    public static final String DA_TRA_PHONG = "DA_TRA_PHONG";
-    public static final String DA_HUY       = "DA_HUY";
+    // 7 trạng thái chi tiết đặt phòng mới
+    public static final String TAM_GIU          = "Tạm giữ";
+    public static final String DA_XAC_NHAN      = "Đã xác nhận";
+    public static final String KHACH_DANG_O     = "Khách đang ở";
+    public static final String DA_TRA_PHONG     = "Đã trả phòng";
+    public static final String DA_HUY           = "Đã hủy";
+    public static final String KHONG_DEN        = "Không đến";
+    public static final String KHONG_THANH_CONG = "Không thành công";
+
+    // Hằng số tương thích ngược
+    public static final String HIEU_LUC         = "Đã xác nhận";
+    public static final String DANG_LUU_TRU     = "Khách đang ở";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +40,8 @@ public class DatPhongChiTiet {
     @Column(name = "so_tre_em_tu_6_tuoi", nullable = false)
     private Integer soTreEmTu6Tuoi = 0;
 
-    @Column(name = "trang_thai", nullable = false, length = 15)
-    private String trangThai = HIEU_LUC;
+    @Column(name = "trang_thai", nullable = false, length = 30)
+    private String trangThai = TAM_GIU;
 
     @Column(name = "ngay_nhan", nullable = false)
     private LocalDate ngayNhan;

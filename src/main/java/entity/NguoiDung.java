@@ -18,13 +18,13 @@ public class NguoiDung {
     @Column(name = "id_nguoi_dung")
     private Long idNguoiDung;
 
-    // Quan hệ: Nhiều người dùng - 1 nhân viên (tùy chọn)
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "id_nhan_vien", referencedColumnName = "id_nhan_vien")
+    // Quan hệ 1-1 đảo ngược với nhân viên (tùy chọn)
+    @OneToOne(mappedBy = "nguoiDung", fetch = FetchType.LAZY)
     private NhanVien nhanVien;
 
-    @Column(name = "id_nhan_vien", insertable = false, updatable = false)
-    private Long idNhanVien;
+    // Quan hệ 1-1 đảo ngược với khách hàng (tùy chọn)
+    @OneToOne(mappedBy = "nguoiDung", fetch = FetchType.LAZY)
+    private KhachHang khachHang;
 
     @Column(name = "email", length = 150, nullable = false, unique = true)
     private String email;
@@ -48,6 +48,9 @@ public class NguoiDung {
 
     public NhanVien getNhanVien() { return nhanVien; }
     public void setNhanVien(NhanVien nhanVien) { this.nhanVien = nhanVien; }
+
+    public KhachHang getKhachHang() { return khachHang; }
+    public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
 
     public Long getIdNhanVien() { return nhanVien != null ? nhanVien.getIdNhanVien() : null; }
     public void setIdNhanVien(Long idNhanVien) {

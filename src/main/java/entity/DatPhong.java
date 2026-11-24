@@ -10,13 +10,21 @@ import java.util.List;
 @Entity
 @Table(name = "dat_phong")
 public class DatPhong {
-    public static final String CHO_COC        = "CHO_COC";
-    public static final String DA_XAC_NHAN    = "DA_XAC_NHAN";
-    public static final String DANG_LUU_TRU   = "DANG_LUU_TRU";
-    public static final String DA_TRA_PHONG   = "DA_TRA_PHONG";
-    public static final String KHACH_HUY      = "KHACH_HUY";
-    public static final String KHACH_SAN_HUY  = "KHACH_SAN_HUY";
-    public static final String TU_HUY         = "TU_HUY";
+    // 7 trạng thái chi tiết đặt phòng (theo nghiệp vụ khách sạn mới)
+    public static final String TAM_GIU           = "Tạm giữ";
+    public static final String DA_XAC_NHAN       = "Đã xác nhận";
+    public static final String KHACH_DANG_O      = "Khách đang ở";
+    public static final String DA_TRA_PHONG      = "Đã trả phòng";
+    public static final String DA_HUY            = "Đã hủy";
+    public static final String KHONG_DEN         = "Không đến";
+    public static final String KHONG_THANH_CONG  = "Không thành công";
+
+    // Hằng số tương thích ngược với code cũ
+    public static final String CHO_COC           = "Tạm giữ";
+    public static final String DANG_LUU_TRU      = "Khách đang ở";
+    public static final String KHACH_HUY         = "Đã hủy";
+    public static final String KHACH_SAN_HUY     = "Đã hủy";
+    public static final String TU_HUY            = "Không đến";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +48,9 @@ public class DatPhong {
     @Column(name = "ma_dat_phong", nullable = false, length = 20, unique = true)
     private String maDatPhong;
 
-    @Column(name = "trang_thai", nullable = false, length = 20)
-    private String trangThai = CHO_COC;
+    // Cột trang_thai đã xóa ở bảng dat_phong SQL, chuyển sang trường tạm (transient) lấy từ chi tiết
+    @Transient
+    private String trangThai = TAM_GIU;
 
     @Column(name = "thoi_gian_nhan_phong", nullable = false)
     private LocalDateTime thoiGianNhanPhong;
@@ -101,8 +110,21 @@ public class DatPhong {
     }
     public String getMaDatPhong() { return maDatPhong; }
     public void setMaDatPhong(String maDatPhong) { this.maDatPhong = maDatPhong; }
-    public String getTrangThai() { return trangThai; }
-    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+    public String getTrangThai() {
+        if (trangThai != null) return trangThai;
+        if (chiTiet != null && !chiTiet.isEmpty()) {
+            return chiTiet.get(0).getTrangThai();
+        }
+        return TAM_GIU;
+    }
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+        if (this.chiTiet != null) {
+            for (DatPhongChiTiet ct : this.chiTiet) {
+                ct.setTrangThai(trangThai);
+            }
+        }
+    }
     public LocalDateTime getThoiGianNhanPhong() { return thoiGianNhanPhong; }
     public void setThoiGianNhanPhong(LocalDateTime v) { this.thoiGianNhanPhong = v; }
     public LocalDateTime getThoiGianTraPhong() { return thoiGianTraPhong; }

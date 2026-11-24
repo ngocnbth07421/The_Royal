@@ -16,6 +16,9 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "bang_luong")
 public class BangLuong {
+    public static final String CHO_CAP_NHAT = "Chờ cập nhật";
+    public static final String DA_XAC_NHAN  = "Đã xác nhận";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bang_luong")
@@ -41,6 +44,6 @@ public class BangLuong {
     @Column(name = "luong_tong", nullable = false, precision = 14, scale = 0)
     private BigDecimal luongTong;
 
-    @Column(name = "trang_thai", length = 20, nullable = false)
-    private String trangThai = "Nháp";
+    @Column(name = "trang_thai", length = 25, nullable = false)
+    private String trangThai = CHO_CAP_NHAT;
 }

@@ -17,6 +17,9 @@ public class MaGiamGia {
     @Column(name = "ma_giam_gia", nullable = false, unique = true, length = 30)
     private String maGiamGia;
 
+    public static final String HOAT_DONG = "Hoạt động";
+    public static final String NGUNG      = "Ngưng";
+
     @Nationalized
     @Column(name = "loai_giam_gia", nullable = false, length = 20)
     private String loaiGiamGia;
@@ -30,8 +33,8 @@ public class MaGiamGia {
     @Column(name = "ket_thuc_luc", nullable = false)
     private LocalDateTime ketThucLuc;
 
-    @Column(name = "so_luot_da_dung", nullable = false)
-    private Integer soLuotDaDung = 0;
+    @Column(name = "so_luot_con_dung", nullable = false)
+    private Integer soLuotConDung = 0;
 
     @Nationalized
     @Column(name = "trang_thai", nullable = false, length = 20)
@@ -49,8 +52,13 @@ public class MaGiamGia {
     public void setBatDauLuc(LocalDateTime batDauLuc) { this.batDauLuc = batDauLuc; }
     public LocalDateTime getKetThucLuc() { return ketThucLuc; }
     public void setKetThucLuc(LocalDateTime ketThucLuc) { this.ketThucLuc = ketThucLuc; }
-    public Integer getSoLuotDaDung() { return soLuotDaDung; }
-    public void setSoLuotDaDung(Integer soLuotDaDung) { this.soLuotDaDung = soLuotDaDung; }
+    public Integer getSoLuotConDung() { return soLuotConDung; }
+    public void setSoLuotConDung(Integer soLuotConDung) { this.soLuotConDung = soLuotConDung; }
+
+    // Compatibility alias for existing code
+    public Integer getSoLuotDaDung() { return soLuotConDung; }
+    public void setSoLuotDaDung(Integer soLuot) { this.soLuotConDung = soLuot; }
+
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
 }

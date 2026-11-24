@@ -21,6 +21,14 @@ public class NhanVien {
     @Column(name = "id_nhan_vien")
     private Long idNhanVien;
 
+    // Quan hệ: 1 nhân viên - 1 người dùng (tài khoản hệ thống)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_nguoi_dung", referencedColumnName = "id_nguoi_dung", unique = true)
+    private NguoiDung nguoiDung;
+
+    @Column(name = "id_nguoi_dung", insertable = false, updatable = false)
+    private Long idNguoiDung;
+
     // Quan hệ: Nhiều nhân viên - 1 vai trò
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_vai_tro", referencedColumnName = "id_vai_tro")
@@ -51,8 +59,19 @@ public class NhanVien {
     @Column(name = "khau_tru")
     private BigDecimal khauTru;
 
-    @Column(name = "trang_thai", length = 15, nullable = false)
-    private String trangThai;
+    public NguoiDung getNguoiDung() { return nguoiDung; }
+    public void setNguoiDung(NguoiDung nguoiDung) { this.nguoiDung = nguoiDung; }
+
+    public Long getIdNguoiDung() { return nguoiDung != null ? nguoiDung.getIdNguoiDung() : idNguoiDung; }
+    public void setIdNguoiDung(Long idNguoiDung) {
+        this.idNguoiDung = idNguoiDung;
+        if (idNguoiDung != null) {
+            if (this.nguoiDung == null) this.nguoiDung = new NguoiDung();
+            this.nguoiDung.setIdNguoiDung(idNguoiDung);
+        } else {
+            this.nguoiDung = null;
+        }
+    }
 
     public Long getIdNhanVien() { return idNhanVien; }
     public void setIdNhanVien(Long idNhanVien) { this.idNhanVien = idNhanVien; }
@@ -91,6 +110,13 @@ public class NhanVien {
     public BigDecimal getKhauTru() { return khauTru; }
     public void setKhauTru(BigDecimal khauTru) { this.khauTru = khauTru; }
 
-    public String getTrangThai() { return trangThai; }
-    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+    // Trạng thái lấy từ bảng người dùng (quan hệ 1-1)
+    public String getTrangThai() {
+        return nguoiDung != null ? nguoiDung.getTrangThai() : "Hoạt động";
+    }
+    public void setTrangThai(String trangThai) {
+        if (this.nguoiDung != null) {
+            this.nguoiDung.setTrangThai(trangThai);
+        }
+    }
 }

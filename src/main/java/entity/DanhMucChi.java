@@ -15,6 +15,11 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "danh_muc_chi")
 public class DanhMucChi {
+    public static final String NHAN_SU   = "Nhân sự";
+    public static final String VAT_TU    = "Vật tư";
+    public static final String KHAC      = "Khác";
+    public static final String VAN_HANH  = "Vận hành";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_danh_muc")
@@ -28,4 +33,7 @@ public class DanhMucChi {
 
     @Column(name = "so_tien", nullable = false, precision = 14, scale = 0)
     private BigDecimal soTien = BigDecimal.ZERO;
+
+    @Column(name = "ghi_chu", length = 255)
+    private String ghiChu;
 }
