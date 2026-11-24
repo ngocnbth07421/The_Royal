@@ -23,9 +23,10 @@ public class Phong {
     @Column(name = "id_phong")
     private Long id;
 
-    /** Để dạng id thô cho nhẹ; người làm "Quản lý khu vực" sẽ nâng lên @ManyToOne Tang nếu cần. */
-    @Column(name = "id_tang", nullable = false)
-    private Long idTang;
+    // Quan hệ: Nhiều phòng - 1 tầng
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_tang", referencedColumnName = "id_tang", nullable = false)
+    private Tang tang;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_loai_phong", nullable = false)
@@ -53,8 +54,17 @@ public class Phong {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Long getIdTang() { return idTang; }
-    public void setIdTang(Long idTang) { this.idTang = idTang; }
+    public Tang getTang() { return tang; }
+    public void setTang(Tang tang) { this.tang = tang; }
+    public Long getIdTang() { return tang != null ? tang.getIdTang() : null; }
+    public void setIdTang(Long idTang) {
+        if (idTang != null) {
+            if (this.tang == null) this.tang = new Tang();
+            this.tang.setIdTang(idTang);
+        } else {
+            this.tang = null;
+        }
+    }
     public LoaiPhong getLoaiPhong() { return loaiPhong; }
     public void setLoaiPhong(LoaiPhong loaiPhong) { this.loaiPhong = loaiPhong; }
     public String getMaPhong() { return maPhong; }

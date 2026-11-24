@@ -18,14 +18,20 @@ public class NhiemVuDonPhong {
     @Column(name = "id_nhiem_vu")
     private Long idNhiemVu;
 
-    @Column(name = "id_phong", nullable = false)
-    private Long idPhong;
+    // Quan hệ: Nhiều nhiệm vụ - 1 phòng
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_phong", referencedColumnName = "id_phong", nullable = false)
+    private Phong phong;
 
-    @Column(name = "id_dat_phong_chi_tiet")
-    private Long idDatPhongChiTiet;
+    // Quan hệ: Nhiều nhiệm vụ - 1 đặt phòng chi tiết
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_dat_phong_chi_tiet", referencedColumnName = "id_dat_phong_chi_tiet", nullable = false)
+    private DatPhongChiTiet datPhongChiTiet;
 
-    @Column(name = "id_nhan_vien")
-    private Long idNhanVien;
+    // Quan hệ: Nhiều nhiệm vụ - 1 nhân viên (tùy chọn)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_nhan_vien", referencedColumnName = "id_nhan_vien")
+    private NhanVien nhanVien;
 
     @Column(name = "trang_thai", length = 20, nullable = false)
     private String trangThai;
@@ -33,14 +39,41 @@ public class NhiemVuDonPhong {
     public Long getIdNhiemVu() { return idNhiemVu; }
     public void setIdNhiemVu(Long idNhiemVu) { this.idNhiemVu = idNhiemVu; }
 
-    public Long getIdPhong() { return idPhong; }
-    public void setIdPhong(Long idPhong) { this.idPhong = idPhong; }
+    public Phong getPhong() { return phong; }
+    public void setPhong(Phong phong) { this.phong = phong; }
+    public Long getIdPhong() { return phong != null ? phong.getId() : null; }
+    public void setIdPhong(Long idPhong) {
+        if (idPhong != null) {
+            if (this.phong == null) this.phong = new Phong();
+            this.phong.setId(idPhong);
+        } else {
+            this.phong = null;
+        }
+    }
 
-    public Long getIdDatPhongChiTiet() { return idDatPhongChiTiet; }
-    public void setIdDatPhongChiTiet(Long idDatPhongChiTiet) { this.idDatPhongChiTiet = idDatPhongChiTiet; }
+    public DatPhongChiTiet getDatPhongChiTiet() { return datPhongChiTiet; }
+    public void setDatPhongChiTiet(DatPhongChiTiet datPhongChiTiet) { this.datPhongChiTiet = datPhongChiTiet; }
+    public Long getIdDatPhongChiTiet() { return datPhongChiTiet != null ? datPhongChiTiet.getId() : null; }
+    public void setIdDatPhongChiTiet(Long idDatPhongChiTiet) {
+        if (idDatPhongChiTiet != null) {
+            if (this.datPhongChiTiet == null) this.datPhongChiTiet = new DatPhongChiTiet();
+            this.datPhongChiTiet.setId(idDatPhongChiTiet);
+        } else {
+            this.datPhongChiTiet = null;
+        }
+    }
 
-    public Long getIdNhanVien() { return idNhanVien; }
-    public void setIdNhanVien(Long idNhanVien) { this.idNhanVien = idNhanVien; }
+    public NhanVien getNhanVien() { return nhanVien; }
+    public void setNhanVien(NhanVien nhanVien) { this.nhanVien = nhanVien; }
+    public Long getIdNhanVien() { return nhanVien != null ? nhanVien.getIdNhanVien() : null; }
+    public void setIdNhanVien(Long idNhanVien) {
+        if (idNhanVien != null) {
+            if (this.nhanVien == null) this.nhanVien = new NhanVien();
+            this.nhanVien.setIdNhanVien(idNhanVien);
+        } else {
+            this.nhanVien = null;
+        }
+    }
 
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }

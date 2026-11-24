@@ -14,12 +14,15 @@ public class TheThanhVien {
     @Column(name = "id_the_thanh_vien")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_khach_hang", nullable = false, unique = true)
+    // Quan hệ: 1 thẻ thành viên - 1 khách hàng
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_khach_hang", referencedColumnName = "id_khach_hang", nullable = false, unique = true)
     private KhachHang khachHang;
 
-    @Column(name = "id_hang_thanh_vien", nullable = false)
-    private Long idHangThanhVien;
+    // Quan hệ: Nhiều thẻ thành viên - 1 hạng thành viên
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_hang_thanh_vien", referencedColumnName = "id_hang_thanh_vien", nullable = false)
+    private HangThanhVien hangThanhVien;
 
     @Column(name = "ma_qr", nullable = false, unique = true, length = 64)
     private String maQr;
@@ -41,8 +44,17 @@ public class TheThanhVien {
     public void setId(Long id) { this.id = id; }
     public KhachHang getKhachHang() { return khachHang; }
     public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
-    public Long getIdHangThanhVien() { return idHangThanhVien; }
-    public void setIdHangThanhVien(Long idHangThanhVien) { this.idHangThanhVien = idHangThanhVien; }
+    public HangThanhVien getHangThanhVien() { return hangThanhVien; }
+    public void setHangThanhVien(HangThanhVien hangThanhVien) { this.hangThanhVien = hangThanhVien; }
+    public Long getIdHangThanhVien() { return hangThanhVien != null ? hangThanhVien.getIdHangThanhVien() : null; }
+    public void setIdHangThanhVien(Long idHangThanhVien) {
+        if (idHangThanhVien != null) {
+            if (this.hangThanhVien == null) this.hangThanhVien = new HangThanhVien();
+            this.hangThanhVien.setIdHangThanhVien(idHangThanhVien);
+        } else {
+            this.hangThanhVien = null;
+        }
+    }
     public String getMaQr() { return maQr; }
     public void setMaQr(String maQr) { this.maQr = maQr; }
     public String getTrangThai() { return trangThai; }

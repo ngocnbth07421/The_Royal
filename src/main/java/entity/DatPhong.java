@@ -27,12 +27,15 @@ public class DatPhong {
     @JoinColumn(name = "id_khach_hang", nullable = false)
     private KhachHang khachHang;
 
-    /** id nhân viên tạo; NULL = khách tự đặt. Để id thô để không phụ thuộc entity NhanVien của người khác. */
-    @Column(name = "id_nguoi_tao")
-    private Long idNguoiTao;
+    // Quan hệ: Nhiều đặt phòng - 1 nhân viên tạo (tùy chọn)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_nguoi_tao", referencedColumnName = "id_nhan_vien")
+    private NhanVien nguoiTao;
 
-    @Column(name = "id_ma_giam_gia")
-    private Long idMaGiamGia;
+    // Quan hệ: Nhiều đặt phòng - 1 mã giảm giá (tùy chọn)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_ma_giam_gia", referencedColumnName = "id_ma_giam_gia")
+    private MaGiamGia maGiamGia;
 
     @Column(name = "ma_dat_phong", nullable = false, length = 20, unique = true)
     private String maDatPhong;
@@ -73,10 +76,29 @@ public class DatPhong {
     public void setIdDatPhong(Long id) { this.id = id; }
     public KhachHang getKhachHang() { return khachHang; }
     public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
-    public Long getIdNguoiTao() { return idNguoiTao; }
-    public void setIdNguoiTao(Long idNguoiTao) { this.idNguoiTao = idNguoiTao; }
-    public Long getIdMaGiamGia() { return idMaGiamGia; }
-    public void setIdMaGiamGia(Long idMaGiamGia) { this.idMaGiamGia = idMaGiamGia; }
+    public NhanVien getNguoiTao() { return nguoiTao; }
+    public void setNguoiTao(NhanVien nguoiTao) { this.nguoiTao = nguoiTao; }
+    public Long getIdNguoiTao() { return nguoiTao != null ? nguoiTao.getIdNhanVien() : null; }
+    public void setIdNguoiTao(Long idNguoiTao) {
+        if (idNguoiTao != null) {
+            if (this.nguoiTao == null) this.nguoiTao = new NhanVien();
+            this.nguoiTao.setIdNhanVien(idNguoiTao);
+        } else {
+            this.nguoiTao = null;
+        }
+    }
+
+    public MaGiamGia getMaGiamGia() { return maGiamGia; }
+    public void setMaGiamGia(MaGiamGia maGiamGia) { this.maGiamGia = maGiamGia; }
+    public Long getIdMaGiamGia() { return maGiamGia != null ? maGiamGia.getId() : null; }
+    public void setIdMaGiamGia(Long idMaGiamGia) {
+        if (idMaGiamGia != null) {
+            if (this.maGiamGia == null) this.maGiamGia = new MaGiamGia();
+            this.maGiamGia.setId(idMaGiamGia);
+        } else {
+            this.maGiamGia = null;
+        }
+    }
     public String getMaDatPhong() { return maDatPhong; }
     public void setMaDatPhong(String maDatPhong) { this.maDatPhong = maDatPhong; }
     public String getTrangThai() { return trangThai; }

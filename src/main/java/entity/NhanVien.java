@@ -21,8 +21,10 @@ public class NhanVien {
     @Column(name = "id_nhan_vien")
     private Long idNhanVien;
 
-    @Column(name = "id_vai_tro", nullable = false)
-    private Long idVaiTro;
+    // Quan hệ: Nhiều nhân viên - 1 vai trò
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vai_tro", referencedColumnName = "id_vai_tro")
+    private VaiTro vaiTro;
 
     @Column(name = "ma_nhan_vien", length = 20, nullable = false, unique = true)
     private String maNhanVien;
@@ -52,8 +54,18 @@ public class NhanVien {
     public Long getIdNhanVien() { return idNhanVien; }
     public void setIdNhanVien(Long idNhanVien) { this.idNhanVien = idNhanVien; }
 
-    public Long getIdVaiTro() { return idVaiTro; }
-    public void setIdVaiTro(Long idVaiTro) { this.idVaiTro = idVaiTro; }
+    public VaiTro getVaiTro() { return vaiTro; }
+    public void setVaiTro(VaiTro vaiTro) { this.vaiTro = vaiTro; }
+
+    public Long getIdVaiTro() { return vaiTro != null ? vaiTro.getIdVaiTro() : null; }
+    public void setIdVaiTro(Long idVaiTro) {
+        if (idVaiTro != null) {
+            if (this.vaiTro == null) this.vaiTro = new VaiTro();
+            this.vaiTro.setIdVaiTro(idVaiTro);
+        } else {
+            this.vaiTro = null;
+        }
+    }
 
     public String getMaNhanVien() { return maNhanVien; }
     public void setMaNhanVien(String maNhanVien) { this.maNhanVien = maNhanVien; }
