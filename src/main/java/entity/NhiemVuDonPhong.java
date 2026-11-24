@@ -23,15 +23,24 @@ public class NhiemVuDonPhong {
     @JoinColumn(name = "id_phong", referencedColumnName = "id_phong", nullable = false)
     private Phong phong;
 
+    @Column(name = "id_phong", insertable = false, updatable = false)
+    private Long idPhong;
+
     // Quan hệ: Nhiều nhiệm vụ - 1 đặt phòng chi tiết
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_dat_phong_chi_tiet", referencedColumnName = "id_dat_phong_chi_tiet", nullable = false)
     private DatPhongChiTiet datPhongChiTiet;
 
+    @Column(name = "id_dat_phong_chi_tiet", insertable = false, updatable = false)
+    private Long idDatPhongChiTiet;
+
     // Quan hệ: Nhiều nhiệm vụ - 1 nhân viên (tùy chọn)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_nhan_vien", referencedColumnName = "id_nhan_vien")
     private NhanVien nhanVien;
+
+    @Column(name = "id_nhan_vien", insertable = false, updatable = false)
+    private Long idNhanVien;
 
     @Column(name = "trang_thai", length = 20, nullable = false)
     private String trangThai;

@@ -23,6 +23,9 @@ public class NguoiDung {
     @JoinColumn(name = "id_nhan_vien", referencedColumnName = "id_nhan_vien")
     private NhanVien nhanVien;
 
+    @Column(name = "id_nhan_vien", insertable = false, updatable = false)
+    private Long idNhanVien;
+
     @Column(name = "email", length = 150, nullable = false, unique = true)
     private String email;
 
@@ -33,6 +36,9 @@ public class NguoiDung {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_vai_tro", referencedColumnName = "id_vai_tro", nullable = false)
     private VaiTro vaiTro;
+
+    @Column(name = "id_vai_tro", insertable = false, updatable = false)
+    private Long idVaiTro;
 
     @Column(name = "trang_thai", length = 20, nullable = false)
     private String trangThai; // HOAT_DONG, BI_KHOA

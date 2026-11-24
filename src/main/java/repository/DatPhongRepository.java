@@ -215,4 +215,33 @@ public class DatPhongRepository {
                 .getResultList();
         return rs.isEmpty() ? null : rs.get(0);
     }
+
+    // ------------------------------------------------------------------ LỊCH ĐẶT PHÒNG
+
+    /**
+     * Các lượt ở (đơn x phòng) giao với khoảng [tu, den). Dùng cho lịch kiểu Google Calendar.
+     * maPhong / trangThaiDon có thể null. goiHuy = false thì bỏ các lượt đã hủy.
+     */
+    public List<DatPhongChiTiet> timLichTheoKhoang(Session s, LocalDate tu, LocalDate den,
+                                                   String maPhong, String trangThaiDon, boolean goiHuy) {
+        StringBuilder hql = new StringBuilder("""
+                select c from DatPhongChiTiet c
+                  join fetch c.datPhong d
+                  join fetch d.khachHang k
+                  join fetch c.phong p
+                where c.ngayNhan < :den and c.ngayTra > :tu
+                """);
+        if (!goiHuy)            hql.append(" and c.trangThai <> :huy");
+        if (maPhong != null)    hql.append(" and lower(p.maPhong) like :ma");
+        if (trangThaiDon != null) hql.append(" and d.trangThai = :tt");
+        hql.append(" order by c.ngayNhan, p.maPhong");
+
+        var q = s.createQuery(hql.toString(), DatPhongChiTiet.class)
+                .setParameter("tu", tu)
+                .setParameter("den", den);
+        if (!goiHuy)            q.setParameter("huy", DatPhongChiTiet.DA_HUY);
+        if (maPhong != null)    q.setParameter("ma", "%" + maPhong.toLowerCase() + "%");
+        if (trangThaiDon != null) q.setParameter("tt", trangThaiDon);
+        return q.getResultList();
+    }
 }

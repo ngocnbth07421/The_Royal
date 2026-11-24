@@ -28,6 +28,9 @@ public class Phong {
     @JoinColumn(name = "id_tang", referencedColumnName = "id_tang", nullable = false)
     private Tang tang;
 
+    @Column(name = "id_tang", insertable = false, updatable = false)
+    private Long idTang;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_loai_phong", nullable = false)
     private LoaiPhong loaiPhong;

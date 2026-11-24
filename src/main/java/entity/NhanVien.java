@@ -26,6 +26,9 @@ public class NhanVien {
     @JoinColumn(name = "id_vai_tro", referencedColumnName = "id_vai_tro")
     private VaiTro vaiTro;
 
+    @Column(name = "id_vai_tro", insertable = false, updatable = false)
+    private Long idVaiTro;
+
     @Column(name = "ma_nhan_vien", length = 20, nullable = false, unique = true)
     private String maNhanVien;
 

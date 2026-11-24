@@ -19,6 +19,9 @@ public class LichSuDatPhong {
     @JoinColumn(name = "id_dat_phong", referencedColumnName = "id_dat_phong", nullable = false, unique = true)
     private DatPhong datPhong;
 
+    @Column(name = "id_dat_phong", insertable = false, updatable = false)
+    private Long idDatPhong;
+
     // Quan hệ: Nhiều biên bản hủy - 1 người hủy (tùy chọn)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_nguoi_huy", referencedColumnName = "id_nhan_vien")

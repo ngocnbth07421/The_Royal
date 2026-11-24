@@ -23,6 +23,9 @@ public class Tang {
     @JoinColumn(name = "id_toa_nha", referencedColumnName = "id_toa_nha", nullable = false)
     private ToaNha toaNha;
 
+    @Column(name = "id_toa_nha", insertable = false, updatable = false)
+    private Long idToaNha;
+
     @Column(name = "so_tang", nullable = false)
     private Integer soTang;
 
