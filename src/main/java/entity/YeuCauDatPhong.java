@@ -1,10 +1,10 @@
-package dto;
+package entity;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Dữ liệu đầu vào của nghiệp vụ "Đặt phòng" (Servlet gom từ form -> đưa cho Service).
+ * Dữ liệu đầu vào của nghiệp vụ "Đặt phòng" (Servlet gom từ form -> đưa cho Repository).
  * idNguoiTao = null nghĩa là khách tự đặt; maGiamGia có thể null/rỗng.
  */
 public record YeuCauDatPhong(Long idKhachHang,

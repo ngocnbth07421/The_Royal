@@ -1,16 +1,12 @@
 package controller;
 
-import dto.PhongYeuCau;
-import dto.YeuCauDatPhong;
-import entity.DatPhong;
-import entity.Phong;
-import exception.NghiepVuException;
+import entity.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.DatPhongService;
+import repository.DatPhongRepository;
 import util.FlashMessage;
 import util.RequestUtil;
 
@@ -33,7 +29,7 @@ import java.util.List;
 @WebServlet("/dat-phong")
 public class DatPhongServlet extends HttpServlet {
     private static final String VIEW = "/WEB-INF/views/dat-phong/";
-    private final DatPhongService service = new DatPhongService();
+    private final DatPhongRepository service = new DatPhongRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

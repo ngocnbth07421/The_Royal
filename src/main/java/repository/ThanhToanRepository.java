@@ -3,10 +3,12 @@ package repository;
 import entity.DatPhong;
 import entity.ThanhToan;
 import entity.TheThanhVien;
+import controller.NghiepVuException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ThanhToanRepository {
@@ -86,5 +88,45 @@ public class ThanhToanRepository {
             if (transaction != null && transaction.isActive()) transaction.rollback();
             throw new RuntimeException("Lỗi xóa thanh toán", e);
         }
+    }
+
+    public List<ThanhToan> layDanhSach() { return findAll(); }
+    public List<DatPhong> layDanhSachDatPhong() { return findAllDatPhong(); }
+    public List<TheThanhVien> layDanhSachTheThanhVien() { return findAllTheThanhVienHoatDong(); }
+
+    public void taoGiaoDichThanhToan(Long idDatPhong, Long idTheThanhVien, String phuongThuc, BigDecimal soTien, String trangThai) {
+        if (idDatPhong == null) {
+            throw new NghiepVuException("Vui lòng chọn đơn đặt phòng cần thanh toán.");
+        }
+        if (soTien == null || soTien.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NghiepVuException("Số tiền thanh toán phải lớn hơn 0.");
+        }
+        if ("THE".equals(phuongThuc) && idTheThanhVien == null) {
+            throw new NghiepVuException("Khi chọn phương thức Thẻ thành viên (THE), bắt buộc phải chọn thẻ của khách!");
+        }
+
+        DatPhong dp = new DatPhong();
+        dp.setId(idDatPhong);
+
+        ThanhToan tt = new ThanhToan();
+        tt.setDatPhong(dp);
+
+        if ("THE".equals(phuongThuc) && idTheThanhVien != null) {
+            TheThanhVien ttv = new TheThanhVien();
+            ttv.setId(idTheThanhVien);
+            tt.setTheThanhVien(ttv);
+        } else {
+            tt.setTheThanhVien(null);
+        }
+
+        tt.setPhuongThucThanhToan(phuongThuc);
+        tt.setTienThanhToan(soTien);
+        tt.setTrangThai(trangThai != null ? trangThai : "THANH_CONG");
+
+        saveOrUpdate(tt);
+    }
+
+    public void doiTrangThai(Long idThanhToan, String trangThaiMoi) {
+        capNhatTrangThai(idThanhToan, trangThaiMoi);
     }
 }

@@ -1,13 +1,12 @@
 package controller;
 
 import entity.TienNghi;
-import exception.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.TienNghiService;
+import repository.TienNghiRepository;
 import util.FlashMessage;
 import util.RequestUtil;
 
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 @WebServlet("/tien-nghi")
 public class TienNghiServlet extends HttpServlet {
     private static final String VIEW = "/WEB-INF/views/tien-nghi/";
-    private final TienNghiService service = new TienNghiService();
+    private final TienNghiRepository service = new TienNghiRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

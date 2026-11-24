@@ -3,13 +3,12 @@ package controller;
 import entity.ThanhToan;
 import entity.DatPhong;
 import entity.TheThanhVien;
-import exception.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.ThanhToanService;
+import repository.ThanhToanRepository;
 import util.FlashMessage;
 import util.RequestUtil;
 
@@ -27,7 +26,7 @@ import java.math.BigDecimal;
 @WebServlet("/thanh-toan")
 public class ThanhToanServlet extends HttpServlet {
     private static final String VIEW = "/WEB-INF/views/thanh-toan/";
-    private final ThanhToanService service = new ThanhToanService();
+    private final ThanhToanRepository service = new ThanhToanRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

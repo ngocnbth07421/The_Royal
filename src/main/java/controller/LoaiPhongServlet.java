@@ -1,13 +1,12 @@
 package controller;
 
 import entity.LoaiPhong;
-import exception.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.LoaiPhongService;
+import repository.LoaiPhongRepository;
 import util.FlashMessage;
 import util.RequestUtil;
 
@@ -24,7 +23,7 @@ import java.math.BigDecimal;
 @WebServlet("/loai-phong")
 public class LoaiPhongServlet extends HttpServlet {
     private static final String VIEW = "/WEB-INF/views/loai-phong/";
-    private final LoaiPhongService service = new LoaiPhongService();
+    private final LoaiPhongRepository service = new LoaiPhongRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

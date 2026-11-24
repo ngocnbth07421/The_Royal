@@ -1,13 +1,12 @@
 package controller;
 
 import entity.MaGiamGia;
-import exception.NghiepVuException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.MaGiamGiaService;
+import repository.MaGiamGiaRepository;
 import util.FlashMessage;
 import util.RequestUtil;
 
@@ -26,7 +25,7 @@ import java.time.format.DateTimeParseException;
 @WebServlet("/ma-giam-gia")
 public class MaGiamGiaServlet extends HttpServlet {
     private static final String VIEW = "/WEB-INF/views/ma-giam-gia/";
-    private final MaGiamGiaService service = new MaGiamGiaService();
+    private final MaGiamGiaRepository service = new MaGiamGiaRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -3,10 +3,12 @@ package repository;
 import entity.HangPhong;
 import entity.LoaiGiuong;
 import entity.LoaiPhong;
+import controller.NghiepVuException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class LoaiPhongRepository {
@@ -93,5 +95,44 @@ public class LoaiPhongRepository {
             if (transaction != null && transaction.isActive()) transaction.rollback();
             throw new RuntimeException("Lỗi xóa loại phòng", e);
         }
+    }
+
+    public List<LoaiPhong> layDanhSach() { return findAll(); }
+    public LoaiPhong timTheoId(Long id) { return findById(id); }
+    public List<HangPhong> layDanhSachHangPhong() { return findAllHangPhong(); }
+    public List<LoaiGiuong> layDanhSachLoaiGiuong() { return findAllLoaiGiuong(); }
+
+    public void luuLoaiPhong(Long id, String ten, BigDecimal giaMoiDem, String moTa, Long idHangPhong, Long idLoaiGiuong) {
+        if (ten == null || ten.trim().isEmpty()) {
+            throw new NghiepVuException("Tên loại phòng không được để trống.");
+        }
+        if (giaMoiDem == null || giaMoiDem.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NghiepVuException("Giá mỗi đêm bắt buộc phải lớn hơn 0.");
+        }
+
+        LoaiPhong trung = findByHangVaGiuong(idHangPhong, idLoaiGiuong);
+        if (trung != null && (id == null || !trung.getId().equals(id))) {
+            throw new NghiepVuException("Tổ hợp Hạng phòng và Loại giường này đã tồn tại ở loại phòng: " + trung.getTen());
+        }
+
+        LoaiPhong lp = (id != null) ? findById(id) : new LoaiPhong();
+        if (lp == null) lp = new LoaiPhong();
+
+        HangPhong hp = new HangPhong();
+        hp.setId(idHangPhong);
+        LoaiGiuong lg = new LoaiGiuong();
+        lg.setId(idLoaiGiuong);
+
+        lp.setTen(ten.trim());
+        lp.setGiaMoiDem(giaMoiDem);
+        lp.setMoTa(moTa != null ? moTa.trim() : null);
+        lp.setHangPhong(hp);
+        lp.setLoaiGiuong(lg);
+
+        saveOrUpdate(lp);
+    }
+
+    public void xoaLoaiPhong(Long id) {
+        delete(id);
     }
 }

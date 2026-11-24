@@ -1,6 +1,6 @@
 package util;
 
-import exception.NghiepVuException;
+import controller.NghiepVuException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDate;
