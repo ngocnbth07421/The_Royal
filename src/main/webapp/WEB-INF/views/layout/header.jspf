@@ -27,20 +27,20 @@
             <a class="nav-item" href="${ctx}/#tong_quan"><i class='bx bx-grid-alt'></i> Tổng quan</a>
 
             <div class="nav-label">VẬN HÀNH KHÁCH SẠN</div>
-            <a class="nav-item" href="${ctx}/#phong"><i class='bx bx-hotel'></i> Quản lý sơ đồ phòng</a>
+            <a class="nav-item ${menu eq 'phong' ? 'active' : ''}" href="${ctx}/quan-ly-phong/view"><i class='bx bx-hotel'></i> Quản lý sơ đồ phòng</a>
             <a class="nav-item ${menu eq 'don' ? 'active' : ''}" href="${ctx}/dat-phong"><i class='bx bx-calendar-check'></i> Quản lý đặt phòng</a>
-            <a class="nav-item" href="${ctx}/#loai_phong"><i class='bx bx-layer'></i> Danh mục loại phòng</a>
-            <a class="nav-item" href="${ctx}/#khach_hang"><i class='bx bx-user'></i> Khách hàng</a>
-            <a class="nav-item" href="${ctx}/#nhan_vien"><i class='bx bx-id-card'></i> Nhân sự &amp; Nhân viên</a>
+            <a class="nav-item ${menu eq 'loai-phong' ? 'active' : ''}" href="${ctx}/loai-phong"><i class='bx bx-layer'></i> Danh mục loại phòng</a>
+            <a class="nav-item ${menu eq 'khach-hang' ? 'active' : ''}" href="${ctx}/quan-ly-khach-hang/view"><i class='bx bx-user'></i> Khách hàng</a>
+            <a class="nav-item ${menu eq 'nhan-vien' ? 'active' : ''}" href="${ctx}/quan-ly-nhan-vien/view"><i class='bx bx-id-card'></i> Nhân sự &amp; Nhân viên</a>
 
             <div class="nav-label">DỊCH VỤ &amp; TÀI CHÍNH</div>
             <a class="nav-item ${menu eq 'tien-nghi' ? 'active' : ''}" href="${ctx}/tien-nghi"><i class='bx bx-spa'></i> Tiện nghi phòng</a>
-            <a class="nav-item" href="${ctx}/#dich_vu"><i class='bx bx-restaurant'></i> Dịch vụ đi kèm</a>
-            <a class="nav-item" href="${ctx}/#thanh_toan"><i class='bx bx-receipt'></i> Hóa đơn &amp; Thanh toán</a>
-            <a class="nav-item" href="${ctx}/#ma_giam_gia"><i class='bx bx-purchase-tag-alt'></i> Khuyến mãi &amp; Ưu đãi</a>
+            <a class="nav-item ${menu eq 'dich-vu' ? 'active' : ''}" href="${ctx}/quan-ly-dich-vu/view"><i class='bx bx-dish'></i> Dịch vụ đi kèm</a>
+            <a class="nav-item ${menu eq 'thanh-toan' ? 'active' : ''}" href="${ctx}/thanh-toan"><i class='bx bx-receipt'></i> Hóa đơn &amp; Thanh toán</a>
+            <a class="nav-item ${menu eq 'ma-giam-gia' ? 'active' : ''}" href="${ctx}/ma-giam-gia"><i class='bx bx-purchase-tag-alt'></i> Khuyến mãi &amp; Ưu đãi</a>
 
             <div class="nav-label">CHẤT LƯỢNG TRẢI NGHIỆM</div>
-            <a class="nav-item" href="${ctx}/#danh_gia"><i class='bx bx-star'></i> Phản hồi &amp; Đánh giá</a>
+            <a class="nav-item ${menu eq 'danh-gia' ? 'active' : ''}" href="${ctx}/quan-ly-danh-gia/view"><i class='bx bx-star'></i> Phản hồi &amp; Đánh giá</a>
         </nav>
 
         <div class="sidebar-bottom">

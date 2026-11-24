@@ -35,4 +35,18 @@ public class KhachHang {
     public void setEmail(String email) { this.email = email; }
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+
+    // Compatibility aliases for KhachHangServlet, KhachHangRepository, and quan-ly-khach-hang/view.jsp
+    public Long getId_khach_hang() { return id; }
+    public void setId_khach_hang(Long id) { this.id = id; }
+    public String getHo_ten() { return hoTen; }
+    public void setHo_ten(String hoTen) { this.hoTen = hoTen; }
+    public String getSo_dien_thoai() { return soDienThoai; }
+    public void setSo_dien_thoai(String soDienThoai) { this.soDienThoai = soDienThoai; }
+    public String getTrang_thai() { return trangThai; }
+    public void setTrang_thai(String trangThai) { this.trangThai = trangThai; }
+
+    // Compatibility alias for quan-ly-danh-gia
+    public Long getIdKhachHang() { return id; }
+    public void setIdKhachHang(Long id) { this.id = id; }
 }

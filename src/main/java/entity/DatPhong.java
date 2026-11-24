@@ -69,6 +69,8 @@ public class DatPhong {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public Long getIdDatPhong() { return id; }
+    public void setIdDatPhong(Long id) { this.id = id; }
     public KhachHang getKhachHang() { return khachHang; }
     public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
     public Long getIdNguoiTao() { return idNguoiTao; }

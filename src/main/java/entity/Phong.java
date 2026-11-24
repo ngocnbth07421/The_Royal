@@ -67,4 +67,19 @@ public class Phong {
     public void setGhiChu(String ghiChu) { this.ghiChu = ghiChu; }
     public Set<TienNghi> getTienNghis() { return tienNghis; }
     public void setTienNghis(Set<TienNghi> tienNghis) { this.tienNghis = tienNghis; }
+
+    // Compatibility methods for HomeServlet and PhongServlet
+    public Long getIdLoaiPhong() {
+        return loaiPhong != null ? loaiPhong.getId() : null;
+    }
+    public void setIdLoaiPhong(Long idLoaiPhong) {
+        if (idLoaiPhong != null) {
+            if (this.loaiPhong == null) {
+                this.loaiPhong = new LoaiPhong();
+            }
+            this.loaiPhong.setId(idLoaiPhong);
+        } else {
+            this.loaiPhong = null;
+        }
+    }
 }

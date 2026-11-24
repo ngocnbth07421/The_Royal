@@ -20,10 +20,26 @@ public class LoaiPhongRepository {
         }
     }
 
+    public List<LoaiPhong> getAll() {
+        return findAll();
+    }
+
     public LoaiPhong findById(Long id) {
         try (Session session = getSession()) {
             return session.find(LoaiPhong.class, id);
         }
+    }
+
+    public LoaiPhong getOne(Long id) {
+        return findById(id);
+    }
+
+    public void add(LoaiPhong lp) {
+        saveOrUpdate(lp);
+    }
+
+    public void update(LoaiPhong lp) {
+        saveOrUpdate(lp);
     }
 
     public List<HangPhong> findAllHangPhong() {

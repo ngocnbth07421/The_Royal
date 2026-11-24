@@ -40,11 +40,22 @@ public class HibernateConfig {
         conf.addAnnotatedClass(KhachHang.class);
         conf.addAnnotatedClass(LichSuDatPhong.class);
         conf.addAnnotatedClass(Phong.class);
-        conf.addAnnotatedClass(KhachLuuTruChiTiet.class);
-        conf.addAnnotatedClass(LichSuDoiPhong.class);
         conf.addAnnotatedClass(LoaiPhong.class);
-        conf.addAnnotatedClass(entity.HangPhong.class);
-        conf.addAnnotatedClass(entity.LoaiGiuong.class);
+        conf.addAnnotatedClass(HangPhong.class);
+        conf.addAnnotatedClass(LoaiGiuong.class);
+        conf.addAnnotatedClass(DanhGia.class);
+        conf.addAnnotatedClass(DichVu.class);
+        conf.addAnnotatedClass(SuDungDichVu.class);
+        conf.addAnnotatedClass(MaGiamGia.class);
+        conf.addAnnotatedClass(NguoiDung.class);
+        conf.addAnnotatedClass(NhanVien.class);
+        conf.addAnnotatedClass(NhiemVuDonPhong.class);
+        conf.addAnnotatedClass(Tang.class);
+        conf.addAnnotatedClass(ThanhToan.class);
+        conf.addAnnotatedClass(TheThanhVien.class);
+        conf.addAnnotatedClass(TienNghiPhong.class);
+        conf.addAnnotatedClass(ToaNha.class);
+        conf.addAnnotatedClass(VaiTro.class);
         conf.setProperties(properties);
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .applySettings(conf.getProperties()).build();

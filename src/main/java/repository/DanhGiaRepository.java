@@ -57,7 +57,7 @@ public class DanhGiaRepository {
         }
     }
     public List<DatPhong> getAllDatPhong() {
-        return session.createQuery("FROM dat_phong", DatPhong.class).list();
+        return session.createQuery("FROM DatPhong", DatPhong.class).list();
     }
 
     public List<KhachHang> getAllKhachHang() {

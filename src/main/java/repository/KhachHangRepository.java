@@ -12,7 +12,7 @@ public class KhachHangRepository {
     // Lấy danh sách khách hàng
     public List<KhachHang> getAll() {
         try (Session session = HibernateConfig.getFACTORY().openSession()) {
-            return session.createQuery("FROM KhachHang ORDER BY id_khach_hang ASC", KhachHang.class).list();
+            return session.createQuery("FROM KhachHang ORDER BY id ASC", KhachHang.class).list();
         }
     }
 

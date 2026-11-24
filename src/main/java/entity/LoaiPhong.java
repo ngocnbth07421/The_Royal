@@ -44,4 +44,8 @@ public class LoaiPhong {
     public void setGiaMoiDem(BigDecimal giaMoiDem) { this.giaMoiDem = giaMoiDem; }
     public String getMoTa() { return moTa; }
     public void setMoTa(String moTa) { this.moTa = moTa; }
+
+    // Compatibility aliases
+    public Long getIdLoaiPhong() { return id; }
+    public void setIdLoaiPhong(Long id) { this.id = id; }
 }

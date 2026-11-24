@@ -27,8 +27,11 @@
         <a href="${pageContext.request.contextPath}/quan-ly-phong/view" class="nav-item ${param.activeMenu == 'phong' ? 'active' : ''}">
             <i class='bx bx-hotel'></i> <span>Quản lý sơ đồ phòng</span>
         </a>
-        <a href="${pageContext.request.contextPath}/trang-chu#so-do-phong" class="nav-item ${param.activeMenu == 'dat-phong' ? 'active' : ''}">
-            <i class='bx bx-calendar-check'></i> <span>Đặt phòng &amp; Sơ đồ</span>
+        <a href="${pageContext.request.contextPath}/dat-phong" class="nav-item ${param.activeMenu == 'dat-phong' ? 'active' : ''}">
+            <i class='bx bx-calendar-check'></i> <span>Đặt phòng &amp; Tra cứu</span>
+        </a>
+        <a href="${pageContext.request.contextPath}/loai-phong" class="nav-item ${param.activeMenu == 'loai-phong' ? 'active' : ''}">
+            <i class='bx bx-layer'></i> <span>Danh mục loại phòng</span>
         </a>
         <a href="${pageContext.request.contextPath}/quan-ly-nhan-vien/view" class="nav-item ${param.activeMenu == 'nhan-vien' ? 'active' : ''}">
             <i class='bx bx-id-card'></i> <span>Quản lý nhân viên</span>
@@ -44,11 +47,14 @@
         <a href="${pageContext.request.contextPath}/quan-ly-danh-gia/view" class="nav-item ${param.activeMenu == 'quan-ly-danh-gia' ? 'active' : ''}">
             <i class='bx bx-star'></i> <span>Đánh giá khách hàng</span>
         </a>
-        <a href="${pageContext.request.contextPath}/quan-ly-phong/view" class="nav-item">
+        <a href="${pageContext.request.contextPath}/tien-nghi" class="nav-item ${param.activeMenu == 'tien-nghi' ? 'active' : ''}">
             <i class='bx bx-spa'></i> <span>Tiện nghi phòng</span>
         </a>
-        <a href="${pageContext.request.contextPath}/trang-chu" class="nav-item">
-            <i class='bx bx-receipt'></i> <span>Hóa đơn &amp; Thu chi</span>
+        <a href="${pageContext.request.contextPath}/thanh-toan" class="nav-item ${param.activeMenu == 'thanh-toan' ? 'active' : ''}">
+            <i class='bx bx-receipt'></i> <span>Hóa đơn &amp; Thanh toán</span>
+        </a>
+        <a href="${pageContext.request.contextPath}/ma-giam-gia" class="nav-item ${param.activeMenu == 'ma-giam-gia' ? 'active' : ''}">
+            <i class='bx bx-purchase-tag-alt'></i> <span>Mã giảm giá</span>
         </a>
 
         <!-- Phân quyền nhanh theo vai trò -->
