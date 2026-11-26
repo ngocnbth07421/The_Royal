@@ -1,16 +1,16 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <c:set var="tieuDe" value="Đơn ${datPhong.maDatPhong}"/>
 <c:set var="menu" value="don"/>
-<%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<%@ include file="/layout/header.jspf" %>
 <fmt:setLocale value="vi_VN"/>
 
 <div class="page-heading">
     <div>
         <div class="eyebrow">CHI TIẾT ĐƠN ĐẶT PHÒNG</div>
         <h1><c:out value="${datPhong.maDatPhong}"/></h1>
-        <p><c:set var="tt" value="${datPhong.trangThai}"/><%@ include file="/WEB-INF/views/layout/badge.jspf" %></p>
+        <p><c:set var="tt" value="${datPhong.trangThai}"/><%@ include file="/layout/badge.jspf" %></p>
     </div>
     <div class="heading-actions">
         <a class="btn btn-ghost" href="${ctx}/dat-phong"><i class='bx bx-arrow-back'></i> Về danh sách</a>
@@ -112,4 +112,5 @@
     </c:if>
 </div>
 
-<%@ include file="/WEB-INF/views/layout/footer.jspf" %>
+<%@ include file="/layout/footer.jspf" %>
+

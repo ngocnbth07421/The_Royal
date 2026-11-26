@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <c:set var="dangSua" value="${not empty tienNghi.id}"/>
 <c:set var="tieuDe" value="${dangSua ? 'Sửa tiện nghi' : 'Thêm tiện nghi'}"/>
 <c:set var="menu" value="tien-nghi"/>
-<%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<%@ include file="/layout/header.jspf" %>
 
 <div class="page-heading">
     <div>
@@ -39,4 +39,5 @@
     </div>
 </form>
 
-<%@ include file="/WEB-INF/views/layout/footer.jspf" %>
+<%@ include file="/layout/footer.jspf" %>
+

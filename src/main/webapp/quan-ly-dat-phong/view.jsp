@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <c:set var="tieuDe" value="Quản lý đặt phòng"/>
 <c:set var="menu" value="don"/>
-<%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<%@ include file="/layout/header.jspf" %>
 <fmt:setLocale value="vi_VN"/>
 
 <div class="page-heading">
@@ -77,7 +77,7 @@
                             <td>${d.thoiGianTraPhong.toLocalDate()}</td>
                             <td class="num">${d.soDem}</td>
                             <td class="num"><b><fmt:formatNumber value="${d.tongTien}" groupingUsed="true"/> ₫</b></td>
-                            <td><c:set var="tt" value="${d.trangThai}"/><%@ include file="/WEB-INF/views/layout/badge.jspf" %></td>
+                            <td><c:set var="tt" value="${d.trangThai}"/><%@ include file="/layout/badge.jspf" %></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -88,4 +88,5 @@
     </c:choose>
 </div>
 
-<%@ include file="/WEB-INF/views/layout/footer.jspf" %>
+<%@ include file="/layout/footer.jspf" %>
+

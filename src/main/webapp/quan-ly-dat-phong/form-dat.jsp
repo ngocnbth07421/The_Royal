@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <c:set var="tieuDe" value="Đặt phòng"/>
 <c:set var="menu" value="don"/>
-<%@ include file="/WEB-INF/views/layout/header.jspf" %>
+<%@ include file="/layout/header.jspf" %>
 <fmt:setLocale value="vi_VN"/>
 
 <div class="page-heading">
@@ -92,4 +92,5 @@
     </div>
 </form>
 
-<%@ include file="/WEB-INF/views/layout/footer.jspf" %>
+<%@ include file="/layout/footer.jspf" %>
+
