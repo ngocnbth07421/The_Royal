@@ -193,6 +193,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    max-width: calc(100vw - 260px);
+    overflow-x: hidden;
     background: transparent; /* Hiển thị nền gradient từ photogradient (#222831 & #EEEEEE) */
 }
 
@@ -304,10 +306,12 @@
 
 /* ==================== KHU VỰC NỘI DUNG (CONTENT) ==================== */
 .content {
-    padding: 28px 36px 45px;
+    padding: 24px 30px 40px;
     flex: 1;
     position: relative;
     isolation: isolate;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Tiêu đề trang */

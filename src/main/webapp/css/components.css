@@ -211,8 +211,8 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    white-space: nowrap;
     text-align: left;
+    table-layout: auto;
 }
 
 thead {
