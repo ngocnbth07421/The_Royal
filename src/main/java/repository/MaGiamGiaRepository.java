@@ -1,7 +1,7 @@
 package repository;
 
-import entity.MaGiamGia;
 import controller.NghiepVuException;
+import entity.MaGiamGia;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
@@ -15,8 +15,28 @@ public class MaGiamGiaRepository {
     }
 
     public List<MaGiamGia> findAll() {
+        return search(null, null);
+    }
+
+    public List<MaGiamGia> search(String tuKhoa, String trangThai) {
         try (Session session = getSession()) {
-            return session.createQuery("FROM MaGiamGia ORDER BY id DESC", MaGiamGia.class).list();
+            StringBuilder hql = new StringBuilder("FROM MaGiamGia m WHERE 1 = 1");
+            if (tuKhoa != null && !tuKhoa.isBlank()) {
+                hql.append(" AND LOWER(m.maGiamGia) LIKE :kw");
+            }
+            if (trangThai != null && !trangThai.isBlank()) {
+                if ("Hoạt động".equals(trangThai) || "HOAT_DONG".equals(trangThai)) {
+                    hql.append(" AND m.trangThai IN (N'Hoạt động', 'HOAT_DONG')");
+                } else {
+                    hql.append(" AND m.trangThai IN (N'Ngưng', 'NGUNG')");
+                }
+            }
+            hql.append(" ORDER BY m.id DESC");
+            var q = session.createQuery(hql.toString(), MaGiamGia.class);
+            if (tuKhoa != null && !tuKhoa.isBlank()) {
+                q.setParameter("kw", "%" + tuKhoa.trim().toLowerCase() + "%");
+            }
+            return q.list();
         }
     }
 
@@ -51,22 +71,52 @@ public class MaGiamGiaRepository {
         }
     }
 
+    public void doiTrangThai(Long id) {
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            MaGiamGia mgg = session.find(MaGiamGia.class, id);
+            if (mgg == null) throw new NghiepVuException("Không tìm thấy mã giảm giá.");
+            boolean dangHoatDong = "Hoạt động".equals(mgg.getTrangThai()) || "HOAT_DONG".equals(mgg.getTrangThai());
+            mgg.setTrangThai(dangHoatDong ? MaGiamGia.NGUNG : MaGiamGia.HOAT_DONG);
+            session.merge(mgg);
+            transaction.commit();
+        } catch (NghiepVuException e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw e;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi đổi trạng thái mã giảm giá", e);
+        }
+    }
+
     public void delete(Long id) {
         Transaction transaction = null;
         try (Session session = getSession()) {
             transaction = session.beginTransaction();
+            Long countUsed = session.createQuery(
+                            "SELECT COUNT(d) FROM DatPhong d WHERE d.maGiamGia.id = :id", Long.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+            if (countUsed != null && countUsed > 0) {
+                throw new NghiepVuException("Không thể xóa mã giảm giá đã áp dụng cho " + countUsed + " đơn đặt phòng. Hãy chuyển sang 'Ngưng'.");
+            }
             MaGiamGia mgg = session.find(MaGiamGia.class, id);
             if (mgg != null) {
                 session.remove(mgg);
             }
             transaction.commit();
+        } catch (NghiepVuException e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw e;
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Lỗi xóa mã giảm giá", e);
+            throw new NghiepVuException("Không thể xóa mã giảm giá đang được sử dụng.");
         }
     }
 
     public List<MaGiamGia> layDanhSach() { return findAll(); }
+    public List<MaGiamGia> layDanhSach(String tuKhoa, String trangThai) { return search(tuKhoa, trangThai); }
     public MaGiamGia timTheoId(Long id) { return findById(id); }
 
     public void luuMaGiamGia(MaGiamGia mgg) {
@@ -83,7 +133,7 @@ public class MaGiamGiaRepository {
             throw new NghiepVuException("Giá trị giảm phải lớn hơn 0.");
         }
 
-        if ("PHAN_TRAM".equals(mgg.getLoaiGiamGia())) {
+        if ("PHAN_TRAM".equals(mgg.getLoaiGiamGia()) || "Phần trăm".equals(mgg.getLoaiGiamGia())) {
             if (mgg.getGiaTri().compareTo(BigDecimal.ONE) < 0 || mgg.getGiaTri().compareTo(new BigDecimal("50")) > 0) {
                 throw new NghiepVuException("Mức giảm giá theo phần trăm chỉ cho phép tối thiểu 1% và tối đa 50%.");
             }
@@ -93,8 +143,8 @@ public class MaGiamGiaRepository {
                 || !mgg.getKetThucLuc().isAfter(mgg.getBatDauLuc())) {
             throw new NghiepVuException("Thời điểm kết thúc bắt buộc phải lớn hơn thời điểm bắt đầu.");
         }
-        if (mgg.getSoLuotDaDung() == null || mgg.getSoLuotDaDung() < 0) {
-            mgg.setSoLuotDaDung(0);
+        if (mgg.getSoLuotConDung() == null || mgg.getSoLuotConDung() < 0) {
+            mgg.setSoLuotConDung(0);
         }
 
         mgg.setMaGiamGia(code);

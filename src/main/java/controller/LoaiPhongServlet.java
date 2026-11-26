@@ -1,6 +1,5 @@
 package controller;
 
-import entity.LoaiPhong;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,16 +12,9 @@ import util.RequestUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-/**
- * URL: /loai-phong
- *   GET  ?action=danhSach (mặc định)  -> views/loai-phong/danh-sach.jsp
- *   GET  ?action=form [&id=]          -> views/loai-phong/danh-sach.jsp (form điền sẵn nếu có id)
- *   POST action=luu                   -> thêm/sửa loại phòng
- *   POST action=xoa                   -> xóa loại phòng
- */
 @WebServlet("/loai-phong")
 public class LoaiPhongServlet extends HttpServlet {
-    private static final String VIEW = "/WEB-INF/views/loai-phong/";
+    private static final String VIEW = "/quan-ly-loai-phong/";
     private final LoaiPhongRepository service = new LoaiPhongRepository();
 
     @Override
@@ -53,10 +45,12 @@ public class LoaiPhongServlet extends HttpServlet {
     }
 
     private void hienDanhSach(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("dsLoaiPhong", service.layDanhSach());
+        String tuKhoa = RequestUtil.chuoi(req, "tuKhoa");
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("dsLoaiPhong", service.layDanhSach(tuKhoa));
         req.setAttribute("dsHangPhong", service.layDanhSachHangPhong());
         req.setAttribute("dsLoaiGiuong", service.layDanhSachLoaiGiuong());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view.jsp").forward(req, resp);
     }
 
     private void hienForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -64,10 +58,9 @@ public class LoaiPhongServlet extends HttpServlet {
         if (id != null) {
             req.setAttribute("loaiPhongSua", service.timTheoId(id));
         }
-        req.setAttribute("dsLoaiPhong", service.layDanhSach());
         req.setAttribute("dsHangPhong", service.layDanhSachHangPhong());
         req.setAttribute("dsLoaiGiuong", service.layDanhSachLoaiGiuong());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view-update.jsp").forward(req, resp);
     }
 
     private void luu(HttpServletRequest req, HttpServletResponse resp) throws IOException {

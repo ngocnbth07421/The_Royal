@@ -15,16 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
-/**
- * URL: /ma-giam-gia
- *   GET  ?action=danhSach (mặc định)  -> views/ma-giam-gia/danh-sach.jsp
- *   GET  ?action=form [&id=]          -> views/ma-giam-gia/danh-sach.jsp (form điền sẵn nếu có id)
- *   POST action=luu                   -> thêm/sửa mã giảm giá
- *   POST action=xoa                   -> xóa mã giảm giá
- */
 @WebServlet("/ma-giam-gia")
 public class MaGiamGiaServlet extends HttpServlet {
-    private static final String VIEW = "/WEB-INF/views/ma-giam-gia/";
+    private static final String VIEW = "/quan-ly-ma-giam-gia/";
     private final MaGiamGiaRepository service = new MaGiamGiaRepository();
 
     @Override
@@ -45,6 +38,7 @@ public class MaGiamGiaServlet extends HttpServlet {
         try {
             switch (action) {
                 case "luu" -> luu(req, resp);
+                case "doiTrangThai" -> doiTrangThai(req, resp);
                 case "xoa" -> xoa(req, resp);
                 default -> resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "action không hợp lệ");
             }
@@ -55,8 +49,12 @@ public class MaGiamGiaServlet extends HttpServlet {
     }
 
     private void hienDanhSach(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("dsMaGiamGia", service.layDanhSach());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        String tuKhoa = RequestUtil.chuoi(req, "tuKhoa");
+        String trangThai = RequestUtil.chuoi(req, "trangThai");
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("trangThai", trangThai);
+        req.setAttribute("dsMaGiamGia", service.layDanhSach(tuKhoa, trangThai));
+        req.getRequestDispatcher(VIEW + "view.jsp").forward(req, resp);
     }
 
     private void hienForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -64,8 +62,7 @@ public class MaGiamGiaServlet extends HttpServlet {
         if (id != null) {
             req.setAttribute("mggSua", service.timTheoId(id));
         }
-        req.setAttribute("dsMaGiamGia", service.layDanhSach());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view-update.jsp").forward(req, resp);
     }
 
     private void luu(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -75,7 +72,8 @@ public class MaGiamGiaServlet extends HttpServlet {
         String giaTriStr = RequestUtil.chuoi(req, "giaTri");
         String batDauStr = RequestUtil.chuoi(req, "batDauLuc");
         String ketThucStr = RequestUtil.chuoi(req, "ketThucLuc");
-        String soLuotStr = RequestUtil.chuoi(req, "soLuotDaDung");
+        String soLuotStr = RequestUtil.chuoi(req, "soLuotConDung");
+        if (soLuotStr == null) soLuotStr = RequestUtil.chuoi(req, "soLuotDaDung");
         String trangThai = RequestUtil.chuoi(req, "trangThai");
 
         BigDecimal giaTri;
@@ -97,7 +95,7 @@ public class MaGiamGiaServlet extends HttpServlet {
         try {
             if (soLuotStr != null) soLuot = Integer.parseInt(soLuotStr);
         } catch (NumberFormatException e) {
-            throw new NghiepVuException("Số lượt đã dùng không hợp lệ.");
+            throw new NghiepVuException("Số lượt còn dùng không hợp lệ.");
         }
 
         MaGiamGia mgg = new MaGiamGia();
@@ -107,11 +105,18 @@ public class MaGiamGiaServlet extends HttpServlet {
         mgg.setGiaTri(giaTri);
         mgg.setBatDauLuc(batDau);
         mgg.setKetThucLuc(ketThuc);
-        mgg.setSoLuotDaDung(soLuot);
-        mgg.setTrangThai(trangThai != null ? trangThai : "Hoạt động");
+        mgg.setSoLuotConDung(soLuot);
+        mgg.setTrangThai(trangThai != null ? trangThai : MaGiamGia.HOAT_DONG);
 
         service.luuMaGiamGia(mgg);
         FlashMessage.thanhCong(req, id == null ? "Đã thêm mã giảm giá mới." : "Đã cập nhật mã giảm giá.");
+        resp.sendRedirect(req.getContextPath() + "/ma-giam-gia");
+    }
+
+    private void doiTrangThai(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Long id = RequestUtil.soLong(req, "id");
+        service.doiTrangThai(id);
+        FlashMessage.thanhCong(req, "Đã cập nhật trạng thái mã giảm giá.");
         resp.sendRedirect(req.getContextPath() + "/ma-giam-gia");
     }
 

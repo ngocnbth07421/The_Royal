@@ -1,9 +1,9 @@
 package repository;
 
+import controller.NghiepVuException;
 import entity.DatPhong;
 import entity.ThanhToan;
 import entity.TheThanhVien;
-import controller.NghiepVuException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateConfig;
@@ -17,58 +17,96 @@ public class ThanhToanRepository {
     }
 
     public List<ThanhToan> findAll() {
+        return search(null, null, null);
+    }
+
+    public List<ThanhToan> search(String tuKhoa, String phuongThuc, String trangThai) {
         try (Session session = getSession()) {
-            return session.createQuery(
-                    "FROM ThanhToan ORDER BY id DESC", ThanhToan.class).list();
+            StringBuilder hql = new StringBuilder(
+                    "SELECT tt FROM ThanhToan tt JOIN FETCH tt.datPhong dp LEFT JOIN FETCH dp.khachHang kh LEFT JOIN FETCH tt.theThanhVien WHERE 1 = 1");
+            if (tuKhoa != null && !tuKhoa.isBlank()) {
+                hql.append(" AND (LOWER(dp.maDatPhong) LIKE :kw OR LOWER(kh.hoTen) LIKE :kw)");
+            }
+            if (phuongThuc != null && !phuongThuc.isBlank()) {
+                hql.append(" AND tt.phuongThucThanhToan = :pt");
+            }
+            if (trangThai != null && !trangThai.isBlank()) {
+                hql.append(" AND tt.trangThai = :tt");
+            }
+            hql.append(" ORDER BY tt.id DESC");
+            var q = session.createQuery(hql.toString(), ThanhToan.class);
+            if (tuKhoa != null && !tuKhoa.isBlank()) {
+                q.setParameter("kw", "%" + tuKhoa.trim().toLowerCase() + "%");
+            }
+            if (phuongThuc != null && !phuongThuc.isBlank()) {
+                q.setParameter("pt", phuongThuc);
+            }
+            if (trangThai != null && !trangThai.isBlank()) {
+                q.setParameter("tt", trangThai);
+            }
+            return q.list();
         }
     }
 
     public ThanhToan findById(Long id) {
         try (Session session = getSession()) {
-            return session.find(ThanhToan.class, id);
+            List<ThanhToan> rs = session.createQuery(
+                            "SELECT tt FROM ThanhToan tt JOIN FETCH tt.datPhong dp LEFT JOIN FETCH dp.khachHang LEFT JOIN FETCH tt.theThanhVien WHERE tt.id = :id",
+                            ThanhToan.class)
+                    .setParameter("id", id)
+                    .list();
+            return rs.isEmpty() ? null : rs.get(0);
         }
     }
 
     public List<DatPhong> findAllDatPhong() {
         try (Session session = getSession()) {
-            return session.createQuery("FROM DatPhong ORDER BY id DESC", DatPhong.class).list();
+            return session.createQuery(
+                    "SELECT DISTINCT d FROM DatPhong d LEFT JOIN FETCH d.khachHang LEFT JOIN FETCH d.chiTiet ORDER BY d.id DESC",
+                    DatPhong.class).list();
         }
     }
 
     public List<TheThanhVien> findAllTheThanhVienHoatDong() {
         try (Session session = getSession()) {
             return session.createQuery(
-                    "FROM TheThanhVien WHERE trangThai = :tt", TheThanhVien.class)
-                    .setParameter("tt", "Hoạt động")
+                    "FROM TheThanhVien WHERE trangThai IN (N'Hoạt động', 'HOAT_DONG')", TheThanhVien.class)
                     .list();
         }
     }
 
-    public void saveOrUpdate(ThanhToan tt) {
-        Transaction transaction = null;
-        try (Session session = getSession()) {
-            transaction = session.beginTransaction();
-            if (tt.getId() == null) {
-                session.persist(tt);
-            } else {
-                session.merge(tt);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) transaction.rollback();
-            throw new RuntimeException("Lỗi lưu thanh toán", e);
+    private void dongBoTienThanhToanDatPhong(Session session, Long idDatPhong) {
+        BigDecimal tongDaThu = session.createQuery(
+                        "SELECT COALESCE(SUM(tt.tienThanhToan), 0) FROM ThanhToan tt WHERE tt.datPhong.id = :id AND tt.trangThai IN (N'Thành công', 'THANH_CONG')",
+                        BigDecimal.class)
+                .setParameter("id", idDatPhong)
+                .uniqueResult();
+        DatPhong dp = session.find(DatPhong.class, idDatPhong);
+        if (dp != null && tongDaThu != null) {
+            dp.setTienThanhToan(tongDaThu);
+            session.merge(dp);
         }
     }
 
     public void capNhatTrangThai(Long id, String trangThaiMoi) {
+        if (trangThaiMoi == null || trangThaiMoi.isBlank()) {
+            throw new NghiepVuException("Vui lòng chọn trạng thái mới.");
+        }
         Transaction transaction = null;
         try (Session session = getSession()) {
             transaction = session.beginTransaction();
             ThanhToan tt = session.find(ThanhToan.class, id);
-            if (tt != null) {
-                tt.setTrangThai(trangThaiMoi);
+            if (tt == null) {
+                throw new NghiepVuException("Không tìm thấy giao dịch thanh toán.");
             }
+            tt.setTrangThai(trangThaiMoi);
+            session.merge(tt);
+            session.flush();
+            dongBoTienThanhToanDatPhong(session, tt.getDatPhong().getId());
             transaction.commit();
+        } catch (NghiepVuException e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw e;
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) transaction.rollback();
             throw new RuntimeException("Lỗi cập nhật trạng thái thanh toán", e);
@@ -81,7 +119,10 @@ public class ThanhToanRepository {
             transaction = session.beginTransaction();
             ThanhToan tt = session.find(ThanhToan.class, id);
             if (tt != null) {
+                Long idDatPhong = tt.getDatPhong().getId();
                 session.remove(tt);
+                session.flush();
+                dongBoTienThanhToanDatPhong(session, idDatPhong);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -91,6 +132,7 @@ public class ThanhToanRepository {
     }
 
     public List<ThanhToan> layDanhSach() { return findAll(); }
+    public List<ThanhToan> layDanhSach(String tuKhoa, String phuongThuc, String trangThai) { return search(tuKhoa, phuongThuc, trangThai); }
     public List<DatPhong> layDanhSachDatPhong() { return findAllDatPhong(); }
     public List<TheThanhVien> layDanhSachTheThanhVien() { return findAllTheThanhVienHoatDong(); }
 
@@ -101,29 +143,41 @@ public class ThanhToanRepository {
         if (soTien == null || soTien.compareTo(BigDecimal.ZERO) <= 0) {
             throw new NghiepVuException("Số tiền thanh toán phải lớn hơn 0.");
         }
-        if ("THE".equals(phuongThuc) && idTheThanhVien == null) {
-            throw new NghiepVuException("Khi chọn phương thức Thẻ thành viên (THE), bắt buộc phải chọn thẻ của khách!");
+        boolean laThe = "Thẻ".equals(phuongThuc) || "THE".equals(phuongThuc);
+        if (laThe && idTheThanhVien == null) {
+            throw new NghiepVuException("Khi chọn phương thức Thẻ thành viên, bắt buộc phải chọn thẻ của khách!");
         }
 
-        DatPhong dp = new DatPhong();
-        dp.setId(idDatPhong);
+        Transaction transaction = null;
+        try (Session session = getSession()) {
+            transaction = session.beginTransaction();
+            DatPhong dp = session.find(DatPhong.class, idDatPhong);
+            if (dp == null) throw new NghiepVuException("Không tìm thấy đơn đặt phòng.");
 
-        ThanhToan tt = new ThanhToan();
-        tt.setDatPhong(dp);
+            ThanhToan tt = new ThanhToan();
+            tt.setDatPhong(dp);
+            if (laThe && idTheThanhVien != null) {
+                TheThanhVien ttv = session.find(TheThanhVien.class, idTheThanhVien);
+                if (ttv == null) throw new NghiepVuException("Không tìm thấy thẻ thành viên.");
+                tt.setTheThanhVien(ttv);
+            } else {
+                tt.setTheThanhVien(null);
+            }
+            tt.setPhuongThucThanhToan(phuongThuc);
+            tt.setTienThanhToan(soTien);
+            tt.setTrangThai(trangThai != null ? trangThai : "Thành công");
 
-        if ("THE".equals(phuongThuc) && idTheThanhVien != null) {
-            TheThanhVien ttv = new TheThanhVien();
-            ttv.setId(idTheThanhVien);
-            tt.setTheThanhVien(ttv);
-        } else {
-            tt.setTheThanhVien(null);
+            session.persist(tt);
+            session.flush();
+            dongBoTienThanhToanDatPhong(session, idDatPhong);
+            transaction.commit();
+        } catch (NghiepVuException e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw e;
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) transaction.rollback();
+            throw new RuntimeException("Lỗi tạo giao dịch thanh toán", e);
         }
-
-        tt.setPhuongThucThanhToan(phuongThuc);
-        tt.setTienThanhToan(soTien);
-        tt.setTrangThai(trangThai != null ? trangThai : "THANH_CONG");
-
-        saveOrUpdate(tt);
     }
 
     public void doiTrangThai(Long idThanhToan, String trangThaiMoi) {

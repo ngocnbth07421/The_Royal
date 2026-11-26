@@ -42,12 +42,12 @@ public class DichVuServlet extends HttpServlet {
     // =========================
 
     private void loadData(HttpServletRequest req) {
-
-        req.setAttribute("listDichVu",
-                dichVuRepository.getAll());
-
-        req.setAttribute("listSuDungDichVu",
-                suDungDichVuRepository.getAll());
+        String tuKhoa = util.RequestUtil.chuoi(req, "tuKhoa");
+        String trangThai = util.RequestUtil.chuoi(req, "trangThai");
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("trangThai", trangThai);
+        req.setAttribute("listDichVu", dichVuRepository.search(tuKhoa, trangThai));
+        req.setAttribute("listSuDungDichVu", suDungDichVuRepository.getAll());
     }
 
     private void showPage(HttpServletRequest req,
@@ -85,6 +85,8 @@ public class DichVuServlet extends HttpServlet {
                          HttpServletResponse resp)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+        util.FlashMessage.nap(req);
         String url = req.getServletPath();
 
         switch (url) {
@@ -93,8 +95,17 @@ public class DichVuServlet extends HttpServlet {
                 showPage(req, resp);
                 break;
 
-            // SUA DICH VU
             case "/quan-ly-dich-vu/view-update":
+                Long idEdit = Long.valueOf(req.getParameter("id"));
+                DichVu dvEdit = dichVuRepository.getOne(idEdit);
+                if (dvEdit == null) {
+                    showError(req, resp, "Không tìm thấy dịch vụ!");
+                    return;
+                }
+                req.setAttribute("dv", dvEdit);
+                req.getRequestDispatcher("/quan-ly-dich-vu/view-update.jsp").forward(req, resp);
+                break;
+
             case "/quan-ly-dich-vu/detail":
 
                 Long idDichVu = Long.valueOf(req.getParameter("id"));

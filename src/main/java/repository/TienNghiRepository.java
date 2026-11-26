@@ -84,6 +84,12 @@ public class TienNghiRepository {
         }
     }
 
+    public List<Phong> danhSachPhong() {
+        try (Session s = HibernateConfig.getFACTORY().openSession()) {
+            return s.createQuery("FROM Phong ORDER BY maPhong ASC", Phong.class).getResultList();
+        }
+    }
+
     public Phong layPhong(Long idPhong) {
         try (Session s = HibernateConfig.getFACTORY().openSession()) {
             Phong p = s.find(Phong.class, idPhong);

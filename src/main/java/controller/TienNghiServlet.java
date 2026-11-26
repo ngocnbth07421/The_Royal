@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @WebServlet("/tien-nghi")
 public class TienNghiServlet extends HttpServlet {
-    private static final String VIEW = "/WEB-INF/views/tien-nghi/";
+    private static final String VIEW = "/quan-ly-tien-nghi/";
     private final TienNghiRepository service = new TienNghiRepository();
 
     @Override
@@ -65,7 +65,7 @@ public class TienNghiServlet extends HttpServlet {
                 req.setAttribute("tienNghi", t);
                 req.setAttribute("soLuongNhap", req.getParameter("soLuong"));
                 req.setAttribute("loi", e.getMessage());
-                req.getRequestDispatcher(VIEW + "form.jsp").forward(req, resp);
+                req.getRequestDispatcher(VIEW + "view-update.jsp").forward(req, resp);
             } else {
                 FlashMessage.loi(req, e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/tien-nghi");
@@ -77,14 +77,15 @@ public class TienNghiServlet extends HttpServlet {
     private void hienDanhSach(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String tuKhoa = RequestUtil.chuoi(req, "tuKhoa");
         req.setAttribute("dsTienNghi", service.danhSach(tuKhoa));
+        req.setAttribute("dsPhong", service.danhSachPhong());
         req.setAttribute("tuKhoa", tuKhoa);
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view.jsp").forward(req, resp);
     }
 
     private void hienForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = RequestUtil.soLong(req, "id");
         req.setAttribute("tienNghi", id == null ? null : service.layTheoId(id));
-        req.getRequestDispatcher(VIEW + "form.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + (id == null ? "add.jsp" : "view-update.jsp")).forward(req, resp);
     }
 
     private void hienGanPhong(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

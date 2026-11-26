@@ -1,12 +1,14 @@
 package controller;
 
+import entity.KhachHang;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import repository.KhachHangRepository; // Đảm bảo tên package repository của em khớp nhé
-import entity.KhachHang;
+import repository.KhachHangRepository;
+import util.FlashMessage;
+import util.RequestUtil;
 
 import java.io.IOException;
 
@@ -20,130 +22,95 @@ import java.io.IOException;
 })
 public class KhachHangServlet extends HttpServlet {
 
-    KhachHangRepository khachHangRepository = new KhachHangRepository();
+    private final KhachHangRepository khachHangRepository = new KhachHangRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url = req.getRequestURI();
+        req.setCharacterEncoding("UTF-8");
+        FlashMessage.nap(req);
+        String url = req.getServletPath();
 
-        if (url.contains("view-update")) {
-            viewUpdate(req, resp);
-        }
-        else if (url.contains("detail")) {
-            detail(req, resp);
-        }
-        else if (url.contains("delete")) {
-            delete(req, resp);
-        }
-        else if (url.contains("view")) {
-            view(req, resp);
+        try {
+            switch (url) {
+                case "/quan-ly-khach-hang/view-update" -> viewUpdate(req, resp);
+                case "/quan-ly-khach-hang/detail" -> detail(req, resp);
+                case "/quan-ly-khach-hang/delete" -> delete(req, resp);
+                default -> view(req, resp);
+            }
+        } catch (NghiepVuException e) {
+            FlashMessage.loi(req, e.getMessage());
+            resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
         }
     }
 
-    // Hiển thị thông tin khách hàng lên form sửa
-    private void viewUpdate(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // Vì id_khach_hang trong SQL là bigint nên dùng Long.valueOf()
-        Long id = Long.valueOf(req.getParameter("id"));
-
-        KhachHang kh = khachHangRepository.getOne(id);
-
-        req.setAttribute("kh", kh);
-
-        req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp")
-                .forward(req, resp);
-    }
-
-    // Xóa khách hàng
-    private void delete(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        Long id = Long.valueOf(req.getParameter("id"));
-
-        khachHangRepository.delete(id);
-
-        // Chú ý sửa lại đường dẫn redirect đúng với URL view của khách hàng
-        resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
-    }
-
-    // Xem chi tiết khách hàng
-    private void detail(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        Long id = Long.valueOf(req.getParameter("id"));
-
-        KhachHang kh = khachHangRepository.getOne(id);
-
-        req.setAttribute("kh", kh);
-
-        req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp")
-                .forward(req, resp);
-    }
-
-    // Hiển thị danh sách khách hàng
     private void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("listKhachHang", khachHangRepository.getAll());
+        String tuKhoa = RequestUtil.chuoi(req, "tuKhoa");
+        String trangThai = RequestUtil.chuoi(req, "trangThai");
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("trangThai", trangThai);
+        req.setAttribute("listKhachHang", khachHangRepository.search(tuKhoa, trangThai));
         req.getRequestDispatcher("/quan-ly-khach-hang/view.jsp").forward(req, resp);
     }
 
+    private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long id = RequestUtil.soLong(req, "id");
+        if (id == null) throw new NghiepVuException("Thiếu ID khách hàng.");
+        KhachHang kh = khachHangRepository.getOne(id);
+        if (kh == null) throw new NghiepVuException("Không tìm thấy khách hàng.");
+        req.setAttribute("kh", kh);
+        req.setAttribute("dsDatPhong", khachHangRepository.layLichSuDatPhong(id));
+        req.setAttribute("theThanhVien", khachHangRepository.layTheThanhVien(id));
+        req.getRequestDispatcher("/quan-ly-khach-hang/detail.jsp").forward(req, resp);
+    }
+
+    private void viewUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long id = RequestUtil.soLong(req, "id");
+        if (id == null) throw new NghiepVuException("Thiếu ID khách hàng.");
+        KhachHang kh = khachHangRepository.getOne(id);
+        if (kh == null) throw new NghiepVuException("Không tìm thấy khách hàng.");
+        req.setAttribute("kh", kh);
+        req.getRequestDispatcher("/quan-ly-khach-hang/view-update.jsp").forward(req, resp);
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Long id = RequestUtil.soLong(req, "id");
+        if (id == null) throw new NghiepVuException("Thiếu ID khách hàng.");
+        khachHangRepository.delete(id);
+        FlashMessage.thanhCong(req, "Đã xóa khách hàng.");
+        resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
+    }
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
+        String url = req.getServletPath();
 
-        String url = req.getRequestURI();
-
-        if (url.contains("add")) {
-
-            String hoTen = req.getParameter("ho_ten");
-            String soDienThoai = req.getParameter("so_dien_thoai");
-            String email = req.getParameter("email");
-            String trangThai = req.getParameter("trang_thai");
-
-            KhachHang kh = new KhachHang();
-            kh.setHo_ten(hoTen);
-            kh.setSo_dien_thoai(soDienThoai);
-            kh.setEmail(email);
-            kh.setTrang_thai(trangThai);
-
-            khachHangRepository.add(kh);
-
-            resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
-
-        }else if (url.contains("update")) {
-
-            String idParam = req.getParameter("id");
-
-            if (idParam == null || idParam.trim().isEmpty()) {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu ID khách hàng");
-                return;
+        try {
+            if ("/quan-ly-khach-hang/add".equals(url)) {
+                KhachHang kh = new KhachHang();
+                kh.setHoTen(RequestUtil.chuoi(req, "ho_ten"));
+                kh.setSoDienThoai(RequestUtil.chuoi(req, "so_dien_thoai"));
+                kh.setEmail(RequestUtil.chuoi(req, "email"));
+                khachHangRepository.add(kh);
+                FlashMessage.thanhCong(req, "Đã thêm khách hàng mới.");
+                resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
+            } else if ("/quan-ly-khach-hang/update".equals(url)) {
+                Long id = RequestUtil.soLong(req, "id");
+                if (id == null) throw new NghiepVuException("Thiếu ID khách hàng.");
+                KhachHang kh = khachHangRepository.getOne(id);
+                if (kh == null) throw new NghiepVuException("Không tìm thấy khách hàng.");
+                kh.setHoTen(RequestUtil.chuoi(req, "ho_ten"));
+                kh.setSoDienThoai(RequestUtil.chuoi(req, "so_dien_thoai"));
+                kh.setEmail(RequestUtil.chuoi(req, "email"));
+                String trangThai = RequestUtil.chuoi(req, "trang_thai");
+                if (trangThai != null) kh.setTrangThai(trangThai);
+                khachHangRepository.update(kh);
+                FlashMessage.thanhCong(req, "Đã cập nhật thông tin khách hàng.");
+                resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
             }
-
-            Long id = Long.valueOf(idParam);
-
-            KhachHang kh = khachHangRepository.getOne(id);
-
-            if (kh == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy khách hàng");
-                return;
-            }
-
-            String hoTen = req.getParameter("ho_ten");
-            String soDienThoai = req.getParameter("so_dien_thoai");
-            String email = req.getParameter("email");
-            String trangThai = req.getParameter("trang_thai");
-
-            kh.setHo_ten(hoTen);
-            kh.setSo_dien_thoai(soDienThoai);
-            kh.setEmail(email);
-            kh.setTrang_thai(trangThai);
-
-            khachHangRepository.update(kh);
-
+        } catch (NghiepVuException e) {
+            FlashMessage.loi(req, e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/quan-ly-khach-hang/view");
         }
-
     }
 }

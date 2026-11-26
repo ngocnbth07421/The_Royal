@@ -1,8 +1,6 @@
 package controller;
 
 import entity.ThanhToan;
-import entity.DatPhong;
-import entity.TheThanhVien;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,17 +13,9 @@ import util.RequestUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-/**
- * URL: /thanh-toan
- *   GET  ?action=danhSach (mặc định)  -> views/thanh-toan/danh-sach.jsp
- *   GET  ?action=form [&id=]          -> views/thanh-toan/danh-sach.jsp (form sẽ điền sẵn nếu có id)
- *   POST action=luu                   -> thêm mới giao dịch thanh toán
- *   POST action=doiTrangThai          -> đổi trạng thái giao dịch
- *   POST action=xoa                   -> xóa giao dịch
- */
 @WebServlet("/thanh-toan")
 public class ThanhToanServlet extends HttpServlet {
-    private static final String VIEW = "/WEB-INF/views/thanh-toan/";
+    private static final String VIEW = "/quan-ly-thanh-toan/";
     private final ThanhToanRepository service = new ThanhToanRepository();
 
     @Override
@@ -34,7 +24,7 @@ public class ThanhToanServlet extends HttpServlet {
         FlashMessage.nap(req);
         String action = req.getParameter("action") == null ? "danhSach" : req.getParameter("action");
         switch (action) {
-            case "form" -> hienForm(req, resp);
+            case "detail" -> hienChiTiet(req, resp);
             default -> hienDanhSach(req, resp);
         }
     }
@@ -57,29 +47,28 @@ public class ThanhToanServlet extends HttpServlet {
     }
 
     private void hienDanhSach(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("dsThanhToan", service.layDanhSach());
+        String tuKhoa = RequestUtil.chuoi(req, "tuKhoa");
+        String phuongThuc = RequestUtil.chuoi(req, "phuongThucLoc");
+        String trangThai = RequestUtil.chuoi(req, "trangThaiLoc");
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("phuongThucLoc", phuongThuc);
+        req.setAttribute("trangThaiLoc", trangThai);
+        req.setAttribute("dsThanhToan", service.layDanhSach(tuKhoa, phuongThuc, trangThai));
         req.setAttribute("dsDatPhong", service.layDanhSachDatPhong());
         req.setAttribute("dsTheThanhVien", service.layDanhSachTheThanhVien());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view.jsp").forward(req, resp);
     }
 
-    private void hienForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void hienChiTiet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = RequestUtil.soLong(req, "id");
-        if (id != null) {
-            // Chế độ sửa trạng thái - truyền thông tin thanh toán
-            req.setAttribute("thanhToanSua", findById(id));
+        ThanhToan tt = id == null ? null : service.findById(id);
+        if (tt == null) {
+            FlashMessage.loi(req, "Không tìm thấy giao dịch thanh toán.");
+            resp.sendRedirect(req.getContextPath() + "/thanh-toan");
+            return;
         }
-        req.setAttribute("dsDatPhong", service.layDanhSachDatPhong());
-        req.setAttribute("dsTheThanhVien", service.layDanhSachTheThanhVien());
-        req.setAttribute("dsThanhToan", service.layDanhSach());
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
-    }
-
-    private ThanhToan findById(Long id) {
-        for (ThanhToan tt : service.layDanhSach()) {
-            if (tt.getId().equals(id)) return tt;
-        }
-        return null;
+        req.setAttribute("tt", tt);
+        req.getRequestDispatcher(VIEW + "detail.jsp").forward(req, resp);
     }
 
     private void luu(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -111,7 +100,7 @@ public class ThanhToanServlet extends HttpServlet {
 
     private void xoa(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long id = RequestUtil.soLong(req, "id");
-        new repository.ThanhToanRepository().delete(id);
+        service.delete(id);
         FlashMessage.thanhCong(req, "Đã xóa giao dịch thanh toán.");
         resp.sendRedirect(req.getContextPath() + "/thanh-toan");
     }

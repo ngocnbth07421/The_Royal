@@ -23,6 +23,8 @@ public class DanhGiaServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        util.FlashMessage.nap(req);
         String dg = req.getRequestURI();
         if (dg.contains("view")){
             view(req,resp);
@@ -37,7 +39,15 @@ public class DanhGiaServlet extends HttpServlet {
         }
     }
     private void view(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("listdanh_gia",DanhGiaRepository.getAll());
+        String tuKhoa = util.RequestUtil.chuoi(req, "tuKhoa");
+        String diemStr = util.RequestUtil.chuoi(req, "diem");
+        Integer diem = null;
+        if (diemStr != null) {
+            try { diem = Integer.valueOf(diemStr); } catch (NumberFormatException ignored) {}
+        }
+        req.setAttribute("tuKhoa", tuKhoa);
+        req.setAttribute("diem", diem);
+        req.setAttribute("listdanh_gia", DanhGiaRepository.search(tuKhoa, diem));
         req.setAttribute("listdat_phong", DanhGiaRepository.getAllDatPhong());
         req.setAttribute("listkhach_hang", DanhGiaRepository.getAllKhachHang());
         req.getRequestDispatcher("/quan-ly-danh-gia/view.jsp").forward(req,resp);
@@ -118,11 +128,17 @@ public class DanhGiaServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         String dg = req.getRequestURI();
-        if (dg.contains("add")) {
-            add(req, resp);
-        } else if (dg.contains("update")) {
-            update(req, resp);
+        try {
+            if (dg.contains("add")) {
+                add(req, resp);
+            } else if (dg.contains("update")) {
+                update(req, resp);
+            }
+        } catch (Exception e) {
+            util.FlashMessage.loi(req, "Thao tác đánh giá thất bại (mỗi đơn đặt phòng chỉ có 1 đánh giá).");
+            resp.sendRedirect(req.getContextPath() + "/quan-ly-danh-gia/view");
         }
     }
 }

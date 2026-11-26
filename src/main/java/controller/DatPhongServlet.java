@@ -28,7 +28,7 @@ import java.util.List;
  */
 @WebServlet("/dat-phong")
 public class DatPhongServlet extends HttpServlet {
-    private static final String VIEW = "/WEB-INF/views/dat-phong/";
+    private static final String VIEW = "/quan-ly-dat-phong/";
     private final DatPhongRepository service = new DatPhongRepository();
 
     @Override
@@ -71,7 +71,7 @@ public class DatPhongServlet extends HttpServlet {
         // trả lại bộ lọc để JSP điền sẵn vào ô tìm kiếm
         for (String k : new String[]{"maDatPhong", "tuKhoaKhach", "trangThai", "tuNgay", "denNgay"})
             req.setAttribute(k, req.getParameter(k));
-        req.getRequestDispatcher(VIEW + "danh-sach.jsp").forward(req, resp);
+        req.getRequestDispatcher(VIEW + "view.jsp").forward(req, resp);
     }
 
     private void hienChiTiet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -84,7 +84,7 @@ public class DatPhongServlet extends HttpServlet {
             // nút "Hủy" chỉ hiện khi đơn còn hủy được
             req.setAttribute("coTheHuy", DatPhong.CHO_COC.equals(dp.getTrangThai())
                     || DatPhong.DA_XAC_NHAN.equals(dp.getTrangThai()));
-            req.getRequestDispatcher(VIEW + "chi-tiet.jsp").forward(req, resp);
+            req.getRequestDispatcher(VIEW + "detail.jsp").forward(req, resp);
         } catch (NghiepVuException e) {
             FlashMessage.loi(req, e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/dat-phong");
@@ -134,7 +134,7 @@ public class DatPhongServlet extends HttpServlet {
             req.setAttribute("dsKhachHang", service.timKhachHang(RequestUtil.chuoi(req, "tuKhoaKhach")));
             req.setAttribute("nhanPhong", nhan.toString());
             req.setAttribute("traPhong", tra.toString());
-            req.getRequestDispatcher(VIEW + "form-dat.jsp").forward(req, resp);
+            req.getRequestDispatcher(VIEW + "add.jsp").forward(req, resp);
         } catch (NghiepVuException e) {
             FlashMessage.loi(req, e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/dat-phong?action=timPhong");

@@ -103,7 +103,7 @@ public class DatPhongRepository {
 
     public List<KhachHang> timKhachHang(Session s, String tuKhoa) {
         boolean coLoc = tuKhoa != null && !tuKhoa.isBlank();
-        String hql = "from KhachHang k where k.trangThai = 'HOAT_DONG'"
+        String hql = "select k from KhachHang k left join fetch k.nguoiDung nd where (nd is null or nd.trangThai in ('HOAT_DONG', N'Hoạt động'))"
                 + (coLoc ? " and (lower(k.hoTen) like :kw or k.soDienThoai like :kw)" : "")
                 + " order by k.hoTen";
         var q = s.createQuery(hql, KhachHang.class);
@@ -118,7 +118,8 @@ public class DatPhongRepository {
         List<?> rs = s.createNativeQuery("""
                         SELECT id_ma_giam_gia, loai_giam_gia, gia_tri
                         FROM ma_giam_gia
-                        WHERE ma_giam_gia = :ma AND trang_thai = 'HOAT_DONG'
+                        WHERE ma_giam_gia = :ma AND trang_thai IN (N'Hoạt động', 'HOAT_DONG')
+                          AND so_luot_con_dung > 0
                           AND bat_dau_luc <= :now AND ket_thuc_luc >= :now
                         """)
                 .setParameter("ma", ma)
@@ -128,7 +129,7 @@ public class DatPhongRepository {
     }
 
     public void tangLuotDungMaGiamGia(Session s, Long idMa) {
-        s.createNativeQuery("UPDATE ma_giam_gia SET so_luot_da_dung = so_luot_da_dung + 1 WHERE id_ma_giam_gia = :id")
+        s.createNativeQuery("UPDATE ma_giam_gia SET so_luot_con_dung = CASE WHEN so_luot_con_dung > 0 THEN so_luot_con_dung - 1 ELSE 0 END WHERE id_ma_giam_gia = :id")
                 .setParameter("id", idMa)
                 .executeUpdate();
     }
@@ -139,7 +140,7 @@ public class DatPhongRepository {
                         SELECT h.phan_tram_giam_gia_phong
                         FROM the_thanh_vien t
                         JOIN hang_thanh_vien h ON h.id_hang_thanh_vien = t.id_hang_thanh_vien
-                        WHERE t.id_khach_hang = :id AND t.trang_thai = 'HOAT_DONG'
+                        WHERE t.id_khach_hang = :id AND t.trang_thai IN (N'Hoạt động', 'HOAT_DONG')
                         """)
                 .setParameter("id", idKhachHang)
                 .getResultList();
@@ -170,10 +171,10 @@ public class DatPhongRepository {
     public List<DatPhong> timKiem(Session s, String maDatPhong, String tuKhoaKhach, String trangThai,
                                   LocalDate tuNgay, LocalDate denNgay) {
         StringBuilder hql = new StringBuilder(
-                "select d from DatPhong d join fetch d.khachHang k where 1 = 1");
+                "select distinct d from DatPhong d join fetch d.khachHang k left join fetch d.chiTiet c where 1 = 1");
         if (maDatPhong != null)  hql.append(" and lower(d.maDatPhong) like :ma");
         if (tuKhoaKhach != null) hql.append(" and (lower(k.hoTen) like :kh or k.soDienThoai like :kh)");
-        if (trangThai != null)   hql.append(" and d.trangThai = :tt");
+        if (trangThai != null)   hql.append(" and exists (select 1 from DatPhongChiTiet ct where ct.datPhong = d and ct.trangThai = :tt)");
         if (tuNgay != null)      hql.append(" and d.thoiGianNhanPhong >= :tu");
         if (denNgay != null)     hql.append(" and d.thoiGianNhanPhong < :den");
         hql.append(" order by d.id desc");
@@ -181,10 +182,24 @@ public class DatPhongRepository {
         var q = s.createQuery(hql.toString(), DatPhong.class);
         if (maDatPhong != null)  q.setParameter("ma", "%" + maDatPhong.toLowerCase() + "%");
         if (tuKhoaKhach != null) q.setParameter("kh", "%" + tuKhoaKhach.toLowerCase() + "%");
-        if (trangThai != null)   q.setParameter("tt", trangThai);
+        if (trangThai != null)   q.setParameter("tt", chuanHoaTrangThai(trangThai));
         if (tuNgay != null)      q.setParameter("tu", tuNgay.atStartOfDay());
         if (denNgay != null)     q.setParameter("den", denNgay.plusDays(1).atStartOfDay());
         return q.getResultList();
+    }
+
+    private String chuanHoaTrangThai(String tt) {
+        if (tt == null) return null;
+        return switch (tt) {
+            case "CHO_COC", "TAM_GIU" -> DatPhong.TAM_GIU;
+            case "DA_XAC_NHAN" -> DatPhong.DA_XAC_NHAN;
+            case "DANG_LUU_TRU", "KHACH_DANG_O" -> DatPhong.KHACH_DANG_O;
+            case "DA_TRA_PHONG" -> DatPhong.DA_TRA_PHONG;
+            case "KHACH_HUY", "KHACH_SAN_HUY", "DA_HUY" -> DatPhong.DA_HUY;
+            case "TU_HUY", "KHONG_DEN" -> DatPhong.KHONG_DEN;
+            case "KHONG_THANH_CONG" -> DatPhong.KHONG_THANH_CONG;
+            default -> tt;
+        };
     }
 
     /** Đơn + khách + các phòng (kèm loại phòng) - fetch hết để JSP dùng được sau khi Session đóng. */
@@ -241,7 +256,7 @@ public class DatPhongRepository {
                 """);
         if (!goiHuy)            hql.append(" and c.trangThai <> :huy");
         if (maPhong != null)    hql.append(" and lower(p.maPhong) like :ma");
-        if (trangThaiDon != null) hql.append(" and d.trangThai = :tt");
+        if (trangThaiDon != null) hql.append(" and c.trangThai = :tt");
         hql.append(" order by c.ngayNhan, p.maPhong");
 
         var q = s.createQuery(hql.toString(), DatPhongChiTiet.class)
@@ -313,7 +328,7 @@ public class DatPhongRepository {
 
     private DatPhong thucHienDatPhong(Session s, YeuCauDatPhong yc) {
         KhachHang kh = s.find(KhachHang.class, yc.idKhachHang());
-        if (kh == null || !"HOAT_DONG".equals(kh.getTrangThai()))
+        if (kh == null || ("BI_KHOA".equals(kh.getTrangThai()) || "Bị khóa".equals(kh.getTrangThai())))
             throw new NghiepVuException("Khách hàng không tồn tại hoặc đang bị khóa.");
 
         int soDem = (int) ChronoUnit.DAYS.between(yc.ngayNhan(), yc.ngayTra());
@@ -360,7 +375,8 @@ public class DatPhongRepository {
             if (mg == null) throw new NghiepVuException("Mã giảm giá không tồn tại, đã hết hạn hoặc đã ngừng.");
             Long idMa = ((Number) mg[0]).longValue();
             BigDecimal giaTri = new BigDecimal(mg[2].toString());
-            BigDecimal giamTuMa = "PHAN_TRAM".equals(mg[1].toString())
+            String loai = mg[1].toString();
+            BigDecimal giamTuMa = ("PHAN_TRAM".equals(loai) || "Phần trăm".equals(loai))
                     ? tienPhong.multiply(giaTri).divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP)
                     : giaTri.setScale(0, RoundingMode.HALF_UP);
             giamGia = giamGia.add(giamTuMa);

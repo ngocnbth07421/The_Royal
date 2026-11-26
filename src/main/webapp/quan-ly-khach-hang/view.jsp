@@ -20,6 +20,41 @@
         <i class="fa-solid fa-users"></i> QUẢN LÝ KHÁCH HÀNG
     </h2>
 
+    <c:if test="${not empty thongBao}">
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fa-solid fa-check-circle"></i> ${thongBao}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+    <c:if test="${not empty loi}">
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fa-solid fa-circle-exclamation"></i> ${loi}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+
+    <!-- TÌM KIẾM -->
+    <form class="card shadow-sm mb-4" method="get" action="${pageContext.request.contextPath}/quan-ly-khach-hang/view">
+        <div class="card-body row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-bold">Tìm kiếm (Tên / SĐT / Email)</label>
+                <input type="text" class="form-control" name="tuKhoa" value="<c:out value='${tuKhoa}'/>" placeholder="Nhập từ khóa...">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Trạng thái</label>
+                <select class="form-select" name="trangThai">
+                    <option value="">Tất cả</option>
+                    <option value="HOAT_DONG" ${trangThai == 'HOAT_DONG' ? 'selected' : ''}>Đang hoạt động</option>
+                    <option value="BI_KHOA" ${trangThai == 'BI_KHOA' ? 'selected' : ''}>Khóa</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-end">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i> Tìm</button>
+                <a href="${pageContext.request.contextPath}/quan-ly-khach-hang/view" class="btn btn-secondary">Xóa lọc</a>
+            </div>
+        </div>
+    </form>
+
     <!-- FORM THÊM / SỬA KHÁCH HÀNG -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
