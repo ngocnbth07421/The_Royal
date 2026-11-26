@@ -73,16 +73,8 @@
         </c:if>
     </nav>
 
-    <!-- Hộp hỗ trợ kỹ thuật và thông tin nhân viên trực ở đáy sidebar -->
+    <!-- Thông tin nhân viên trực ở đáy sidebar -->
     <div class="sidebar-bottom" style="flex-direction: column; align-items: stretch; gap: 8px; margin-top: auto; padding-top: 14px;">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="support-icon"><i class='bx bx-support'></i></div>
-            <div style="white-space: nowrap; overflow: hidden;">
-                <b style="font-size: 12px; color: #eee; display: block;">Trung tâm hỗ trợ IT</b>
-                <small style="color: #9eafa7; font-size: 11px;">Hotline: 1900-ROYAL (24/7)</small>
-            </div>
-        </div>
-
         <div style="padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
             <div style="white-space: nowrap; overflow: hidden; max-width: 170px;">
                 <small style="color: #87938e; font-size: 10px; display: block;">${not empty sessionScope.currentUser ? 'Nhân viên trực ca:' : 'Đang đăng nhập:'}</small>

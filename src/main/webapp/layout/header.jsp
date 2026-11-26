@@ -12,13 +12,42 @@
         <b>${not empty param.pageTitle ? param.pageTitle : 'Tổng quan Dashboard'}</b>
     </div>
 
-    <!-- Khu vực bên phải: Chuông thông báo, Vai trò & Tài khoản người dùng -->
-    <div class="top-actions" style="position: relative;">
-        <!-- Nút chuông thông báo hệ thống -->
-        <button class="icon-btn" id="notifBtn" type="button" title="Xem thông báo hệ thống" onclick="toggleNotifDropdown(event)" style="position: relative; width: 36px; height: 36px; border-radius: 8px; border: 1px solid #dce5df; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #49584e; font-size: 18px;">
-            <i class='bx bx-bell'></i>
-            <span id="notifDot" style="position: absolute; top: 7px; right: 7px; width: 8px; height: 8px; background: #e53935; border-radius: 50%; border: 2px solid #ffffff;"></span>
+    <!-- Khu vực bên phải: Giao diện Sáng/Tối, Ngôn ngữ, Vai trò & Tài khoản người dùng -->
+    <div class="top-actions" style="position: relative; display: flex; align-items: center; gap: 10px;">
+        <!-- Nút chuyển đổi Sáng / Tối -->
+        <button class="icon-btn" id="themeToggleBtn" type="button" title="Chuyển giao diện Sáng / Tối" onclick="toggleTheme()" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #dce5df; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #49584e; font-size: 18px;">
+            <i class='bx bx-moon' id="themeIcon"></i>
         </button>
+
+        <!-- Nút chuyển đổi Ngôn ngữ VI / EN -->
+        <button class="icon-btn" id="langToggleBtn" type="button" title="Switch Language (VI / EN)" onclick="toggleLanguage()" style="padding: 0 10px; height: 36px; border-radius: 8px; border: 1px solid #dce5df; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #49584e; font-size: 12px; font-weight: 700;">
+            <span id="langLabel">VI</span>
+        </button>
+
+        <script>
+            function toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('royal_theme', isDark ? 'dark' : 'light');
+                document.getElementById('themeIcon').className = isDark ? 'bx bx-sun' : 'bx bx-moon';
+            }
+            function toggleLanguage() {
+                const current = localStorage.getItem('royal_lang') || 'vi';
+                const next = current === 'vi' ? 'en' : 'vi';
+                localStorage.setItem('royal_lang', next);
+                document.getElementById('langLabel').textContent = next.toUpperCase();
+            }
+            (function() {
+                if (localStorage.getItem('royal_theme') === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    const icon = document.getElementById('themeIcon');
+                    if (icon) icon.className = 'bx bx-sun';
+                }
+                const savedLang = localStorage.getItem('royal_lang') || 'vi';
+                const lbl = document.getElementById('langLabel');
+                if (lbl) lbl.textContent = savedLang.toUpperCase();
+            })();
+        </script>
 
         <!-- DROPDOWN DANH SÁCH THÔNG BÁO HỆ THỐNG (CĂN PHẢI CHUẨN XÁC) -->
         <div id="notifDropdown" style="display: none; position: absolute; top: 52px; right: 180px; width: 340px; background: #ffffff; border-radius: 12px; box-shadow: 0 10px 35px rgba(0,0,0,0.18); border: 1px solid #e0e6e2; z-index: 1050; overflow: hidden;">
