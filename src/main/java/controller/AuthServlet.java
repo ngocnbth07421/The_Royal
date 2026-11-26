@@ -116,12 +116,6 @@ public class AuthServlet extends HttpServlet {
                     nd = nguoiDungRepository.findByEmail(kh.getEmail());
                 }
             }
-        } else {
-            // 3. Đăng nhập bằng Mã nhân viên (VD: NV001, NV002, ...)
-            nv = nhanVienRepository.findByMaNhanVien(taiKhoan.toUpperCase());
-            if (nv != null) {
-                nd = nguoiDungRepository.findByNhanVien(nv.getIdNhanVien());
-            }
         }
 
         if (nd == null) {
